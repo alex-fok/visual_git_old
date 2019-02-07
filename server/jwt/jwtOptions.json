@@ -1,0 +1,5 @@
+{
+    "audience": "http://localhost:4000",
+    "algorithm": "HS256",
+    "expiresIn" : "12h"
+}
