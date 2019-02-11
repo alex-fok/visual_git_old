@@ -8,7 +8,9 @@ import {sign, verify, decode} from './jwt/jwtService';
 const path = require('path');
 const app = express();
 const http = require('http').createServer(app);
-const io = require('socket.io')(http);
+const io = require('socket.io')(http, {
+  path:'/io'
+});
 
 // const proxy = http.createServer((req, res) => {
 //   res.statudCode = 200;
@@ -58,10 +60,10 @@ app.use((req, res, next) => {
   var token = req.headers.authorization;
 
   console.log("****** START HTTP REQUEST ******");
-  console.log("Token: " + token);
-
+  console.log("URL: " + req.url);
 
   if(token) {
+    console.log("Token: " + token);
     let jwt = token.replace("Bearer ", "");
     console.log("JWT: " + jwt);
     jwtService.verify(jwt, (decoded) => {
@@ -80,11 +82,17 @@ app.use((req, res, next) => {
       }
     });
   }
+  else {
+    console.log("No token found");
+  }
 });
 
-// io.on('connection', (socket) => {
-//   console.log('user connected');
-// })
+io.on('connection', (socket) => {
+  console.log('a user connected');
+  // socket.on('image', (msg)=> {
+  //   console.log('message: ' + msg);
+  // });
+});
 
 app.get('/api/helloWorld', (req, res) => {
   console.log("****** /api/helloWorld GET ******");
