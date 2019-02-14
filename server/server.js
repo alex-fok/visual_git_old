@@ -32,7 +32,6 @@ const userList = [
 ];
 
 app.use((req, res, next)=> {
-  console.log("");
   res.header("Access-Control-Allow-Origin", "http://localhost:8080");
   next();
 });
@@ -84,6 +83,7 @@ app.use((req, res, next) => {
   }
   else {
     console.log("No token found");
+    console.log("****** END HTTP REQUEST ******\n");
   }
 });
 
@@ -94,13 +94,14 @@ io.on('connection', (socket) => {
   // });
 });
 
-app.get('/api/helloWorld', (req, res) => {
+app.get('/api/helloWorld', (req, res, next) => {
   console.log("****** /api/helloWorld GET ******");
   res.json({ hello : "HELLO WORLD" });
+  next();
 });
 
-app.get('*', (req, res) => {
-  console.log("app.get *")
+app.use('*', (req, res, next) => {
+  console.log("****** END HTTP REQUEST ******\n");
 });
 
 app.listen(4000, ()=> {

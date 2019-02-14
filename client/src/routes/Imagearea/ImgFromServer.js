@@ -8,10 +8,7 @@ class ImgFromServer extends Component {
   }
 
   componentDidMount() {
-    var socket = io(this.props.host, {
-      path: '/io'
-    });
-    console.log('socket connected: ' + socket.connected);
+    var socket = io(this.props.host);
     this.props.setSocket(socket);
   }
 
