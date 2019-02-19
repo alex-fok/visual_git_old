@@ -8,9 +8,7 @@ import {sign, verify, decode} from './jwt/jwtService';
 const path = require('path');
 const app = express();
 const http = require('http').createServer(app);
-const io = require('socket.io')(http, {
-  path:'/io'
-});
+const io = require('socket.io')(http);
 
 // const proxy = http.createServer((req, res) => {
 //   res.statudCode = 200;
@@ -33,6 +31,7 @@ const userList = [
 
 app.use((req, res, next)=> {
   res.header("Access-Control-Allow-Origin", "http://localhost:8080");
+  res.header("Access-Control-Allow-Credentials", "true");
   next();
 });
 
@@ -89,9 +88,9 @@ app.use((req, res, next) => {
 
 io.on('connection', (socket) => {
   console.log('a user connected');
-  // socket.on('image', (msg)=> {
-  //   console.log('message: ' + msg);
-  // });
+  socket.on('message', (msg)=> {
+    console.log('message: ' + msg);
+  });
 });
 
 app.get('/api/helloWorld', (req, res, next) => {
@@ -104,6 +103,6 @@ app.use('*', (req, res, next) => {
   console.log("****** END HTTP REQUEST ******\n");
 });
 
-app.listen(4000, ()=> {
+http.listen(4000, ()=> {
   console.log('Listening');
 });

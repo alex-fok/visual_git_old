@@ -54,7 +54,7 @@ class App extends Component {
   handleImgRequest(event) {
     const message = 'message';
     const socket = this.state.socket;
-    socket.emit("image", message);
+    socket.emit("message", message);
       //var ctx = document.getElementById('canvas').getContext('2d');
        // if (res & res.image) {
        //   var img = new Image();
