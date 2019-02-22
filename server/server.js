@@ -87,9 +87,12 @@ app.use((req, res, next) => {
 });
 
 io.on('connection', (socket) => {
-  console.log('a user connected');
-  socket.on('message', (msg)=> {
-    console.log('message: ' + msg);
+  const fs = require('fs');
+  socket.on('message', (msg) => {
+    console.log ('socket.on message');
+    fs.readFile(__dirname + '/image/image.jpg', (err, buf) => {
+      socket.emit('image', {buffer: buf.toString('base64')});
+    });
   });
 });
 

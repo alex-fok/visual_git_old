@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
-import io from 'socket.io-client';
 
 class ImgFromServer extends Component {
   constructor(props) {
@@ -8,8 +7,8 @@ class ImgFromServer extends Component {
   }
 
   componentDidMount() {
-    var socket = io(this.props.host);
-    this.props.setSocket(socket);
+    const ctx = document.getElementById('canvas').getContext('2d');
+    this.props.setSocket(ctx);
   }
 
   render() {
@@ -18,8 +17,8 @@ class ImgFromServer extends Component {
     }
     return(
       <div>
-      <p id="testP"></p>
-      <canvas id="canvas" height="400" width="400" style={canvasStyle}></canvas>
+        <p id="testP"></p>
+        <canvas id="canvas" height="400" width="400" style={canvasStyle}></canvas>
       </div>
     )
   }

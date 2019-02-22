@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 
 import {BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
 import Loadable from 'react-loadable';
-
+import io from 'socket.io-client';
 
 import ImgFromServer from './routes/Imagearea/ImgFromServer';
 import PrivateRoute from './privateRoute';
@@ -52,15 +52,7 @@ class App extends Component {
   }
 
   handleImgRequest(event) {
-    const message = 'message';
-    const socket = this.state.socket;
-    socket.emit("message", message);
-      //var ctx = document.getElementById('canvas').getContext('2d');
-       // if (res & res.image) {
-       //   var img = new Image();
-       //   img.src = 'data:image/png;base64,' + res.buffer;
-       //   ctx.drawImage(img, 0, 0);
-       // }
+    this.state.socket.emit("message", "message");
   }
 
   setAxiosHeader(jwt) {
@@ -80,8 +72,17 @@ class App extends Component {
     }
   }
 
-  setSocket(socket) {
-    this.setState({socket: socket})
+  setSocket(ctx) {
+    const socket = io(AUTH_SERVER);
+    socket.on('image', (data) => {
+      if(data.buffer) {
+        console.log('setSocket is reached');
+        const img = new Image();
+        img.src = 'data:image/jpeg;base64, ' + data.buffer;
+        ctx.drawImage(img, 0, 0);
+      }
+    })
+    this.setState({socket: socket});
   }
 
   render() {
@@ -148,7 +149,7 @@ class App extends Component {
           <button onClick={this.handleImgRequest}>IMG</button>
         </div>
         </PrivateRoute>
-        <ImgFromServer host={AUTH_SERVER} setSocket={this.setSocket}/>
+        <ImgFromServer setSocket={this.setSocket}/>
       </div>
     );
   }
