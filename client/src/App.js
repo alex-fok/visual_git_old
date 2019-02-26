@@ -17,12 +17,12 @@ class App extends Component {
     this.state = {
       text: "Sending from TopLayer",
       httpRequestHandler: httpRequestHandler,
-      socket: ""
+      socket: io(AUTH_SERVER)
     };
     this.handleClick = this.handleClick.bind(this);
     this.handleImgRequest = this.handleImgRequest.bind(this);
     this.setAxiosHeader = this.setAxiosHeader.bind(this);
-    this.setSocket = this.setSocket.bind(this);
+    this.setImage = this.setImage.bind(this);
   }
 
   handleClick(event) {
@@ -72,17 +72,16 @@ class App extends Component {
     }
   }
 
-  setSocket(ctx) {
-    const socket = io(AUTH_SERVER);
-    socket.on('image', (data) => {
+  setImage(ctx) {
+    this.state.socket.on('image', (data) => {
       if(data.buffer) {
         console.log('setSocket is reached');
         const img = new Image();
         img.src = 'data:image/jpeg;base64, ' + data.buffer;
-        ctx.drawImage(img, 0, 0);
+        // onload is added for Chrome to render image
+        img.onload = () => {ctx.drawImage(img, 0, 0)};
       }
     })
-    this.setState({socket: socket});
   }
 
   render() {
@@ -149,7 +148,7 @@ class App extends Component {
           <button onClick={this.handleImgRequest}>IMG</button>
         </div>
         </PrivateRoute>
-        <ImgFromServer setSocket={this.setSocket}/>
+        <ImgFromServer setImage={this.setImage}/>
       </div>
     );
   }
