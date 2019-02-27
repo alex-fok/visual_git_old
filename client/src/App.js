@@ -78,7 +78,6 @@ class App extends Component {
         console.log('setSocket is reached');
         const img = new Image();
         img.src = 'data:image/jpeg;base64, ' + data.buffer;
-        // onload is added for Chrome to render image
         img.onload = () => {ctx.drawImage(img, 0, 0)};
       }
     })

@@ -88,15 +88,22 @@ app.use((req, res, next) => {
 
 io.on('connection', (socket) => {
   const fs = require('fs');
+  var count = 0;
   const broadcastMessage = () => {
-    for (var num = 0; num < 4; num ++) {
-      fs.readFile(__dirname + '/image/image' +  + '.jpg', (err, buf) => {
+    const countInFn = count;
+    fs.readFile(__dirname + '/image/image' + countInFn + '.png', (err, buf) => {
+      console.log("image rendered : " + countInFn);
+      if (!err)
         socket.emit('image', {buffer: buf.toString('base64')});
-      });
-    }
+    });
+    count += 1;
   };
   socket.on('message', (msg) => {
-    setInterval(broadcastMessage, 1000);
+    for (var num = 0; num < 4; num ++) {
+      setTimeout(broadcastMessage, 1000);
+      console.log('pic num: ' + num);
+    };
+    count = 0;
   });
 });
 
