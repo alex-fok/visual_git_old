@@ -75,7 +75,6 @@ class App extends Component {
   setImage(ctx) {
     this.state.socket.on('image', (data) => {
       if(data.buffer) {
-        console.log('setSocket is reached');
         const img = new Image();
         img.src = 'data:image/jpeg;base64, ' + data.buffer;
         img.onload = () => {ctx.drawImage(img, 0, 0)};

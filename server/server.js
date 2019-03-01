@@ -93,7 +93,7 @@ io.on('connection', (socket) => {
       console.log("Drawing number: " + num);
       fs.readFile(__dirname + '/image/image' + num + '.png', (err, buf) => {
         if (!err)
-          socket.emit('image', {buffer: buf.toString('base64')});
+          io.emit('image', {buffer: buf.toString('base64')});
           setTimeout(()=> {broadcastMessage(num + 1)}, 1000)
       });
     }
