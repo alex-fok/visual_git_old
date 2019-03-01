@@ -89,13 +89,16 @@ app.use((req, res, next) => {
 io.on('connection', (socket) => {
   const fs = require('fs');
   const broadcastMessage = (num) => {
-    console.log("Drawing number: " + num);
     if (num < 4) {
+      console.log("Drawing number: " + num);
       fs.readFile(__dirname + '/image/image' + num + '.png', (err, buf) => {
         if (!err)
           socket.emit('image', {buffer: buf.toString('base64')});
           setTimeout(()=> {broadcastMessage(num + 1)}, 1000)
       });
+    }
+    else {
+      console.log("Last drawing sent");
     };
   }
   socket.on('message', (msg) => {

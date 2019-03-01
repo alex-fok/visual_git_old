@@ -76,13 +76,9 @@ class App extends Component {
     this.state.socket.on('image', (data) => {
       if(data.buffer) {
         console.log('setSocket is reached');
-        console.log("wait 1 second");
-        setTimeout(()=> {
-          console.log("wait completed");
-          const img = new Image();
-          img.src = 'data:image/jpeg;base64, ' + data.buffer;
-          img.onload = () => {ctx.drawImage(img, 0, 0)};
-        }, 1000)
+        const img = new Image();
+        img.src = 'data:image/jpeg;base64, ' + data.buffer;
+        img.onload = () => {ctx.drawImage(img, 0, 0)};
         
       }
     })
