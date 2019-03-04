@@ -8,7 +8,7 @@ class ImgFromServer extends Component {
 
   componentDidMount() {
     const ctx = document.getElementById('canvas').getContext('2d');
-    this.props.setSocket(ctx);
+    this.props.setImage(ctx);
   }
 
   render() {
