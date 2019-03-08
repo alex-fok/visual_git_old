@@ -6,6 +6,7 @@ import Loadable from 'react-loadable';
 import io from 'socket.io-client';
 
 import ImgFromServer from './routes/Imagearea/ImgFromServer';
+import Messenger from './routes/Messenger/Messenger'
 import PrivateRoute from './privateRoute';
 import {httpRequestHandler} from './httpRequestHandler';
 
@@ -17,7 +18,9 @@ class App extends Component {
     this.state = {
       text: "Sending from TopLayer",
       httpRequestHandler: httpRequestHandler,
-      socket: io(AUTH_SERVER)
+      socket: io(AUTH_SERVER, {
+        transoprts: ['websocket']
+      })
     };
     this.handleClick = this.handleClick.bind(this);
     this.handleImgRequest = this.handleImgRequest.bind(this);
@@ -59,7 +62,7 @@ class App extends Component {
     let handler = this.state.httpRequestHandler;
 
     if (!handler) {
-      console.log("Axios instnace not initialized");
+      console.log("Axios instance not initialized");
     }
 
     else if (handler.defaults.headers.common['Authorization'] != jwt) {
@@ -148,6 +151,7 @@ class App extends Component {
         </div>
         </PrivateRoute>
         <ImgFromServer setImage={this.setImage}/>
+        <Messenger />
       </div>
     );
   }

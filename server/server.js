@@ -99,9 +99,11 @@ io.on('connection', (socket) => {
     }
     else {
       console.log("Last drawing sent");
+      console.log("******END DRAWING BROADCAST******\n")
     };
   }
   socket.on('message', (msg) => {
+      console.log("******START DRAWING BROADCAST******");
       setTimeout(() => {broadcastMessage(0)}, 1000);
   });
 });
@@ -117,5 +119,5 @@ app.use('*', (req, res, next) => {
 });
 
 http.listen(4000, ()=> {
-  console.log('Listening');
+  console.log('Listening\n');
 });
