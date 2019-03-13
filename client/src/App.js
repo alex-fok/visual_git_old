@@ -6,7 +6,7 @@ import Loadable from 'react-loadable';
 import io from 'socket.io-client';
 
 import ImgFromServer from './routes/Imagearea/ImgFromServer';
-import Messenger from './routes/Messenger/Messenger'
+import Messenger from './routes/Messenger/Messenger';
 import PrivateRoute from './privateRoute';
 import {httpRequestHandler} from './httpRequestHandler';
 
@@ -18,14 +18,35 @@ class App extends Component {
     this.state = {
       text: "Sending from TopLayer",
       httpRequestHandler: httpRequestHandler,
-      socket: io(AUTH_SERVER, {
-        transoprts: ['websocket']
+      chat: document.createElement('ul'),
+      socket: io( AUTH_SERVER, {
+        transports: ['websocket']
       })
     };
+    
     this.handleClick = this.handleClick.bind(this);
     this.handleImgRequest = this.handleImgRequest.bind(this);
     this.setAxiosHeader = this.setAxiosHeader.bind(this);
     this.setImage = this.setImage.bind(this);
+    this.addChatItem = this.addChatItem.bind(this);
+
+    this.state.socket.on('message', (message) => {
+      if (message) {
+        const {chat} = this.state;
+        this.setState({
+          chat: this.addChatItem(message, chat)
+        })
+      }
+    });
+  }
+
+  addChatItem(message, chat) {
+    const newChat = chat;
+    const listItem = document.createElement("li");
+    listItem.appendChild(document.createTextNode(message));
+    
+    newChat.appendChild(listItem);
+    return newChat;
   }
 
   handleClick(event) {
@@ -55,7 +76,7 @@ class App extends Component {
   }
 
   handleImgRequest(event) {
-    this.state.socket.emit("message", "message");
+    this.state.socket.emit("image");
   }
 
   setAxiosHeader(jwt) {
@@ -151,7 +172,8 @@ class App extends Component {
         </div>
         </PrivateRoute>
         <ImgFromServer setImage={this.setImage}/>
-        <Messenger />
+        {console.log(this.state.chat)}
+        <Messenger chat={this.state.chat}/>
       </div>
     );
   }

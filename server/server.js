@@ -102,9 +102,10 @@ io.on('connection', (socket) => {
       console.log("******END DRAWING BROADCAST******\n")
     };
   }
-  socket.on('message', (msg) => {
+  socket.on('image', () => {
       console.log("******START DRAWING BROADCAST******");
       setTimeout(() => {broadcastMessage(0)}, 1000);
+      socket.emit("message", "message")
   });
 });
 
