@@ -18,7 +18,7 @@ class App extends Component {
     this.state = {
       text: "Sending from TopLayer",
       httpRequestHandler: httpRequestHandler,
-      chat: document.createElement('ul'),
+      chat: ['test'],
       socket: io( AUTH_SERVER, {
         transports: ['websocket']
       })
@@ -28,25 +28,17 @@ class App extends Component {
     this.handleImgRequest = this.handleImgRequest.bind(this);
     this.setAxiosHeader = this.setAxiosHeader.bind(this);
     this.setImage = this.setImage.bind(this);
-    this.addChatItem = this.addChatItem.bind(this);
+    this.renewChat = this.renewChat.bind(this);
 
     this.state.socket.on('message', (message) => {
-      if (message) {
-        const {chat} = this.state;
-        this.setState({
-          chat: this.addChatItem(message, chat)
-        })
-      }
+      if (message) this.renewChat(message);
     });
   }
 
-  addChatItem(message, chat) {
-    const newChat = chat;
-    const listItem = document.createElement("li");
-    listItem.appendChild(document.createTextNode(message));
-    
-    newChat.appendChild(listItem);
-    return newChat;
+  renewChat(message) {
+    this.setState({
+      chat: this.state.chat.concat([message])
+    });
   }
 
   handleClick(event) {
@@ -172,7 +164,6 @@ class App extends Component {
         </div>
         </PrivateRoute>
         <ImgFromServer setImage={this.setImage}/>
-        {console.log(this.state.chat)}
         <Messenger chat={this.state.chat}/>
       </div>
     );

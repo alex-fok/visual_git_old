@@ -5,12 +5,7 @@ import ReactDOM from "react-dom";
 class Messenger extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      chat: this.props.chat,
-    }
-    console.log("chat : Messenger.js" + this.state.chat);
   }
-
 
   render() {
     const divStyle = {
@@ -25,7 +20,11 @@ class Messenger extends Component {
 
     return (
       <div style={divStyle}>
-      
+        <ul style={listStyle}>
+          {this.props.chat.map((m, i)=> {
+            return <li key={i}>{m}</li>
+          })}
+        </ul>
       </div>
     )
   }
