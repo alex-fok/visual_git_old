@@ -8,23 +8,31 @@ class Messenger extends Component {
   }
 
   render() {
-    const divStyle = {
+    const MsgStyle = {
       border:"1px solid #000000",
-      width:"400px",
+      width:"350px",
       height: "200px"
     }
     const listStyle = {
       overflowY: "scroll",
       height: "200px"
     }
+    const DialogStyle = {
+      border:"1px solid #000000",
+      width:"400px",
+      height: "50px"
+    }
 
     return (
-      <div style={divStyle}>
+      <div>
+      <div style={MsgStyle}>
         <ul style={listStyle}>
           {this.props.chat.map((m, i)=> {
-            return <li key={i}>{m}</li>
+            return <li key={i}>{i}{m}</li>
           })}
         </ul>
+      </div>
+      <div style={DialogStyle}></div>
       </div>
     )
   }
