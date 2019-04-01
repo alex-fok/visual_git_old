@@ -92,9 +92,10 @@ io.on('connection', (socket) => {
     if (num < 4) {
       console.log("Drawing number: " + num);
       fs.readFile(__dirname + '/image/image' + num + '.png', (err, buf) => {
-        if (!err)
+        if (!err) {
           io.emit('image', {buffer: buf.toString('base64')});
           setTimeout(()=> {broadcastMessage(num + 1)}, 1000)
+        }
       });
     }
     else {
@@ -103,10 +104,16 @@ io.on('connection', (socket) => {
     };
   }
   socket.on('image', () => {
-      console.log("******START DRAWING BROADCAST******");
-      setTimeout(() => {broadcastMessage(0)}, 1000);
-      socket.emit("message", "message")
+    console.log("******START DRAWING BROADCAST******");
+    setTimeout(() => {broadcastMessage(0)}, 1000);
   });
+
+  socket.on('message', (msg) => {
+    console.log("******MESSAGE RECEIVED******");
+    console.log("      input: " + msg);
+    io.emit("message", msg);
+    console.log("******END MESSAGE BROADCAST******\n");
+  })
 });
 
 app.get('/api/helloWorld', (req, res, next) => {
