@@ -151,7 +151,7 @@ class App extends Component {
         </div>
         </PrivateRoute>
         <ImgFromServer setImage={this.setImage}/>
-        <Messenger chat={this.state.chat} socket={this.state.socket}/>
+        <Messenger chat={this.state.chat} authServer={AUTH_SERVER} socket={this.state.socket}/>
       </div>
     );
   }

@@ -1,30 +1,25 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
-
-let state = {chat:[]};
+import io from "socket.io-client";
 
 class Messenger extends Component {
   constructor(props) {
     super(props);
     
-    this.state = state;
+    this.state = {
+      chat:[],
+      socket: this.props.socket
+    };
     
     this.handleMessageSubmit = this.handleMessageSubmit.bind(this);
 
-    this.props.socket.on('message', (message) => {
-      if (message) {
-        this.setState(prevState => ({
-          chat: [...prevState.chat, message]
-        }));
-      }
-    });    
   }
 
   handleMessageSubmit(){
     const input = document.getElementById("usertext").value;
     const test = true;
     test ? 
-      this.props.socket.emit("message", input) :
+      this.state.socket.emit("message", input) :
       this.setState(prevState => ({
         chat: [...prevState.chat, 'new message']
       }));
@@ -32,8 +27,21 @@ class Messenger extends Component {
     document.getElementById("usertext").value = "";
   }
 
+  componentDidMount() {
+    console.log("Component Did Mount"); 
+
+    this.state.socket.on('message', (message) => {
+      if (message) {
+        this.setState(prevState => ({
+          chat: [...prevState.chat, message]
+        }));
+      }
+    });
+  }
+
   componentWillUnmount() {
-    state = this.state;
+    console.log("Component Unmounted");
+    this.state.socket.close();
   }
 
   render() {
