@@ -17,19 +17,13 @@ class Messenger extends Component {
 
   handleMessageSubmit(){
     const input = document.getElementById("usertext").value;
-    const test = true;
-    test ? 
-      this.state.socket.emit("message", input) :
-      this.setState(prevState => ({
-        chat: [...prevState.chat, 'new message']
-      }));
-      
+    this.state.socket.emit("message", input);
     document.getElementById("usertext").value = "";
   }
 
   componentDidMount() {
-    console.log("Component Did Mount"); 
-
+    console.log("Messenger.js - componentDidMount"); 
+    
     this.state.socket.on('message', (message) => {
       if (message) {
         this.setState(prevState => ({
@@ -40,7 +34,7 @@ class Messenger extends Component {
   }
 
   componentWillUnmount() {
-    console.log("Component Unmounted");
+    console.log("Messenger.js - componentWillUnmount");
     this.state.socket.close();
   }
 

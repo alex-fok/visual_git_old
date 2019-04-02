@@ -77,13 +77,22 @@ class App extends Component {
   }
 
   setImage(ctx) {
-    this.state.socket.on('image', (data) => {
+    /*this.state.socket.on('image', (data) => {
       if(data.buffer) {
         const img = new Image();
         img.src = 'data:image/jpeg;base64, ' + data.buffer;
         img.onload = () => {ctx.drawImage(img, 0, 0)};
       }
-    })
+    })*/
+  }
+
+  componentDidMount() {
+    console.log("App.js - componentDidMount")
+  }
+
+  componentWillUnmount() {
+    console.log("App.js - componentWillUnmount");
+    this.state.socket.close();
   }
 
   render() {
