@@ -59,6 +59,7 @@ class App extends Component {
     this.state.socket.emit("image");
   }
 
+  
   setAxiosHeader(jwt) {
     let handler = this.state.httpRequestHandler;
 
@@ -75,15 +76,16 @@ class App extends Component {
       console.log("JWT Token @ setAxiosHeader: " + this.state.httpRequestHandler.defaults.headers.common['Authorization'])
     }
   }
+  
 
   setImage(ctx) {
-    /*this.state.socket.on('image', (data) => {
+    this.state.socket.on('image', (data) => {
       if(data.buffer) {
         const img = new Image();
         img.src = 'data:image/jpeg;base64, ' + data.buffer;
         img.onload = () => {ctx.drawImage(img, 0, 0)};
       }
-    })*/
+    })
   }
 
   componentDidMount() {
@@ -99,7 +101,7 @@ class App extends Component {
     const {text} = this.state;
 
     const Loading = () => <div>Loading...</div>;
-
+    
     const Home = Loadable({
       loader: () => import('./routes/Home/container/FormContainer'),
       loading: Loading,
@@ -137,6 +139,7 @@ class App extends Component {
     const linkStyle= {
       color: "#FFFFFF"
     }
+    
 
     return (
       <div>
@@ -159,6 +162,7 @@ class App extends Component {
           <button onClick={this.handleImgRequest}>IMG</button>
         </div>
         </PrivateRoute>
+      
         <ImgFromServer setImage={this.setImage}/>
         <Messenger chat={this.state.chat} authServer={AUTH_SERVER} socket={this.state.socket}/>
       </div>
@@ -167,6 +171,3 @@ class App extends Component {
 }
 
 export default App;
-
-const wrapper = document.getElementById("top-layer-div");
-wrapper ? ReactDOM.render(<App />, wrapper) : false;
