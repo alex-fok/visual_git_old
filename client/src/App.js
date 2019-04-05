@@ -7,6 +7,7 @@ import io from 'socket.io-client';
 
 import ImgFromServer from './routes/Imagearea/ImgFromServer';
 import Messenger from './routes/Messenger/Messenger';
+import Display from './routes/Display/Display';
 import PrivateRoute from './privateRoute';
 import {httpRequestHandler} from './httpRequestHandler';
 
@@ -18,15 +19,12 @@ class App extends Component {
     this.state = {
       text: "Sending from TopLayer",
       httpRequestHandler: httpRequestHandler,
-      socket: io( AUTH_SERVER, {
-        transports: ['websocket']
-      })
+      display: "d1"
     };
     
     this.handleClick = this.handleClick.bind(this);
-    this.handleImgRequest = this.handleImgRequest.bind(this);
     this.setAxiosHeader = this.setAxiosHeader.bind(this);
-    this.setImage = this.setImage.bind(this);
+    this.setDisplay = this.setDisplay.bind(this);
   }
 
   handleClick(event) {
@@ -54,11 +52,6 @@ class App extends Component {
     .then(data => console.log(data.hello));
     */
   }
-
-  handleImgRequest(event) {
-    this.state.socket.emit("image");
-  }
-
   
   setAxiosHeader(jwt) {
     let handler = this.state.httpRequestHandler;
@@ -76,15 +69,13 @@ class App extends Component {
       console.log("JWT Token @ setAxiosHeader: " + this.state.httpRequestHandler.defaults.headers.common['Authorization'])
     }
   }
-  
 
-  setImage(ctx) {
-    this.state.socket.on('image', (data) => {
-      if(data.buffer) {
-        const img = new Image();
-        img.src = 'data:image/jpeg;base64, ' + data.buffer;
-        img.onload = () => {ctx.drawImage(img, 0, 0)};
-      }
+  setDisplay(e) {
+    const value = e.target.value;
+    const {display} = this.state;
+    console.log(value);
+    if (display !== value) this.setState({
+      display: value
     })
   }
 
@@ -158,13 +149,25 @@ class App extends Component {
               { return TextareaInstance }
             }/>
           </Switch>
-          <button onClick={this.handleClick}>Button</button>
-          <button onClick={this.handleImgRequest}>IMG</button>
         </div>
         </PrivateRoute>
-      
+        {/*
+          <button onClick={this.handleClick}>Button</button>
+          <button onClick={this.handleImgRequest}>IMG</button>
+        */
+        }
+        <div className="btn-group">
+          <button className="btn btn-secondary" value="d1" onClick={this.setDisplay}>Image</button>
+          <button className="btn btn-secondary" value="d2" onClick={this.setDisplay}>Chat</button>
+
+        </div>
+        {
+        /*
         <ImgFromServer setImage={this.setImage}/>
         <Messenger chat={this.state.chat} authServer={AUTH_SERVER} socket={this.state.socket}/>
+        */
+        }
+        <Display display={this.state.display} host={AUTH_SERVER}/>
       </div>
     );
   }
