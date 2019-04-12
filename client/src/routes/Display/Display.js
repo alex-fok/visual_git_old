@@ -4,6 +4,8 @@ import io from 'socket.io-client';
 
 import ImgFromServer from './Imagearea/ImgFromServer';
 import Messenger from './Messenger/Messenger';
+import DragBoard from './DragBoard/DragBoard';
+
 
 class Display extends Component {
   constructor(props) {
@@ -14,6 +16,7 @@ class Display extends Component {
     }
     this.getImgDisplayComponent = this.getImgDisplayComponent.bind(this);
     this.getMessengerComponent = this.getMessengerComponent.bind(this);
+    this.getDragBoardComponent = this.getDragBoardComponent.bind(this);
     this.componentToDisplay = this.componentToDisplay.bind(this);
   }
 
@@ -27,13 +30,22 @@ class Display extends Component {
     return <Messenger chat={this.state.chat} host={this.props.host}/>;
   }
 
+  getDragBoardComponent() {
+    console.log("getDragBoardComponent Reached");
+    return <DragBoard />;
+  }
+
   componentToDisplay() {
     const {display} = this.props;
     console.log("display @ Display.js: %s", display);
 
-    return "d1" === (display) ? 
-      this.getImgDisplayComponent() :
-      this.getMessengerComponent()
+    return(
+      "d1" === (display) ? 
+      this.getImgDisplayComponent():
+      "d2" === (display) ?
+      this.getMessengerComponent():
+      this.getDragBoardComponent()
+    )
   }
 
   render() {
