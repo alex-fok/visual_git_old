@@ -5,7 +5,8 @@ class DragBoard extends Component {
 	constructor(props) {
 		super(props);
 		this.state={
-
+			dx: 0,
+			dy: 0
 		}
 	}
 
@@ -18,7 +19,7 @@ class DragBoard extends Component {
 	}
 
 	handleMouseDown(e) {
-		console.log("X position: " + e.pageX);
+		console.log("X position: " + document.getElementById);
 		console.log("Y position: "+ e.pageY);
 
 	}
