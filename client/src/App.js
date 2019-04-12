@@ -5,8 +5,8 @@ import {BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
 import Loadable from 'react-loadable';
 import io from 'socket.io-client';
 
-import ImgFromServer from './routes/Imagearea/ImgFromServer';
-import Messenger from './routes/Messenger/Messenger';
+//import ImgFromServer from './routes/Imagearea/ImgFromServer';
+//import Messenger from './routes/Messenger/Messenger';
 import Display from './routes/Display/Display';
 import PrivateRoute from './privateRoute';
 import {httpRequestHandler} from './httpRequestHandler';
@@ -159,7 +159,7 @@ class App extends Component {
         <div className="btn-group">
           <button className="btn btn-secondary" value="d1" onClick={this.setDisplay}>Image</button>
           <button className="btn btn-secondary" value="d2" onClick={this.setDisplay}>Chat</button>
-
+          <button className="btn btn-secondary" value="d3" onClick={this.setDisplay}>Drag</button>
         </div>
         {
         /*
