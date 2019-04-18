@@ -49,6 +49,12 @@ class DragBoard extends Component {
 		})
 	}
 
+	handleMouseLeave(e) {
+		this.setState({
+			isDragged:false
+		})
+	}
+
 	// createNewRectSVGElement(old,x,y){
 	// 	var rect = document.createElementNS("http://www.w3.org/2000/svg","rect");
 	// 	rect.setAttributeNS(null, "x", 	x);
@@ -75,6 +81,7 @@ class DragBoard extends Component {
 				width="100"
 				height="100"
 				onMouseMove={(e)=>this.handleMouseMove(e)}
+				onMouseLeave={(e)=>this.handleMouseLeave(e)}
 				style={{backgroundColor: "#000"}}
 			>
 				<rect
