@@ -5,8 +5,6 @@ class DragBoard extends Component {
 	constructor(props) {
 		super(props);
 		this.state={
-			dx: 0,
-			dy: 0
 		}
 	}
 
@@ -22,11 +20,16 @@ class DragBoard extends Component {
 	}
 
 	handleMouseUp(e) {
-		
+
 		const dx = parseInt(e.pageX - this.state.xFrom);
 		const dy = parseInt(e.pageY - this.state.yFrom);
 		console.log("X distance: " + dx);
 		console.log("Y distance: " + dy);
+
+		this.setState({
+			xFrom: e.pageX,
+			yFrom: e.pageY
+		})
 
 		const svgItem = document.getElementById("svgViewBox");
 		const oldRect = svgItem.getElementById("moveable");
@@ -46,7 +49,7 @@ class DragBoard extends Component {
 		rect.setAttributeNS(null, "fill", old.getAttribute("fill"));
 		rect.setAttributeNS(null, "id", old.getAttribute("id"));
 		rect.setAttributeNS(null, "onMouseDown", old.getAttribute("onMouseDown"));
-		
+		old.remove();
 		document.getElementById("svgViewBox").appendChild(rect);
 	}
 
