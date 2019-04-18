@@ -5,6 +5,8 @@ class DragBoard extends Component {
 	constructor(props) {
 		super(props);
 		this.state={
+			xFrom: 0,
+			yFrom: 0
 		}
 	}
 
@@ -14,8 +16,8 @@ class DragBoard extends Component {
 
 	handleMouseDown(e,str) {
 		this.setState({
-			xFrom: e.pageX,
-			yFrom: e.pageY
+			xFrom: parseInt(e.pageX),
+			yFrom: parseInt(e.pageY)
 		})
 	}
 
@@ -23,8 +25,6 @@ class DragBoard extends Component {
 
 		const dx = parseInt(e.pageX - this.state.xFrom);
 		const dy = parseInt(e.pageY - this.state.yFrom);
-		console.log("X distance: " + dx);
-		console.log("Y distance: " + dy);
 
 		this.setState({
 			xFrom: e.pageX,
@@ -32,26 +32,30 @@ class DragBoard extends Component {
 		})
 
 		const svgItem = document.getElementById("svgViewBox");
-		const oldRect = svgItem.getElementById("moveable");
+		const rect = svgItem.getElementById("moveable");
 		
-		const rectX = parseInt(oldRect.getAttribute("x"));
-		const rectY = parseInt(oldRect.getAttribute("y"));
-		
-		this.createNewRectSVGElement(oldRect, rectX + dx, rectY + dy)
+		const rectX = parseInt(rect.getAttribute("x"));
+		const rectY = parseInt(rect.getAttribute("y"));
+
+		console.log(dx);
+		rect.setAttributeNS(null, "x", (rectX + dx));
+		rect.setAttributeNS(null, "y", (rectY + dy));
 	}
 
-	createNewRectSVGElement(old,x,y){
-		var rect = document.createElementNS("http://www.w3.org/2000/svg","rect");
-		rect.setAttributeNS(null, "x", 	x);
-		rect.setAttributeNS(null, "y", y);
-		rect.setAttributeNS(null, "width", parseInt(old.getAttribute("width")));
-		rect.setAttributeNS(null, "height", parseInt(old.getAttribute("height")));
-		rect.setAttributeNS(null, "fill", old.getAttribute("fill"));
-		rect.setAttributeNS(null, "id", old.getAttribute("id"));
-		rect.setAttributeNS(null, "onMouseDown", old.getAttribute("onMouseDown"));
-		old.remove();
-		document.getElementById("svgViewBox").appendChild(rect);
-	}
+	// createNewRectSVGElement(old,x,y){
+	// 	var rect = document.createElementNS("http://www.w3.org/2000/svg","rect");
+	// 	rect.setAttributeNS(null, "x", 	x);
+	// 	rect.setAttributeNS(null, "y", y);
+	// 	rect.setAttributeNS(null, "width", parseInt(old.getAttribute("width")));
+	// 	rect.setAttributeNS(null, "height", parseInt(old.getAttribute("height")));
+	// 	rect.setAttributeNS(null, "fill", old.getAttribute("fill"));
+	// 	rect.setAttributeNS(null, "id", old.getAttribute("id"));
+	// 	rect.setAttributeNS(null, "onMouseDown", old.getAttribute("onMouseDown"));
+	// 	old.remove();
+	// 	document.getElementById("svgViewBox").appendChild(rect);
+	// 
+	// }
+
 
 	render() {
 
