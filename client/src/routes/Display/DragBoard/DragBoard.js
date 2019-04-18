@@ -6,40 +6,47 @@ class DragBoard extends Component {
 		super(props);
 		this.state={
 			xFrom: 0,
-			yFrom: 0
+			yFrom: 0,
+			draggedItem: "",
+			isDragged: false
 		}
-	}
-
-	handleClick() {
-		console.log("Clicked");
 	}
 
 	handleMouseDown(e,str) {
 		this.setState({
 			xFrom: parseInt(e.pageX),
-			yFrom: parseInt(e.pageY)
+			yFrom: parseInt(e.pageY),
+			draggedItem: str,
+			isDragged: true
 		})
 	}
 
+	handleMouseMove(e) {
+		const {isDragged} = this.state;
+		if (isDragged) {
+			const dx = e.pageX - this.state.xFrom;
+			const dy = e.pageY - this.state.yFrom;
+
+			this.setState({
+				xFrom: e.pageX,
+				yFrom: e.pageY
+			})
+
+			const svgItem = document.getElementById("svgViewBox");
+			const rect = svgItem.getElementById("moveable");
+			
+			const rectX = parseInt(rect.getAttribute("x"));
+			const rectY = parseInt(rect.getAttribute("y"));
+
+			rect.setAttributeNS(null, "x", (rectX + dx));
+			rect.setAttributeNS(null, "y", (rectY + dy));
+		}	
+	}	
+
 	handleMouseUp(e) {
-
-		const dx = parseInt(e.pageX - this.state.xFrom);
-		const dy = parseInt(e.pageY - this.state.yFrom);
-
 		this.setState({
-			xFrom: e.pageX,
-			yFrom: e.pageY
+			isDragged: false
 		})
-
-		const svgItem = document.getElementById("svgViewBox");
-		const rect = svgItem.getElementById("moveable");
-		
-		const rectX = parseInt(rect.getAttribute("x"));
-		const rectY = parseInt(rect.getAttribute("y"));
-
-		console.log(dx);
-		rect.setAttributeNS(null, "x", (rectX + dx));
-		rect.setAttributeNS(null, "y", (rectY + dy));
 	}
 
 	// createNewRectSVGElement(old,x,y){
@@ -67,14 +74,13 @@ class DragBoard extends Component {
 				viewBox="0 0 100 100"
 				width="100"
 				height="100"
-				onMouseUp={(e)=>this.handleMouseUp(e, "bbb")}
+				onMouseMove={(e)=>this.handleMouseMove(e)}
 				style={{backgroundColor: "#000"}}
 			>
-				
 				<rect
 					id="moveable"
-					onMouseDown={(e)=>this.handleMouseDown(e,"bbb")}
-					
+					onMouseDown={(e)=>this.handleMouseDown(e,"moveable")}
+					onMouseUp={(e)=>this.handleMouseUp(e)}
 					x="30"
 					y="30"
 					width="10"
