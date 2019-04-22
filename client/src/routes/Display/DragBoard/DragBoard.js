@@ -1,15 +1,35 @@
 import React, {Component} from "react";
 import ReactDOM from "react-dom";
+import io from 'socket.io-client';
 
 class DragBoard extends Component {
 	constructor(props) {
 		super(props);
 		this.state={
+			socket: io(this.props.host, {
+        transports: ['websocket']
+      }),
 			xFrom: 0,
 			yFrom: 0,
 			draggedItem: "",
 			isDragged: false
 		}
+
+		this.handleNewSVGElementRequest = this.handleNewSVGElementRequest.bind(this);
+		this.createRectSVGElement = this.createRectSVGElement.bind(this);
+		this.handleMouseDown = this.handleMouseDown.bind(this);
+	}
+
+	componentDidMount() {
+		const {socket} = this.state;
+		socket.on("svgAdd", (data)=> {
+			this.appendSVGElement(this.createRectSVGElement(data));
+		})
+	}
+
+	componentWillUnmount() {
+		const {socket} = this.state;
+		socket.close();
 	}
 
 	handleMouseDown(e,str) {
@@ -18,22 +38,21 @@ class DragBoard extends Component {
 			yFrom: parseInt(e.pageY),
 			draggedItem: str,
 			isDragged: true
-		})
+		});
+		const svgItem = document.getElementById("svgViewBox");
+		console.log(svgItem.getElementById(str));
 	}
 
 	handleMouseMove(e) {
-		const {isDragged} = this.state;
+		const {isDragged, draggedItem, xFrom, yFrom} = this.state;
 		if (isDragged) {
-			const dx = e.pageX - this.state.xFrom;
-			const dy = e.pageY - this.state.yFrom;
+			const dx = e.pageX - xFrom;
+			const dy = e.pageY - yFrom;
 
-			this.setState({
-				xFrom: e.pageX,
-				yFrom: e.pageY
-			})
-
+			this.setState({ xFrom: e.pageX, yFrom: e.pageY});
+			
 			const svgItem = document.getElementById("svgViewBox");
-			const rect = svgItem.getElementById("moveable");
+			const rect = svgItem.getElementById(draggedItem);
 			
 			const rectX = parseInt(rect.getAttribute("x"));
 			const rectY = parseInt(rect.getAttribute("y"));
@@ -41,38 +60,54 @@ class DragBoard extends Component {
 			rect.setAttributeNS(null, "x", (rectX + dx));
 			rect.setAttributeNS(null, "y", (rectY + dy));
 		}	
-	}	
+	}
 
-	handleMouseUp(e) {
+	handleNewSVGElementRequest(e) {
+		const data = {
+			x: 10,
+			y: 50,
+			width: 10,
+			height: 10,
+			fill: "#FFF",
+			id: "newItem",
+		}
+		const {socket} = this.state;
+		socket.emit("createSVG", data);
+	}
+
+	notDragged(e) {
 		this.setState({
 			isDragged: false
 		})
 	}
 
-	handleMouseLeave(e) {
-		this.setState({
-			isDragged:false
-		})
+	logSth() {
+		console.log("HELLO WORLD")
 	}
 
-	// createNewRectSVGElement(old,x,y){
-	// 	var rect = document.createElementNS("http://www.w3.org/2000/svg","rect");
-	// 	rect.setAttributeNS(null, "x", 	x);
-	// 	rect.setAttributeNS(null, "y", y);
-	// 	rect.setAttributeNS(null, "width", parseInt(old.getAttribute("width")));
-	// 	rect.setAttributeNS(null, "height", parseInt(old.getAttribute("height")));
-	// 	rect.setAttributeNS(null, "fill", old.getAttribute("fill"));
-	// 	rect.setAttributeNS(null, "id", old.getAttribute("id"));
-	// 	rect.setAttributeNS(null, "onMouseDown", old.getAttribute("onMouseDown"));
-	// 	old.remove();
-	// 	document.getElementById("svgViewBox").appendChild(rect);
-	// 
-	// }
+	createRectSVGElement(data){
+		var rect = document.createElementNS("http://www.w3.org/2000/svg","rect");
+		rect.setAttributeNS(null, "id", data.id);
+		rect.setAttributeNS(null, "x", parseInt(data.x));
+		rect.setAttributeNS(null, "y", parseInt(data.y));
+		rect.setAttributeNS(null, "width", parseInt(data.width));
+		rect.setAttributeNS(null, "height", parseInt(data.height));
+		rect.setAttributeNS(null, "fill", data.fill);
+		rect.addEventListener("mousedown", (e)=>{this.handleMouseDown(e,data.id)});
+		rect.addEventListener("mouseup", (e)=>{this.notDragged(e)});
+		console.log(rect);
+		return rect;
+	}
+
+	appendSVGElement(element){
+		document.getElementById("svgViewBox").appendChild(element);
+	}
 
 
 	render() {
 
 		return(
+			<div>
 			<svg
 				x="200"
 				id="svgViewBox"
@@ -81,13 +116,13 @@ class DragBoard extends Component {
 				width="100"
 				height="100"
 				onMouseMove={(e)=>this.handleMouseMove(e)}
-				onMouseLeave={(e)=>this.handleMouseLeave(e)}
+				onMouseLeave={(e)=>this.notDragged(e)}
 				style={{backgroundColor: "#000"}}
 			>
 				<rect
 					id="moveable"
 					onMouseDown={(e)=>this.handleMouseDown(e,"moveable")}
-					onMouseUp={(e)=>this.handleMouseUp(e)}
+					onMouseUp={(e)=>this.notDragged(e)}
 					x="30"
 					y="30"
 					width="10"
@@ -95,6 +130,8 @@ class DragBoard extends Component {
 					fill="#FFF"
 				/>
 			</svg>
+			<button onClick={this.handleNewSVGElementRequest}>BUTTON</button>
+			</div>
 		);
 	}
 }

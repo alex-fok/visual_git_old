@@ -113,6 +113,13 @@ io.on('connection', (socket) => {
     console.log("      input: " + msg);
     io.emit("message", msg);
     console.log("******END MESSAGE BROADCAST******\n");
+  });
+
+  socket.on('createSVG', (data)=> {
+    console.log("******CREATE SVG REQ******");
+    console.log("      svg: " + data);
+    io.emit("svgAdd", data);
+    console.log("******END CREATE SVG REQ******")
   })
 });
 
