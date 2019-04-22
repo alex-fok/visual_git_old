@@ -40,7 +40,6 @@ class DragBoard extends Component {
 			isDragged: true
 		});
 		const svgItem = document.getElementById("svgViewBox");
-		console.log(svgItem.getElementById(str));
 	}
 
 	handleMouseMove(e) {
@@ -69,7 +68,7 @@ class DragBoard extends Component {
 			width: 10,
 			height: 10,
 			fill: "#FFF",
-			id: "newItem",
+			id: "newItem" + Date.now(),
 		}
 		const {socket} = this.state;
 		socket.emit("createSVG", data);
@@ -79,10 +78,6 @@ class DragBoard extends Component {
 		this.setState({
 			isDragged: false
 		})
-	}
-
-	logSth() {
-		console.log("HELLO WORLD")
 	}
 
 	createRectSVGElement(data){
@@ -95,7 +90,6 @@ class DragBoard extends Component {
 		rect.setAttributeNS(null, "fill", data.fill);
 		rect.addEventListener("mousedown", (e)=>{this.handleMouseDown(e,data.id)});
 		rect.addEventListener("mouseup", (e)=>{this.notDragged(e)});
-		console.log(rect);
 		return rect;
 	}
 
