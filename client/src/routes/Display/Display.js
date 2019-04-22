@@ -32,7 +32,7 @@ class Display extends Component {
 
   getDragBoardComponent() {
     console.log("getDragBoardComponent Reached");
-    return <DragBoard />;
+    return <DragBoard host={this.props.host}/>;
   }
 
   componentToDisplay() {
