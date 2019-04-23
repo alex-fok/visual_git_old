@@ -35,6 +35,8 @@ class Messenger extends Component {
         }));
       }
     });
+
+    console.log(this.props.user);
   }
 
   componentWillUnmount() {

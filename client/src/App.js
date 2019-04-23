@@ -17,6 +17,7 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
+      user: "",
       text: "Sending from TopLayer",
       httpRequestHandler: httpRequestHandler,
       display: "d1"
@@ -167,7 +168,11 @@ class App extends Component {
         <Messenger chat={this.state.chat} authServer={AUTH_SERVER} socket={this.state.socket}/>
         */
         }
-        <Display display={this.state.display} host={AUTH_SERVER}/>
+        <Display 
+          display={this.state.display} 
+          host={AUTH_SERVER} 
+          httpRequestHandler={this.state.httpRequestHandler}
+        />
       </div>
     );
   }

@@ -24,9 +24,11 @@ app.use(bodyParser.urlencoded({
 }));
 
 const userList = [
-  {"userID": "xxxx"},
-  {"userID": "yyyy"},
-  {"userID": "John Smith"}
+  {"userID": "user1", "group": "1", "jwt": ""},
+  {"userID": "user2", "group": "1", "jwt": ""},
+  {"userID": "user3", "group": "2", "jwt": ""},
+  {"userID": "user4", "group": "2", "jwt": ""},
+  {"userID": "username", "group": "3", "jwt": ""}
 ];
 
 app.use((req, res, next)=> {
@@ -44,12 +46,28 @@ app.get('/login', (req, res, next) => {
 });
 
 app.post('/login', (req, res, next) => {
-  if (req && req.body) {
-    jwtService.sign({name: "John Smith"}, (err, token) => {
-      const next = req.query.next;
-      console.log("****** /login POST ******");
-      res.redirect(next.substring(0,next.length-1) + "?jwt=" + token);
-    });
+
+  console.log("****** /login POST ******");
+
+  var authentication = {
+    user: "",
+    authenticated: false
+  }
+
+  const {username} = req.body;
+  
+  for (let i = 0; i < userList.length; i ++) {
+    if (userList[i].userID == username) {
+      jwtService.sign({name: userList[i].userID}, (err, token) => {
+        const next = req.query.next;
+        userList[i].jwt = token;
+        res.redirect(next.substring(0,next.length-1) + "?jwt=" + token);
+      }); 
+      break;
+    }
+    if (i === userList.length-1) {
+      res.sendFile(path.join(__dirname+'/src/index.html'));
+    }
   }
 });
 
@@ -84,6 +102,10 @@ app.use((req, res, next) => {
     console.log("No token found");
     console.log("****** END HTTP REQUEST ******\n");
   }
+});
+
+app.get('getUser', (req, res) => {
+  console.log(req.body)
 });
 
 io.on('connection', (socket) => {
