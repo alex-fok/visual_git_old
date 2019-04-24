@@ -156,6 +156,10 @@ io.on('connection', (socket) => {
     console.log("      svg: " + JSON.stringify(data));
     io.emit("svgAdd", data);
     console.log("******END CREATE SVG REQ******")
+  });
+
+  socket.on('svgCopyRequest', () => {
+    socket.broadcast.emit('requestSvgCopy');
   })
 });
 

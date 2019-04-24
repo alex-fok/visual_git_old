@@ -9,6 +9,7 @@ class DragBoard extends Component {
 			socket: io(this.props.host, {
         transports: ['websocket']
       }),
+      svgElements: [],
 			xFrom: 0,
 			yFrom: 0,
 			draggedItem: "",
@@ -21,10 +22,31 @@ class DragBoard extends Component {
 	}
 
 	componentDidMount() {
-		const {socket} = this.state;
-		socket.on("svgAdd", (data)=> {
+		const {socket, svgElements} = this.state;
+
+		socket.on("svgAdd", (data) => {
+			this.setState((prev) => {svgElements: [...prev.svgElements, svgElements]});
 			this.appendSVGElement(this.createRectSVGElement(data));
-		})
+		});
+
+		socket.on("requestSvgCopy", () => {
+			socket.emit("svgToServer", this.state.svgElements);
+		});
+
+		socket.on("svgToClient", (data) => {
+			if(data) {
+				this.setState({
+					svgElements: data
+				})
+			}
+		});
+
+		socket.emit("svgCopyRequest");
+
+		for (se in svgElements)
+			this.appendSVGElement(this.createRectSVGElement(svgElements[se]));
+		
+
 	}
 
 	componentWillUnmount() {
@@ -33,12 +55,14 @@ class DragBoard extends Component {
 	}
 
 	handleMouseDown(e,str) {
-		this.setState({
-			xFrom: parseInt(e.pageX),
-			yFrom: parseInt(e.pageY),
-			draggedItem: str,
-			isDragged: true
-		});
+		if (!this.state.isDragged) {
+			this.setState({
+				xFrom: parseInt(e.pageX),
+				yFrom: parseInt(e.pageY),
+				draggedItem: str,
+				isDragged: true
+			});
+		}
 		const svgItem = document.getElementById("svgViewBox");
 	}
 
@@ -75,8 +99,18 @@ class DragBoard extends Component {
 	}
 
 	notDragged(e) {
+		const {draggedItem, svgElements} = this.state;
+		
+		for (se in svgElements) {
+			if (draggedItem === svgElements[se].id) {
+				const dragged = document.getElementById("svgViewBox").getElementById(draggedItem);
+				svgElements[se].x = dragged.x;
+				svgElements[se].y = dragged.y;
+			}
+		}
 		this.setState({
-			isDragged: false
+			isDragged: false,
+			svgElements: svgElements
 		})
 	}
 
