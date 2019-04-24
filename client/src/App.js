@@ -3,7 +3,6 @@ import ReactDOM from "react-dom";
 
 import {BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
 import Loadable from 'react-loadable';
-import io from 'socket.io-client';
 
 //import ImgFromServer from './routes/Imagearea/ImgFromServer';
 //import Messenger from './routes/Messenger/Messenger';
@@ -26,6 +25,27 @@ class App extends Component {
     this.handleClick = this.handleClick.bind(this);
     this.setAxiosHeader = this.setAxiosHeader.bind(this);
     this.setDisplay = this.setDisplay.bind(this);
+  }
+
+  componentDidMount() {
+    const jwt = this.state.httpRequestHandler.defaults.headers.common['Authorization'];
+    httpRequestHandler({
+      method: 'post',
+      url: '/api/getUser',
+      header: { 'content-type': 'application/x-www-form-urlencoded'},
+      data: {
+        jwt: jwt
+      }
+    }).then((json)=> {
+      this.setState({
+        user: json.data.user
+      });
+    });
+    console.log("App.js is mounted");  
+  }
+
+  componentWillUnmount() {
+    console.log("App.js is unmounted");
   }
 
   handleClick(event) {
@@ -74,23 +94,20 @@ class App extends Component {
   setDisplay(e) {
     const value = e.target.value;
     const {display} = this.state;
-    console.log(value);
-    if (display !== value) this.setState({
-      display: value
-    })
+    
+    if (display !== value) {
+      console.log("Changing display to " + value);  
+      this.setState({
+        display: value
+      })
+    }
   }
 
-  componentDidMount() {
-    console.log("App.js - componentDidMount")
-  }
-
-  componentWillUnmount() {
-    console.log("App.js - componentWillUnmount");
-    this.state.socket.close();
-  }
 
   render() {
-    const {text} = this.state;
+    const {text, display, httpRequestHandler, user} = this.state;
+    let auth = httpRequestHandler.defaults.headers.common['Authorization'];
+    const jwt = auth ? auth.replace("Bearer ", "") : "";
 
     const Loading = () => <div>Loading...</div>;
     
@@ -132,7 +149,6 @@ class App extends Component {
       color: "#FFFFFF"
     }
     
-
     return (
       <div>
         <PrivateRoute setAxiosHeader={this.setAxiosHeader} host={AUTH_SERVER}>
@@ -152,27 +168,20 @@ class App extends Component {
           </Switch>
         </div>
         </PrivateRoute>
-        {/*
-          <button onClick={this.handleClick}>Button</button>
-          <button onClick={this.handleImgRequest}>IMG</button>
-        */
-        }
+
         <div className="btn-group">
           <button className="btn btn-secondary" value="d1" onClick={this.setDisplay}>Image</button>
           <button className="btn btn-secondary" value="d2" onClick={this.setDisplay}>Chat</button>
           <button className="btn btn-secondary" value="d3" onClick={this.setDisplay}>Drag</button>
         </div>
-        {
-        /*
-        <ImgFromServer setImage={this.setImage}/>
-        <Messenger chat={this.state.chat} authServer={AUTH_SERVER} socket={this.state.socket}/>
-        */
-        }
-        <Display 
-          display={this.state.display} 
+
+        <Display
+          display={display} 
           host={AUTH_SERVER} 
-          httpRequestHandler={this.state.httpRequestHandler}
+          jwt={jwt}
+          user={user}
         />
+      
       </div>
     );
   }

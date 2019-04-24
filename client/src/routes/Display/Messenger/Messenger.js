@@ -16,18 +16,19 @@ class Messenger extends Component {
     };
     
     this.handleMessageSubmit = this.handleMessageSubmit.bind(this);
-    console.log("Messenger constructor");
+    
   }
 
   handleMessageSubmit(){
-    const input = document.getElementById("usertext").value;
-    this.state.socket.emit("message", input);
+    const data = {
+      jwt: this.props.jwt,
+      message: document.getElementById("usertext").value
+    }
+    this.state.socket.emit("message", data);
     document.getElementById("usertext").value = "";
   }
 
-  componentDidMount() {
-    console.log("Messenger.js - componentDidMount"); 
-    
+  componentDidMount() {  
     this.state.socket.on('message', (message) => {
       if (message) {
         this.setState(prevState => ({
@@ -35,12 +36,10 @@ class Messenger extends Component {
         }));
       }
     });
-
-    console.log(this.props.user);
   }
 
   componentWillUnmount() {
-    console.log("Messenger.js - componentWillUnmount");
+    
     chat = this.state.chat;
     this.state.socket.close();
   }
@@ -81,7 +80,7 @@ class Messenger extends Component {
         <div className="container" style={wrapperStyle}>
           <div className="row" style={rowStyle}>
             <div className="col-8">
-              <textarea id="usertext" style={DialogStyle} placeholder="Text..."/>
+              <textarea id="usertext" style={DialogStyle} placeholder={"Chat as "+ this.props.user}/>
             </div>
             <div className="col-4">
               <button onClick={this.handleMessageSubmit}>Submit</button>

@@ -24,11 +24,11 @@ app.use(bodyParser.urlencoded({
 }));
 
 const userList = [
-  {"userID": "user1", "group": "1", "jwt": ""},
-  {"userID": "user2", "group": "1", "jwt": ""},
-  {"userID": "user3", "group": "2", "jwt": ""},
-  {"userID": "user4", "group": "2", "jwt": ""},
-  {"userID": "username", "group": "3", "jwt": ""}
+  {"userID": "user1", "group": "1"},
+  {"userID": "user2", "group": "1"},
+  {"userID": "user3", "group": "2"},
+  {"userID": "user4", "group": "2"},
+  {"userID": "username", "group": "3"}
 ];
 
 app.use((req, res, next)=> {
@@ -55,9 +55,10 @@ app.post('/login', (req, res, next) => {
   }
 
   const {username} = req.body;
-  
-  for (let i = 0; i < userList.length; i ++) {
-    if (userList[i].userID == username) {
+
+  var userExists = false;
+  for (let i = 0; i < userList.length; i++) {
+    if (userList[i].userID === username) {
       jwtService.sign({name: userList[i].userID}, (err, token) => {
         const next = req.query.next;
         userList[i].jwt = token;
@@ -65,7 +66,7 @@ app.post('/login', (req, res, next) => {
       }); 
       break;
     }
-    if (i === userList.length-1) {
+    else if (i === userList.length-1) {
       res.sendFile(path.join(__dirname+'/src/index.html'));
     }
   }
@@ -74,12 +75,10 @@ app.post('/login', (req, res, next) => {
 app.use((req, res, next) => {
   //var token = req.body.token || req.query.token || req.headers['x-access-token'];
   var token = req.headers.authorization;
-
   console.log("****** START HTTP REQUEST ******");
   console.log("URL: " + req.url);
 
   if(token) {
-    console.log("Token: " + token);
     let jwt = token.replace("Bearer ", "");
     console.log("JWT: " + jwt);
     jwtService.verify(jwt, (decoded) => {
@@ -87,15 +86,13 @@ app.use((req, res, next) => {
       var userExists = false;
       for (var user in userList) {
         if (userList[user].userID === decoded.name) {
+
           userExists = true;
+          res.locals.user = userList[user].userID;
           break;
         }
       }
-      if (userExists) {
-        next();
-      } else {
-        console.log("Invalid User");
-      }
+      userExists ? next() : console.log("Invalid User");
     });
   }
   else {
@@ -104,11 +101,14 @@ app.use((req, res, next) => {
   }
 });
 
-app.get('getUser', (req, res) => {
-  console.log(req.body)
+app.post('/api/getUser', (req, res, next) => {
+  console.log("User: "+ res.locals.user);
+  res.json({user: res.locals.user});
+  next();
 });
 
 io.on('connection', (socket) => {
+
   const fs = require('fs');
   const broadcastMessage = (num) => {
     if (num < 4) {
@@ -125,21 +125,35 @@ io.on('connection', (socket) => {
       console.log("******END DRAWING BROADCAST******\n")
     };
   }
+  const socketAuthentication = (jwt, callback) => {
+    jwtService.verify(jwt, (decoded) => {
+      for (var user in userList) {
+        var id = userList[user].userID;
+
+        if (id === decoded.name) {
+          callback(id);
+        }
+      }
+    })
+  }
+
   socket.on('image', () => {
     console.log("******START DRAWING BROADCAST******");
     setTimeout(() => {broadcastMessage(0)}, 1000);
   });
 
-  socket.on('message', (msg) => {
+  socket.on('message', (data) => {
     console.log("******MESSAGE RECEIVED******");
-    console.log("      input: " + msg);
-    io.emit("message", msg);
-    console.log("******END MESSAGE BROADCAST******\n");
+    socketAuthentication(data.jwt, (id) => {
+      console.log("      input: " + data.message);
+      io.emit("message", id + ": " + data.message);
+      console.log("******END MESSAGE BROADCAST******\n");  
+    })
   });
 
   socket.on('createSVG', (data)=> {
     console.log("******CREATE SVG REQ******");
-    console.log("      svg: " + data);
+    console.log("      svg: " + JSON.stringify(data));
     io.emit("svgAdd", data);
     console.log("******END CREATE SVG REQ******")
   })

@@ -14,51 +14,41 @@ class Display extends Component {
     this.getMessengerComponent = this.getMessengerComponent.bind(this);
     this.getDragBoardComponent = this.getDragBoardComponent.bind(this);
     this.componentToDisplay = this.componentToDisplay.bind(this);
-    this.user = "";
+
+  }
+
+  getImgDisplayComponent(host, jwt, user) {
+    return <ImgFromServer host={host} jwt={jwt} user={user}/>;
+  }
+
+  getMessengerComponent(host, jwt, user) {
+    return <Messenger host={host} jwt={jwt} user={user}/>;
+  }
+
+  getDragBoardComponent(host, jwt, user) {
+    return <DragBoard host={host} jwt={jwt} user={user}/>;
   }
 
   componentDidMount() {
-    const {httpRequestHandler} = this.props;
-    httpRequestHandler({
-      method: 'post',
-      url: '/api/getUser',
-      header: { 'content-type': 'application/x-www-form-urlencoded'},
-      data: {
-        jwt: httpRequestHandler.defaults.headers.common['Authorization']
-      }
-    }).then((data)=> {
-      this.user = data.userName;
-    });
-    console.log(this.user);
+    console.log("Display.js is mounted")
   }
 
-  getImgDisplayComponent() {
-    console.log("getImgDisplayComponent Reached");
-    return <ImgFromServer host={this.props.host} user={this.user}/>;
+  componentWillUnmount() {
+    console.log("Display.js is unmounted");
   }
-
-  getMessengerComponent() {
-    console.log("getMessengerComponent Reached");
-    return <Messenger host={this.props.host} user={this.user}/>;
-  }
-
-  getDragBoardComponent() {
-    console.log("getDragBoardComponent Reached");
-    return <DragBoard host={this.props.host} user={this.user}/>;
-  }
-
 
 
   componentToDisplay() {
-    const {display} = this.props;
-    console.log("display @ Display.js: %s", display);
+    const {display, host, jwt, user} = this.props;
+
 
     return(
       "d1" === (display) ? 
-      this.getImgDisplayComponent():
+      this.getImgDisplayComponent(host, jwt, user):
       "d2" === (display) ?
-      this.getMessengerComponent():
-      this.getDragBoardComponent()
+      this.getMessengerComponent(host, jwt, user):
+      //"d3"
+      this.getDragBoardComponent(host, jwt, user)
     )
   }
 
