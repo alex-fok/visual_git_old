@@ -109,8 +109,8 @@ app.post('/api/getUser', (req, res, next) => {
 
 io.on('connection', (socket) => {
 
-  const fs = require('fs');
   const broadcastMessage = (num) => {
+    const fs = require('fs');
     if (num < 4) {
       console.log("Drawing number: " + num);
       fs.readFile(__dirname + '/image/image' + num + '.png', (err, buf) => {
@@ -158,9 +158,20 @@ io.on('connection', (socket) => {
     console.log("******END CREATE SVG REQ******")
   });
 
-  socket.on('svgCopyRequest', () => {
-    socket.broadcast.emit('requestSvgCopy');
-  })
+  socket.on('svgCopyRequest', (jwt) => {
+    socketAuthentication(jwt, (id) => {
+      console.log("svgCopyRequest from %s; (socket id: %s)", id, socket.id);
+      socket.broadcast.emit('requestSvgCopy', socket.id)
+    })
+  });
+
+  socket.on('svgToServer', (data) => {
+    socketAuthentication(data.jwt, (id) => {
+      console.log("svgToServer from %s; (socket id: %s", id, socket.id);
+      socket.broadcast.to(data.socketid).emit("svgToClient", data.svgElements);  
+    })
+  });
+
 });
 
 app.get('/api/helloWorld', (req, res, next) => {
