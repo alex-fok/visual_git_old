@@ -53,6 +53,9 @@ class DragBoard extends Component {
 			if(data){
 				this.setState({
 					svgElements: data
+				});
+				data.map((se, i)=> {
+					this.appendSVG(this.createRectSVGElement(se));
 				})
 			}
 		});
