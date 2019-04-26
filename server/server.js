@@ -161,13 +161,14 @@ io.on('connection', (socket) => {
   socket.on('svgCopyRequest', (jwt) => {
     socketAuthentication(jwt, (id) => {
       console.log("svgCopyRequest from %s; (socket id: %s)", id, socket.id);
-      socket.broadcast.emit('requestSvgCopy', socket.id)
+      socket.broadcast.emit('serverReqSvg', socket.id)
     })
   });
 
   socket.on('svgToServer', (data) => {
     socketAuthentication(data.jwt, (id) => {
-      console.log("svgToServer from %s; (socket id: %s", id, socket.id);
+      console.log("svgToServer from %s; (socket id: %s)", id, socket.id);
+      console.log(data);
       socket.broadcast.to(data.socketid).emit("svgToClient", data.svgElements);  
     })
   });
