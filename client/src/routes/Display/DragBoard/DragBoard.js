@@ -10,10 +10,12 @@ class DragBoard extends Component {
 		this.state={
 			socket: io(this.props.host, {transports: ['websocket']}),
       svgElements: {},
-			xFrom: 0,
-			yFrom: 0,
-			draggedItem: "",
-			isDragged: false,
+			draggedItem: {
+				id: "",
+				xFrom: 0,
+				yFrom: 0
+			},
+			isDragging: false,
 			updated: false
 		}
 
@@ -29,22 +31,29 @@ class DragBoard extends Component {
 			let {svgElements} = this.state;
 			let svgObj = data[Object.keys(data)[0]];
 
-			console.log("Received data: " + JSON.stringify(data));
-			console.log("Extracted data: " + JSON.stringify(svgObj));
-			
-			this.setState((prev) => ({
+			this.setState(prev => ({
 				svgElements: Object.assign(svgElements, data)
 			}));
-
-			console.log(JSON.stringify(this.state.svgElements));
 			this.appendSVG(this.createRectSVGElement(svgObj));
 		});
 
+		socket.on("svgMoved", (data) => {
+			const {id, x, y, fill} = data;
+			const rect = document.getElementById("svgContainer").getElementById(id);
+			console.log("svgMoved receieved: " + JSON.stringify(data));
+			rect.setAttributeNS(null, "x", x);
+			rect.setAttributeNS(null, "y", y);
+			rect.setAttributeNS(null, "fill", fill);
+		});
+
+		socket.on("svgReleased", (id) => {
+			const rect = document.getElementById("svgContainer").getElementById(id);
+			rect.setAttributeNS(null, "fill", "#FFF");
+		})
+
+		// Return the current SVG map to server
 		socket.on("serverReqSvg", (socketid) => {
 			const {svgElements} = this.state;
-
-			console.log("this.state.svgElemetns: " + JSON.stringify(this.state.svgElements));
-			console.log("svgElements: " + JSON.stringify(svgElements));
 
 			socket.emit("svgToServer", {
 				jwt: this.props.jwt,
@@ -53,22 +62,22 @@ class DragBoard extends Component {
 			})
 		});
 
+		// Receive the SVG map from server on init
 		socket.on("svgToClient", (data) => {
-			console.log("Recieved svg " + data);
-			if(data && !this.state.updated){
+			if(data && !this.state.updated) {
 				this.setState({
 					svgElements: Object.assign(data),
 					updated: true
 				});
-				console.log(data);
 				Object.keys(data).forEach(key => {
 					this.appendSVG(this.createRectSVGElement(data[key]));
 				})
 			}
 		});
 
+		// When init, send an request to server, server will
+		// request for a SVG map from other users
 		socket.emit("svgCopyRequest", this.props.jwt);		
-
 	}
 
 	componentWillUnmount() {
@@ -77,33 +86,47 @@ class DragBoard extends Component {
 	}
 
 	handleMouseDown(e,str) {
-		if (!this.state.isDragged) {
+		if (!this.state.isDragging) {
+			const px = parseInt(e.pageX);
+			const py = parseInt(e.pageY);
+
 			this.setState({
-				xFrom: parseInt(e.pageX),
-				yFrom: parseInt(e.pageY),
-				draggedItem: str,
-				isDragged: true
+				draggedItem: {
+					id: str,
+					xFrom: px,
+					yFrom: py 
+				},
+				isDragging: true
 			});
 		}
-		const svgItem = document.getElementById("svgViewBox");
 	}
 
 	handleMouseMove(e) {
-		const {isDragged, draggedItem, xFrom, yFrom} = this.state;
-		if (isDragged) {
-			const dx = e.pageX - xFrom;
-			const dy = e.pageY - yFrom;
+		if (this.state.isDragging) {
+			const {draggedItem, socket} = this.state;
+			const rect = document.getElementById("svgContainer").getElementById(draggedItem.id);
 
-			this.setState({ xFrom: e.pageX, yFrom: e.pageY});
+			const px = parseInt(e.pageX);
+			const py = parseInt(e.pageY);
+			const dx = px - draggedItem.xFrom;
+			const dy = py - draggedItem.yFrom;
+
+			this.setState(prev => ({
+				draggedItem: Object.assign(prev.draggedItem, {xFrom: px, yFrom: py}) 
+			}));
 			
-			const svgItem = document.getElementById("svgViewBox");
-			const rect = svgItem.getElementById(draggedItem);
-			
-			const rectX = parseInt(rect.getAttribute("x"));
-			const rectY = parseInt(rect.getAttribute("y"));
+			const rectX = parseInt(rect.getAttributeNS(null, "x"));
+			const rectY = parseInt(rect.getAttributeNS(null, "y"));
 
 			rect.setAttributeNS(null, "x", (rectX + dx));
 			rect.setAttributeNS(null, "y", (rectY + dy));
+
+			socket.emit("moveSVG", {
+				id: draggedItem.id,
+				x: rectX + dx,
+				y: rectY + dy,
+				fill: "#F00"
+			})
 		}	
 	}
 
@@ -124,26 +147,29 @@ class DragBoard extends Component {
 	}
 
 	notDragged(e) {
-		const {draggedItem, svgElements} = this.state;
+		if (this.state.isDragging) {
+			const {draggedItem, svgElements, socket} = this.state;
+			const svg = svgElements[draggedItem.id];		
+			const dragged = document.getElementById("svgContainer").getElementById(draggedItem.id);
+			
+			svg.x = parseInt(dragged.getAttributeNS(null, "x"));
+			svg.y = parseInt(dragged.getAttributeNS(null, "y"));
 		
-		for (var se in svgElements) {
-			if (svgElements[se].id) {
-				if (draggedItem === svgElements[se].id) {
-					const dragged = document.getElementById("svgViewBox").getElementById(draggedItem);
-					
-					svgElements[se].x = parseInt(dragged.getAttributeNS(null, "x"));
-					svgElements[se].y = parseInt(dragged.getAttributeNS(null, "y"));
-				}
-			}
+			this.setState({
+				draggedItem: {
+					id: "",
+					xFrom: 0,
+					yFrom: 0
+				},
+				isDragging: false,
+				svgElements: svgElements
+			});
+
+			socket.emit("releaseSvg", draggedItem.id)
 		}
-		this.setState({
-			isDragged: false,
-			svgElements: svgElements
-		})
 	}
 
 	createRectSVGElement(data){
-		console.log(data);
 		var rect = document.createElementNS(svgNS,"rect");
 		rect.setAttributeNS(null, "id", data.id);
 		rect.setAttributeNS(null, "x", parseInt(data.x));
@@ -157,7 +183,7 @@ class DragBoard extends Component {
 	}
 
 	appendSVG(element){
-		document.getElementById("svgViewBox").appendChild(element);
+		document.getElementById("svgContainer").appendChild(element);
 	}
 
 
@@ -167,7 +193,7 @@ class DragBoard extends Component {
 			<div>
 			<svg
 				x="200"
-				id="svgViewBox"
+				id="svgContainer"
 				xmlns="http://www.w3.org/2000/svg"
 				viewBox="0 0 100 100"
 				width="100"

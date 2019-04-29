@@ -158,6 +158,19 @@ io.on('connection', (socket) => {
     console.log("******END CREATE SVG REQ******")
   });
 
+  socket.on('moveSVG', (data)=> {
+    console.log("******SVG MOVE******");
+    console.log("      svg: " + JSON.stringify(data));
+    socket.broadcast.emit("svgMoved", data);
+    console.log("******END SVG MOVE******")
+  });
+
+  socket.on('releaseSvg', (id)=> {
+    console.log("******RELEASE SVG******");
+    socket.broadcast.emit("svgReleased", id);
+    console.log("******END RELEASE SVG******")
+  })
+
   socket.on('svgCopyRequest', (jwt) => {
     socketAuthentication(jwt, (id) => {
       console.log("svgCopyRequest from %s; (socket id: %s)", id, socket.id);

@@ -41,7 +41,6 @@ class Display extends Component {
   componentToDisplay() {
     const {display, host, jwt, user} = this.props;
 
-
     return(
       "d1" === (display) ? 
       this.getImgDisplayComponent(host, jwt, user):
