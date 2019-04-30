@@ -2,7 +2,6 @@ import React, {Component} from "react";
 import ReactDOM from "react-dom";
 import io from 'socket.io-client';
 
-
 const svgNS = "http://www.w3.org/2000/svg";
 class DragBoard extends Component {
 	constructor(props) {
@@ -146,14 +145,15 @@ class DragBoard extends Component {
 	}
 
 	notDragged(e) {
+
 		const {draggedItem} = this.state;
 		const dragged = document.getElementById("svgContainer").getElementById(draggedItem.id);
 
 		if (dragged){
 			const {socket, svgElements} = this.state;
-			svgElements[draggedItem.id].x = parseInt(dragged.getAttributeNS(null, "x"));
 			svgElements[draggedItem.id].y = parseInt(dragged.getAttributeNS(null, "y"));
-
+			svgElements[draggedItem.id].x = parseInt(dragged.getAttributeNS(null, "x"));
+		
 			this.setState({
 				draggedItem: {id: "", xFrom: 0, yFrom: 0},
 				isDragging: false,
@@ -161,7 +161,7 @@ class DragBoard extends Component {
 			});
 			socket.emit("releaseSvg", draggedItem.id);
 		}
-	}
+}
 
 	createRectSVGElement(data){
 		var rect = document.createElementNS(svgNS,"rect");
@@ -178,7 +178,6 @@ class DragBoard extends Component {
 	appendSVG(element){
 		document.getElementById("svgContainer").appendChild(element);
 	}
-
 
 	render() {
 
