@@ -152,8 +152,8 @@ class DragBoard extends Component {
 			const svg = svgElements[draggedItem.id];		
 			const dragged = document.getElementById("svgContainer").getElementById(draggedItem.id);
 			
-			svg.x = parseInt(dragged.getAttributeNS(null, "x"));
-			svg.y = parseInt(dragged.getAttributeNS(null, "y"));
+			svgElements[draggedItem.id].x = parseInt(dragged.getAttributeNS(null, "x"));
+			svgElements[draggedItem.id].y = parseInt(dragged.getAttributeNS(null, "y"));
 		
 			this.setState({
 				draggedItem: {
