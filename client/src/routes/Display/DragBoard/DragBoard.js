@@ -37,10 +37,9 @@ class DragBoard extends Component {
 			this.appendSVG(this.createRectSVGElement(svgObj));
 		});
 
-		socket.on("svgMoved", (data) => {
+		socket.on("svgMove", (data) => {
 			const {id, x, y, fill} = data;
 			const rect = document.getElementById("svgContainer").getElementById(id);
-			console.log("svgMoved receieved: " + JSON.stringify(data));
 			rect.setAttributeNS(null, "x", x);
 			rect.setAttributeNS(null, "y", y);
 			rect.setAttributeNS(null, "fill", fill);
@@ -147,25 +146,20 @@ class DragBoard extends Component {
 	}
 
 	notDragged(e) {
-		if (this.state.isDragging) {
-			const {draggedItem, svgElements, socket} = this.state;
-			const svg = svgElements[draggedItem.id];		
-			const dragged = document.getElementById("svgContainer").getElementById(draggedItem.id);
-			
-			svg.x = parseInt(dragged.getAttributeNS(null, "x"));
-			svg.y = parseInt(dragged.getAttributeNS(null, "y"));
-		
+		const {draggedItem} = this.state;
+		const dragged = document.getElementById("svgContainer").getElementById(draggedItem.id);
+
+		if (dragged){
+			const {socket, svgElements} = this.state;
+			svgElements[draggedItem.id].x = parseInt(dragged.getAttributeNS(null, "x"));
+			svgElements[draggedItem.id].y = parseInt(dragged.getAttributeNS(null, "y"));
+
 			this.setState({
-				draggedItem: {
-					id: "",
-					xFrom: 0,
-					yFrom: 0
-				},
+				draggedItem: {id: "", xFrom: 0, yFrom: 0},
 				isDragging: false,
 				svgElements: svgElements
 			});
-
-			socket.emit("releaseSvg", draggedItem.id)
+			socket.emit("releaseSvg", draggedItem.id);
 		}
 	}
 
@@ -178,7 +172,6 @@ class DragBoard extends Component {
 		rect.setAttributeNS(null, "height", parseInt(data.height));
 		rect.setAttributeNS(null, "fill", data.fill);
 		rect.addEventListener("mousedown", (e)=>{this.handleMouseDown(e,data.id)});
-		rect.addEventListener("mouseup", (e)=>{this.notDragged(e)});
 		return rect;
 	}
 
@@ -191,30 +184,20 @@ class DragBoard extends Component {
 
 		return(
 			<div>
-			<svg
-				x="200"
-				id="svgContainer"
-				xmlns="http://www.w3.org/2000/svg"
-				viewBox="0 0 100 100"
-				width="100"
-				height="100"
-				onMouseMove={(e)=>this.handleMouseMove(e)}
-				onMouseLeave={(e)=>this.notDragged(e)}
-				style={{backgroundColor: "#000"}}
-			>
-				{// <rect
-				// 	id="moveable"
-				// 	onMouseDown={(e)=>this.handleMouseDown(e,"moveable")}
-				// 	onMouseUp={(e)=>this.notDragged(e)}
-				// 	x="30"
-				// 	y="30"
-				// 	width="10"
-				// 	height="10"
-				// 	fill="#FFF"
-				// />
-				}
-			</svg>
-			<button onClick={this.handleNewSVGElementRequest}>BUTTON</button>
+				<svg
+					x="200"
+					id="svgContainer"
+					xmlns="http://www.w3.org/2000/svg"
+					viewBox="0 0 100 100"
+					width="100"
+					height="100"
+					onMouseMove={(e)=>this.handleMouseMove(e)}
+					onMouseLeave={(e)=>this.notDragged(e)}
+					onMouseUp={(e)=>this.notDragged(e)}
+					style={{backgroundColor: "#000"}}
+				>
+				</svg>
+				<button onClick={this.handleNewSVGElementRequest}>BUTTON</button>
 			</div>
 		);
 	}

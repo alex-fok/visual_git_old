@@ -161,7 +161,7 @@ io.on('connection', (socket) => {
   socket.on('moveSVG', (data)=> {
     console.log("******SVG MOVE******");
     console.log("      svg: " + JSON.stringify(data));
-    socket.broadcast.emit("svgMoved", data);
+    socket.broadcast.emit("svgMove", data);
     console.log("******END SVG MOVE******")
   });
 
