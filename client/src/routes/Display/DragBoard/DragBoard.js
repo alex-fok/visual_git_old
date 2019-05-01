@@ -47,6 +47,9 @@ class DragBoard extends Component {
 		socket.on("svgReleased", (id) => {
 			const rect = document.getElementById("svgContainer").getElementById(id);
 			rect.setAttributeNS(null, "fill", "#FFF");
+			this.setState(prev => ({
+				svgElements: Object.assign(prev.svgElements, {[id]: Object.assign(prev.svgElements[id], {x: rect.x, y: rect.y})})
+			}));
 		})
 
 		// Return the current SVG map to server
@@ -146,11 +149,9 @@ class DragBoard extends Component {
 
 	notDragged(e) {
 
-		const {draggedItem} = this.state;
-		const dragged = document.getElementById("svgContainer").getElementById(draggedItem.id);
-
-		if (dragged){
-			const {socket, svgElements} = this.state;
+		if (this.state.isDragging){
+			const {draggedItem, socket, svgElements} = this.state;
+			const dragged = document.getElementById("svgContainer").getElementById(draggedItem.id);
 			svgElements[draggedItem.id].y = parseInt(dragged.getAttributeNS(null, "y"));
 			svgElements[draggedItem.id].x = parseInt(dragged.getAttributeNS(null, "x"));
 		
@@ -187,9 +188,9 @@ class DragBoard extends Component {
 					x="200"
 					id="svgContainer"
 					xmlns="http://www.w3.org/2000/svg"
-					viewBox="0 0 100 100"
-					width="100"
-					height="100"
+					viewBox="0 0 300 300"
+					width="300"
+					height="300"
 					onMouseMove={(e)=>this.handleMouseMove(e)}
 					onMouseLeave={(e)=>this.notDragged(e)}
 					onMouseUp={(e)=>this.notDragged(e)}
