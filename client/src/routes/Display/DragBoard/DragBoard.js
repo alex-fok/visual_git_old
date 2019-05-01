@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import ReactDOM from "react-dom";
 import io from 'socket.io-client';
+import svgElementController from './svgElementController'
 
 const svgNS = "http://www.w3.org/2000/svg";
 class DragBoard extends Component {
@@ -24,66 +25,11 @@ class DragBoard extends Component {
 	}
 
 	componentDidMount() {
-		const {socket} = this.state;
-
-		socket.on("svgAdd", (data) => {
-			let {svgElements} = this.state;
-			let svgObj = data[Object.keys(data)[0]];
-
-			this.setState(prev => ({
-				svgElements: Object.assign(svgElements, data)
-			}));
-			this.appendSVG(this.createRectSVGElement(svgObj));
-		});
-
-		socket.on("svgMove", (data) => {
-			const {id, x, y, fill} = data;
-			const rect = document.getElementById("svgContainer").getElementById(id);
-			rect.setAttributeNS(null, "x", x);
-			rect.setAttributeNS(null, "y", y);
-			rect.setAttributeNS(null, "fill", fill);
-		});
-
-		socket.on("svgReleased", (id) => {
-			const rect = document.getElementById("svgContainer").getElementById(id);
-			rect.setAttributeNS(null, "fill", "#FFF");
-			this.setState(prev => ({
-				svgElements: Object.assign(prev.svgElements, {[id]: Object.assign(prev.svgElements[id], {x: rect.x, y: rect.y})})
-			}));
-		})
-
-		// Return the current SVG map to server
-		socket.on("serverReqSvg", (socketid) => {
-			const {svgElements} = this.state;
-
-			socket.emit("svgToServer", {
-				jwt: this.props.jwt,
-				socketid: socketid,
-				svgElements: svgElements
-			})
-		});
-
-		// Receive the SVG map from server on init
-		socket.on("svgToClient", (data) => {
-			if(data && !this.state.updated) {
-				this.setState({
-					svgElements: Object.assign(data),
-					updated: true
-				});
-				Object.keys(data).forEach(key => {
-					this.appendSVG(this.createRectSVGElement(data[key]));
-				})
-			}
-		});
-
-		// When init, send an request to server, server will
-		// request for a SVG map from other users
-		socket.emit("svgCopyRequest", this.props.jwt);		
+		svgElementController.initSocket(this, this.state.socket);
 	}
 
 	componentWillUnmount() {
-		const {socket} = this.state;
-		socket.close();
+		this.state.socket.close();
 	}
 
 	handleMouseDown(e,str) {
