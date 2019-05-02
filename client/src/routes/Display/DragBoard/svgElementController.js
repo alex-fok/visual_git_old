@@ -48,7 +48,7 @@ export default {
 					updated: true
 				});
 				Object.keys(data).forEach(key => {
-					obj.appendSVG(fnList.createRectSVGElement(data[key], fnList.handleMouseDown, obj));
+					fnList.appendSVG(fnList.createRectSVGElement(data[key], fnList.handleMouseDown, obj));
 				})
 			}
 		});

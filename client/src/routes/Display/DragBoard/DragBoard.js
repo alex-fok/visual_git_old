@@ -38,19 +38,45 @@ class DragBoard extends Component {
 
 		return(
 			<div>
-				<svg
-					x="200"
-					id="svgContainer"
-					xmlns="http://www.w3.org/2000/svg"
-					viewBox="0 0 300 300"
-					width="300"
-					height="300"
-					onMouseMove={(e)=>svgElementController.handleMouseMove(e, this)}
-					onMouseLeave={(e)=>svgElementController.notDragged(e, this)}
-					onMouseUp={(e)=>svgElementController.notDragged(e, this)}
-					style={{backgroundColor: "#000"}}
-				>
-				</svg>
+					<svg
+						id="svgContainer"
+						xmlns={svgNS}
+						viewBox="0 0 800 800"
+						width="800"
+						height="800"
+						onMouseMove={(e)=>svgElementController.handleMouseMove(e, this)}
+						onMouseLeave={(e)=>svgElementController.notDragged(e, this)}
+						onMouseUp={(e)=>svgElementController.notDragged(e, this)}
+						style={{backgroundColor: "#999"}}
+					>
+					<rect 
+						x="0"
+						y="0"
+						width="800"
+						height="50"
+						fill="#CCC"
+					>
+					</rect>
+						<g
+							fill="#CCC"
+							strokeWidth="1"
+							stroke="#000"
+							strokeDasharray="1"
+						>
+						<rect
+							x="10"
+							y="7.5"
+							width="70"
+							height="30"
+						>
+						</rect>
+						</g>
+						<text 
+							x="20"
+							y="27"
+							fill="#000">Option
+						</text>
+					</svg>
 				<button onClick={(e) => {svgElementController.handleNewSVGElementRequest(e, this)}}>BUTTON</button>
 			</div>
 		);
