@@ -79,12 +79,8 @@ class Messenger extends Component {
         </div>
         <div className="container" style={wrapperStyle}>
           <div className="row" style={rowStyle}>
-            <div className="col-8">
-              <textarea id="usertext" style={DialogStyle} placeholder={"Chat as "+ this.props.user}/>
-            </div>
-            <div className="col-4">
+              <input id="usertext" style={DialogStyle} placeholder={"Chat as "+ this.props.user}/>            
               <button onClick={this.handleMessageSubmit}>Submit</button>
-            </div>
           </div>
         </div>
       </div>

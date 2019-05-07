@@ -26,7 +26,8 @@ class DragBoard extends Component {
 		svgElementController.initSocket(this, this.state.socket, {
 			createRectSVGElement: ((data, callback, obj) => { return svgElementController.createRectSVGElement(data, callback, obj)}),
 			appendSVG: ((element) => {svgElementController.appendSVG(element)}),
-			handleMouseDown: ((e, str, obj) => {svgElementController.handleMouseDown(e, str, obj)})
+			handleMouseDown: ((e, str, obj) => {svgElementController.handleMouseDown(e, str, obj)}),
+			handleMouseOver: ((e, str, obj) => {svgElementController.handleMouseOver(e, str, obj)})
 		});
 	}
 
@@ -35,49 +36,34 @@ class DragBoard extends Component {
 	}
 
 	render() {
+		const divW = 400;
+		const divH = 400;
+		const svgW = divW*.5;
+		const svgH = divH*.5;
 
 		return(
-			<div>
+			<div style={{width:divW, height:divH}}>
+				
+				<div style={{width:svgW*.75, height:svgH*.75}}>
 					<svg
 						id="svgContainer"
 						xmlns={svgNS}
-						viewBox="0 0 800 800"
-						width="800"
-						height="800"
+						viewBox={`0 0 ${svgW*.75} ${svgH*.75}`}
+						width="100%"
+						height="100%"
 						onMouseMove={(e)=>svgElementController.handleMouseMove(e, this)}
 						onMouseLeave={(e)=>svgElementController.notDragged(e, this)}
 						onMouseUp={(e)=>svgElementController.notDragged(e, this)}
 						style={{backgroundColor: "#999"}}
 					>
-					<rect 
-						x="0"
-						y="0"
-						width="800"
-						height="50"
-						fill="#CCC"
-					>
-					</rect>
-						<g
-							fill="#CCC"
-							strokeWidth="1"
-							stroke="#000"
-							strokeDasharray="1"
-						>
-						<rect
-							x="10"
-							y="7.5"
-							width="70"
-							height="30"
-						>
-						</rect>
-						</g>
-						<text 
-							x="20"
-							y="27"
-							fill="#000">Option
-						</text>
 					</svg>
-				<button onClick={(e) => {svgElementController.handleNewSVGElementRequest(e, this)}}>BUTTON</button>
+				</div>
+				<input type="text" id="message" placeholder="Add message..."/>
+				<button onClick={(e) => {
+					const val = document.getElementById("message").value;
+					svgElementController.handleNewSVGElementRequest(e, val, this);
+					document.getElementById("message").value = ""
+				}}>BUTTON</button>
 			</div>
 		);
 	}

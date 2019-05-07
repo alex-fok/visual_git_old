@@ -10,7 +10,10 @@ export default {
 			obj.setState(prev => ({
 				svgElements: Object.assign(svgElements, data)
 			}));
-			fnList.appendSVG(fnList.createRectSVGElement(svgObj, fnList.handleMouseDown, obj));
+			fnList.appendSVG(fnList.createRectSVGElement(svgObj, {
+				handleMouseDown: fnList.handleMouseDown,
+				handleMouseOver: fnList.handleMouseOver
+			}, obj));
 		});
 
 		socket.on("svgMove", (data) => {
@@ -56,7 +59,7 @@ export default {
 		socket.emit("svgCopyRequest", obj.props.jwt);
 	},
 
-	createRectSVGElement: (data, handleMouseDown, obj) => {
+	createRectSVGElement: (data, fnList, obj) => {
 		var rect = document.createElementNS(svgNS,"rect");
 		rect.setAttributeNS(null, "id", data.id);
 		rect.setAttributeNS(null, "x", parseInt(data.x));
@@ -64,12 +67,21 @@ export default {
 		rect.setAttributeNS(null, "width", parseInt(data.width));
 		rect.setAttributeNS(null, "height", parseInt(data.height));
 		rect.setAttributeNS(null, "fill", data.fill);
-		rect.addEventListener("mousedown", (e)=>{handleMouseDown(e, data.id, obj)});
+		rect.addEventListener("mousedown", (e)=>{fnList.handleMouseDown(e, data.id, obj)});
+		rect.addEventListener("mouseover", (e)=>{fnList.handleMouseOver(e, data.id, obj)});
 		return rect;
 	},
 
 	appendSVG(element){
 		document.getElementById("svgContainer").appendChild(element);
+	},
+
+	handleMouseOver(e, str, obj){
+		if (!obj.state.isDragging) {
+			const m = obj.state.svgElements[str].msg;
+			//console.log("str: " + str);
+			//console.log("message: " + m);
+		}
 	},
 
 	handleMouseDown(e,str, obj) {
@@ -117,10 +129,11 @@ export default {
 		}	
 	},
 
-	handleNewSVGElementRequest(e, obj) {
+	handleNewSVGElementRequest(e, msg, obj) {
 		const id = "newItem" + Date.now();
 		let data = {
-			[id] : { 
+			[id] : {
+				msg: msg, 
 				x: 10,
 				y: 50,
 				width: 10,
