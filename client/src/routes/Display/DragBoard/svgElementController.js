@@ -51,7 +51,10 @@ export default {
 					updated: true
 				});
 				Object.keys(data).forEach(key => {
-					fnList.appendSVG(fnList.createRectSVGElement(data[key], fnList.handleMouseDown, obj));
+					fnList.appendSVG(fnList.createRectSVGElement(data[key], {
+						handleMouseDown: fnList.handleMouseDown,
+						handleMouseOver: fnList.handleMouseOver
+					}, obj));
 				})
 			}
 		});
@@ -78,9 +81,8 @@ export default {
 
 	handleMouseOver(e, str, obj){
 		if (!obj.state.isDragging) {
-			const m = obj.state.svgElements[str].msg;
-			//console.log("str: " + str);
-			//console.log("message: " + m);
+			const svgObj = obj.state.svgElements[str];
+			console.log(`${svgObj.id}: ${svgObj.msg}`);
 		}
 	},
 
