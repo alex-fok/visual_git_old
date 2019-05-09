@@ -174,6 +174,9 @@ export default {
 				y: rectY + dy,
 				fill: "#F00"
 			})
+		} else {
+			document.getElementById("descriptionBox").style.top = e.pageX+10;
+			document.getElementById("descriptionBox").style.left = e.pageY-10;
 		}	
 	},
 
