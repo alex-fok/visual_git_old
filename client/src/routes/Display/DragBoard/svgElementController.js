@@ -83,12 +83,7 @@ export default {
 		if (!obj.state.isDragging) {
 			const svgObj = obj.state.svgElements[str];
 			console.log(`${svgObj.id}: ${svgObj.msg}`);
-			document.getElementById("messageBox").style.display = "block";
-			const s = document.getElementById(containerID).getElementById(str);
-			//document.getElementById("messageBox").style.top = s.getAttributeNS("null", )
-			document.getElementById("messageBox").style.top = s.y - 10;
-			//document.getElementById("messageBox").style.left = `${s.x + 10}+"px"`;
-			console.log(document.getElementById("messageBox").style);
+			document.getElementById("messageBox").style.display = "none";
 		}
 	},
 

@@ -1,8 +1,8 @@
-#messageBox {
-	display: none;
+#messageBox{
+	display: block;
 	width: 30px;
 	height: 50px;
 	top: 0;
 	left: 0;
-	background-color: #000000;
+	background-color: #CCCCCC;
 }

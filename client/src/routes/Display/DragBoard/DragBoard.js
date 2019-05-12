@@ -44,7 +44,7 @@ class DragBoard extends Component {
 
 		return(
 			<div>
-				<div id="messageBox">test</div>
+				<div id="messageBox" className="message">test</div>
 				<div style={{width:divW, height:divH}}>
 					
 					<div style={{width:svgW*.75, height:svgH*.75}}>
