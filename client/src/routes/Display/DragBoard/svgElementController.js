@@ -88,8 +88,8 @@ export default {
 		if (!obj.state.isDragging) {
 			document.getElementById("messageBox").innerHTML = obj.state.svgElements[str].msg;
 			document.getElementById("messageBox").style.display = "block";
-			document.getElementById("messageBox").style.left = `${e.pageX + 10}px`;
-			document.getElementById("messageBox").style.top = `${e.pageY - 15}px`;
+			document.getElementById("messageBox").style.left = `${e.pageX + 20}px`;
+			document.getElementById("messageBox").style.top = `${e.pageY - 25}px`;
 		} else {
 			document.getElementById("messageBox").style.display = "none";
 		}
