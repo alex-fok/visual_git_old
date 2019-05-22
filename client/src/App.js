@@ -150,7 +150,7 @@ class App extends Component {
     }
     
     return (
-      <div>
+      <div id="topApp">
         <PrivateRoute setAxiosHeader={this.setAxiosHeader} host={AUTH_SERVER}>
         <div>
           <div style={headerStyle}>
@@ -180,6 +180,17 @@ class App extends Component {
           host={AUTH_SERVER} 
           jwt={jwt}
           user={user}
+          offset={()=> {
+            let parents = [document.getElementById("app-container")];
+            //document.getElementById("top-layer-div"), document.getElementById("top-col"), document.getElementById("top-row"), 
+            let ol = 0;
+            let ot = 0;
+            parents.forEach((e)=> {ol += e.offsetLeft}), 
+            parents.forEach((e)=> {ot += e.offsetTop})
+            const f = [ol, ot]
+            console.log("f: " + f);
+            return f;
+          }}
         />
       
       </div>

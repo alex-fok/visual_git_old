@@ -12,6 +12,7 @@ class DragBoard extends Component {
 		super(props);
 		this.state={
 			socket: io(this.props.host, {transports: ['websocket']}),
+			parentOffset: this.props.offset(),
       svgElements: {},
 			draggedItem: {
 				id: "",
@@ -24,11 +25,12 @@ class DragBoard extends Component {
 	}
 
 	componentDidMount() {
-		svgElementController.initSocket(this, this.state.socket, containerID, {
+		svgElementController.initSocket(this, containerID, {
 			createRectSVGElement: (data => { return svgElementController.createRectSVGElement(...data)}),
 			appendSVG: (data => {svgElementController.appendSVG(...data)}),
 			handleMouseDown: (data => {svgElementController.handleMouseDown(...data)}),
-			handleMouseOver: (data => {svgElementController.handleMouseOver(...data)})
+			showDetails: (data => {svgElementController.showDetails(...data)}),
+			hideDetails: (data => {svgElementController.hideDetails(...data)})
 		});
 	}
 
@@ -43,8 +45,8 @@ class DragBoard extends Component {
 		const svgH = divH*.5;
 
 		return(
-			<div>
-				<div id="messageBox" className="message">test</div>
+			<div id="svgLayer">
+				<div id="messageBox"></div>
 				<div style={{width:divW, height:divH}}>
 					
 					<div style={{width:svgW*.75, height:svgH*.75}}>
@@ -58,8 +60,7 @@ class DragBoard extends Component {
 							onMouseLeave={(e)=>svgElementController.notDragged(e, this, containerID)}
 							onMouseUp={(e)=>svgElementController.notDragged(e, this, containerID)}
 							style={{backgroundColor: "#999"}}
-						>
-						</svg>
+						></svg>
 					</div>
 					<input type="text" id="message" placeholder="Add message..."/>
 					<button onClick={(e) => {

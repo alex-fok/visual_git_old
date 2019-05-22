@@ -1,7 +1,8 @@
 const svgNS = "http://www.w3.org/2000/svg";
 
 export default {
-	initSocket: (obj, socket, containerID, fnList) => {
+	initSocket: (obj, containerID, fnList) => {
+		const {socket} = obj.state;
 
 		socket.on("svgAdd", (data) => {
 			let {svgElements} = obj.state;
@@ -12,7 +13,8 @@ export default {
 			}));
 			fnList.appendSVG([fnList.createRectSVGElement([svgObj, containerID, {
 				handleMouseDown: fnList.handleMouseDown,
-				handleMouseOver: fnList.handleMouseOver
+				showDetails: fnList.showDetails,
+				hideDetails: fnList.hideDetails
 			}, obj]), containerID]);
 		});
 
@@ -53,7 +55,8 @@ export default {
 				Object.keys(data).forEach(key => {
 					fnList.appendSVG([fnList.createRectSVGElement([data[key], containerID, {
 						handleMouseDown: fnList.handleMouseDown,
-						handleMouseOver: fnList.handleMouseOver
+						showDetails: fnList.showDetails,
+						hideDetails: fnList.hideDetails
 					}, obj]), containerID]);
 				})
 			}
@@ -71,7 +74,9 @@ export default {
 		rect.setAttributeNS(null, "height", parseInt(attributes.height));
 		rect.setAttributeNS(null, "fill", attributes.fill);
 		rect.addEventListener("mousedown", (e)=>{fnList.handleMouseDown([e, attributes.id, obj])});
-		rect.addEventListener("mouseover", (e)=>{fnList.handleMouseOver([e, attributes.id, obj, containerID])});
+		rect.addEventListener("mouseover", (e)=>{fnList.showDetails([e, attributes.id, obj, containerID])});
+		rect.addEventListener("mousemove", (e)=>{fnList.showDetails([e, attributes.id, obj, containerID])})
+		rect.addEventListener("mouseleave", (e)=>{fnList.hideDetails([e, attributes.id, obj, containerID])});
 		return rect;
 	},
 
@@ -79,12 +84,19 @@ export default {
 		document.getElementById(containerID).appendChild(element);
 	},
 
-	handleMouseOver(e, str, obj, containerID){
+	showDetails(e, str, obj, containerID){
 		if (!obj.state.isDragging) {
-			const svgObj = obj.state.svgElements[str];
-			console.log(`${svgObj.id}: ${svgObj.msg}`);
+			document.getElementById("messageBox").innerHTML = obj.state.svgElements[str].msg;
+			document.getElementById("messageBox").style.display = "block";
+			document.getElementById("messageBox").style.left = `${e.pageX - obj.state.parentOffset[0] + 10}px`;
+			document.getElementById("messageBox").style.top = `${e.pageY - obj.state.parentOffset[1] - 15}px`;
+		} else {
 			document.getElementById("messageBox").style.display = "none";
 		}
+	},
+
+	hideDetails(e, str, obj, containerID){
+		document.getElementById("messageBox").style.display = "none";
 	},
 
 	handleMouseDown(e,str, obj) {
@@ -146,10 +158,7 @@ export default {
 				y: rectY + dy,
 				fill: "#F00"
 			})
-		} else {
-			document.getElementById("messageBox").style.top = e.pageX+10;
-			document.getElementById("messageBox").style.left = e.pageY-10;
-		}	
+		}
 	},
 
 	notDragged(e, obj, containerID) {

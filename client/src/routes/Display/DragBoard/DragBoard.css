@@ -1,7 +1,6 @@
 #messageBox{
-	display: block;
-	width: 30px;
-	height: 50px;
+	display: none;
+	position: absolute;
 	top: 0;
 	left: 0;
 	background-color: #CCCCCC;

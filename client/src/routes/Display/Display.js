@@ -25,8 +25,8 @@ class Display extends Component {
     return <Messenger host={host} jwt={jwt} user={user}/>;
   }
 
-  getDragBoardComponent(host, jwt, user) {
-    return <DragBoard host={host} jwt={jwt} user={user}/>;
+  getDragBoardComponent(host, jwt, user, offset) {
+    return <DragBoard host={host} jwt={jwt} user={user} offset={offset}/>;
   }
 
   componentDidMount() {
@@ -39,7 +39,7 @@ class Display extends Component {
 
 
   componentToDisplay() {
-    const {display, host, jwt, user} = this.props;
+    const {display, host, jwt, user, offset} = this.props;
 
     return(
       "d1" === (display) ? 
@@ -47,7 +47,7 @@ class Display extends Component {
       "d2" === (display) ?
       this.getMessengerComponent(host, jwt, user):
       //"d3"
-      this.getDragBoardComponent(host, jwt, user)
+      this.getDragBoardComponent(host, jwt, user, offset)
     )
   }
 
