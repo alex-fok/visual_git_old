@@ -12,7 +12,6 @@ class DragBoard extends Component {
 		super(props);
 		this.state={
 			socket: io(this.props.host, {transports: ['websocket']}),
-			parentOffset: this.props.offset(),
       svgElements: {},
 			draggedItem: {
 				id: "",
