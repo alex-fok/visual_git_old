@@ -6,6 +6,8 @@ import './DragBoard.css';
 
 const svgNS = "http://www.w3.org/2000/svg";
 const containerID = "svgContainer";
+const messageBoxID = "messageBoxID";
+const size = 800;
 
 class DragBoard extends Component {
 	constructor(props) {
@@ -24,7 +26,8 @@ class DragBoard extends Component {
 	}
 
 	componentDidMount() {
-		svgElementController.initSocket(this, containerID, {
+		svgElementController.initSocket(this, containerID, messageBoxID,
+			{
 			createRectSVGElement: (data => { return svgElementController.createRectSVGElement(...data)}),
 			appendSVG: (data => {svgElementController.appendSVG(...data)}),
 			handleMouseDown: (data => {svgElementController.handleMouseDown(...data)}),
@@ -38,13 +41,13 @@ class DragBoard extends Component {
 	}
 
 	render() {
-		const divW = 400;
-		const divH = 400;
+		const divW = size;
+		const divH = size;
 		const svgW = divW*.5;
 		const svgH = divH*.5;
 
 		return(
-			<div id="svgLayer">
+			<div>
 				<div id="messageBox"></div>
 				<div style={{width:divW, height:divH}}>
 					

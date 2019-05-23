@@ -1,7 +1,7 @@
 const svgNS = "http://www.w3.org/2000/svg";
 
 export default {
-	initSocket: (obj, containerID, fnList) => {
+	initSocket: (obj, containerID, messageBoxID, fnList) => {
 		const {socket} = obj.state;
 
 		socket.on("svgAdd", (data) => {
@@ -11,7 +11,7 @@ export default {
 			obj.setState(prev => ({
 				svgElements: Object.assign(svgElements, data)
 			}));
-			fnList.appendSVG([fnList.createRectSVGElement([svgObj, containerID, {
+			fnList.appendSVG([fnList.createRectSVGElement([svgObj, containerID, messageBoxID, {
 				handleMouseDown: fnList.handleMouseDown,
 				showDetails: fnList.showDetails,
 				hideDetails: fnList.hideDetails
@@ -65,7 +65,7 @@ export default {
 		socket.emit("svgCopyRequest", obj.props.jwt);
 	},
 
-	createRectSVGElement: (attributes, containerID, fnList, obj) => {
+	createRectSVGElement: (attributes, containerID, messageBoxID, fnList, obj) => {
 		var rect = document.createElementNS(svgNS,"rect");
 		rect.setAttributeNS(null, "id", attributes.id);
 		rect.setAttributeNS(null, "x", parseInt(attributes.x));
@@ -88,8 +88,8 @@ export default {
 		if (!obj.state.isDragging) {
 			document.getElementById("messageBox").innerHTML = obj.state.svgElements[str].msg;
 			document.getElementById("messageBox").style.display = "block";
-			document.getElementById("messageBox").style.left = `${e.pageX + 20}px`;
-			document.getElementById("messageBox").style.top = `${e.pageY - 25}px`;
+			document.getElementById("messageBox").style.left = `${e.pageX + 15}px`;
+			document.getElementById("messageBox").style.top = `${e.pageY}px`;
 		} else {
 			document.getElementById("messageBox").style.display = "none";
 		}
