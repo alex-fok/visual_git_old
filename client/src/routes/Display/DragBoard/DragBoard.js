@@ -42,34 +42,41 @@ class DragBoard extends Component {
 
 	render() {
 		const divW = size;
-		const divH = size;
+		const divH = size*.5;
 		const svgW = divW*.5;
-		const svgH = divH*.5;
+		const svgH = divH;
 
 		return(
 			<div>
-				<div id="messageBox"></div>
-				<div style={{width:divW, height:divH}}>
-					
-					<div style={{width:svgW*.75, height:svgH*.75}}>
-						<svg
-							id={containerID}
-							xmlns={svgNS}
-							viewBox={`0 0 ${svgW*.75} ${svgH*.75}`}
-							width="100%"
-							height="100%"
-							onMouseMove={(e)=>svgElementController.handleMouseMove(e, this, containerID)}
-							onMouseLeave={(e)=>svgElementController.notDragged(e, this, containerID)}
-							onMouseUp={(e)=>svgElementController.notDragged(e, this, containerID)}
-							style={{backgroundColor: "#999"}}
-						></svg>
+				<div className="container-fluid noPadding">
+					<div style={{width:divW, height:divH}}>
+						<div className="row">
+							<div className="col">
+								<div style={{width:svgW, height:svgH}}>
+									<svg
+										id={containerID}
+										xmlns={svgNS}
+										viewBox={`0 0 ${svgW} ${svgH}`}
+										width="100%"
+										height="100%"
+										onMouseMove={(e)=>svgElementController.handleMouseMove(e, this, containerID)}
+										onMouseLeave={(e)=>svgElementController.notDragged(e, this, containerID)}
+										onMouseUp={(e)=>svgElementController.notDragged(e, this, containerID)}
+										style={{backgroundColor: "#999"}}
+									></svg></div>
+								<input type="text" id="message" placeholder="Add message..."/>
+								<button onClick={(e) => {
+									const val = document.getElementById("message").value;
+									svgElementController.handleNewSVGElementRequest(e, val, this);
+									document.getElementById("message").value = "";
+								}}>BUTTON</button>
+							</div>
+							<div className="col">
+								<div id="details">dfjeisod</div>
+							</div>
+						</div>
 					</div>
-					<input type="text" id="message" placeholder="Add message..."/>
-					<button onClick={(e) => {
-						const val = document.getElementById("message").value;
-						svgElementController.handleNewSVGElementRequest(e, val, this);
-						document.getElementById("message").value = "";
-					}}>BUTTON</button>
+					<div id="messageBox"></div>
 				</div>
 			</div>
 		);

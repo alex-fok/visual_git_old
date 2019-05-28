@@ -5,3 +5,15 @@
 	left: 0;
 	background-color: rgba(255, 255, 255, 0.3);
 }
+
+#details{
+	display: block;
+	width: 25%;
+	height: 25%;
+	background-color: rgba(200,200,200,1);
+}
+
+.noPadding{
+	padding: 0 !important;
+	margin: 0 !important;
+}
