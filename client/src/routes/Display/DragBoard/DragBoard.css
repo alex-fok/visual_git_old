@@ -7,7 +7,7 @@
 }
 
 #details{
-	display: block;
+	display: none;
 	width: auto;
 	height: auto;
 	padding: 5px;

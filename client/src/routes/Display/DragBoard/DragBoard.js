@@ -31,8 +31,6 @@ class DragBoard extends Component {
 			createRectSVGElement: (data => { return svgElementController.createRectSVGElement(...data)}),
 			appendSVG: (data => {svgElementController.appendSVG(...data)}),
 			handleMouseDown: (data => {svgElementController.handleMouseDown(...data)}),
-			showTag: (data => {svgElementController.showTag(...data)}),
-			hideTag: (data => {svgElementController.hideTag(...data)}),
 			showDetails: (data => {svgElementController.showDetails(...data)}),
 			hideDetails: (data => {svgElementController.hideDetails(...data)})
 		});
@@ -64,7 +62,6 @@ class DragBoard extends Component {
 										onMouseMove={(e)=>svgElementController.handleMouseMove(e, this, containerID)}
 										onMouseLeave={(e)=>svgElementController.notDragged(e, this, containerID)}
 										onMouseUp={(e)=>svgElementController.notDragged(e, this, containerID)}
-										onClick={(e)=>svgElementController.hideDetails()}
 										style={{backgroundColor: "#999"}}
 									></svg></div>
 								<input type="text" id="message" placeholder="Add message..."/>
