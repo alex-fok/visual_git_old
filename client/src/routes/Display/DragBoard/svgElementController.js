@@ -1,7 +1,7 @@
 const svgNS = "http://www.w3.org/2000/svg";
 
 export default {
-	initSocket: (obj, containerID, svgTagID, fnList) => {
+	initSocket: (obj, containerID, svgTagID, detailsID, fnList) => {
 		const {socket} = obj.state;
 
 		socket.on("svgAdd", (data) => {
@@ -11,7 +11,7 @@ export default {
 			obj.setState(prev => ({
 				svgElements: Object.assign(svgElements, data)
 			}));
-			fnList.appendSVG([fnList.createRectSVGElement([svgObj, containerID, svgTagID, {
+			fnList.appendSVG([fnList.createRectSVGElement([svgObj, svgTagID, detailsID, {
 				handleMouseDown: fnList.handleMouseDown,
 				showDetails: fnList.showDetails,
 				hideDetails: fnList.hideDetails
@@ -53,7 +53,7 @@ export default {
 					updated: true
 				});
 				Object.keys(data).forEach(key => {
-					fnList.appendSVG([fnList.createRectSVGElement([data[key], containerID, svgTagID, {
+					fnList.appendSVG([fnList.createRectSVGElement([data[key], svgTagID, detailsID, {
 						handleMouseDown: fnList.handleMouseDown,
 						showDetails: fnList.showDetails,
 						hideDetails: fnList.hideDetails
@@ -65,7 +65,7 @@ export default {
 		socket.emit("svgCopyRequest", obj.props.jwt);
 	},
 
-	createRectSVGElement: (attributes, containerID, svgTagID, fnList, obj) => {
+	createRectSVGElement: (attributes, svgTagID, detailsID, fnList, obj) => {
 		var rect = document.createElementNS(svgNS,"rect");
 		rect.setAttributeNS(null, "id", attributes.id);
 		rect.setAttributeNS(null, "x", parseInt(attributes.x));
@@ -74,9 +74,9 @@ export default {
 		rect.setAttributeNS(null, "height", parseInt(attributes.height));
 		rect.setAttributeNS(null, "fill", attributes.fill);
 		rect.addEventListener("mousedown", (e)=>{fnList.handleMouseDown([e, attributes.id, obj])});
-		rect.addEventListener("mouseover", (e)=>{fnList.showDetails([e, attributes.id, obj, containerID])});
-		rect.addEventListener("mousemove", (e)=>{fnList.showDetails([e, attributes.id, obj, containerID])});
-		rect.addEventListener("mouseleave", (e)=>{fnList.hideDetails([e, attributes.id, obj, containerID])})
+		rect.addEventListener("mouseover", (e)=>{fnList.showDetails([e, attributes.id, obj, svgTagID, detailsID])});
+		rect.addEventListener("mousemove", (e)=>{fnList.showDetails([e, attributes.id, obj, svgTagID, detailsID])});
+		rect.addEventListener("mouseleave", (e)=>{fnList.hideDetails([svgTagID, detailsID])})
 		return rect;
 	},
 
@@ -84,23 +84,23 @@ export default {
 		document.getElementById(containerID).appendChild(element);
 	},
 
-	showDetails: (e, str, obj, containerID) => {
+	showDetails: (e, str, obj, svgTagID, detailsID) => {
 		if (!obj.state.isDragging) {
-			document.getElementById("svgTag").innerHTML = obj.state.svgElements[str].msg;
-			document.getElementById("svgTag").style.display = "block";
-			document.getElementById("svgTag").style.left = `${e.pageX + 15}px`;
-			document.getElementById("svgTag").style.top = `${e.pageY}px`;
-			document.getElementById("details").innerHTML = obj.state.svgElements[str].msg;
-			document.getElementById("details").style.display = "block";
+			document.getElementById(svgTagID).innerHTML = obj.state.svgElements[str].msg;
+			document.getElementById(svgTagID).style.display = "block";
+			document.getElementById(svgTagID).style.left = `${e.pageX + 15}px`;
+			document.getElementById(svgTagID).style.top = `${e.pageY}px`;
+			document.getElementById(detailsID).innerHTML = obj.state.svgElements[str].msg;
+			document.getElementById(detailsID).style.display = "block";
 		} else {
-			document.getElementById("svgTag").style.display = "none";
-			document.getElementById("details").style.display = "none";
+			document.getElementById(svgTagID).style.display = "none";
+			document.getElementById(detailsID).style.display = "none";
 		}
 	},
 
-	hideDetails: (e, str, obj, containerID) => {
-		document.getElementById("svgTag").style.display = "none";
-		document.getElementById("details").style.display = "none";
+	hideDetails: (svgTagID, detailsID) => {
+		document.getElementById(svgTagID).style.display = "none";
+		document.getElementById(detailsID).style.display = "none";
 	},
 
 	handleMouseDown: (e,str, obj) => {
