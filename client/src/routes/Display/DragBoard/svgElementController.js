@@ -1,4 +1,5 @@
 const svgNS = "http://www.w3.org/2000/svg";
+const $ = (id) => {return document.getElementById(id)};
 
 export default {
 	initSocket: (obj, containerID, svgTagID, detailsID, fnList) => {
@@ -20,14 +21,14 @@ export default {
 
 		socket.on("svgMove", (data) => {
 			const {id, x, y, fill} = data;
-			const rect = document.getElementById(containerID).getElementById(id);
+			const rect = $(containerID).getElementById(id);
 			rect.setAttributeNS(null, "x", parseInt(x));
 			rect.setAttributeNS(null, "y", parseInt(y));
 			rect.setAttributeNS(null, "fill", fill);
 		});
 
 		socket.on("svgReleased", (id) => {
-			const rect = document.getElementById(containerID).getElementById(id);
+			const rect = $(containerID).getElementById(id);
 			rect.setAttributeNS(null, "fill", "#FFF");
 			obj.setState(prev => ({
 				svgElements: Object.assign(prev.svgElements, {[id]: Object.assign(prev.svgElements[id], {x: rect.x, y: rect.y})})
@@ -76,31 +77,41 @@ export default {
 		rect.addEventListener("mousedown", (e)=>{fnList.handleMouseDown([e, attributes.id, obj])});
 		rect.addEventListener("mouseover", (e)=>{fnList.showDetails([e, attributes.id, obj, svgTagID, detailsID])});
 		rect.addEventListener("mousemove", (e)=>{fnList.showDetails([e, attributes.id, obj, svgTagID, detailsID])});
-		rect.addEventListener("mouseleave", (e)=>{fnList.hideDetails([svgTagID, detailsID])})
+		rect.addEventListener("mouseleave", (e)=>{fnList.hideDetails([svgTagID, detailsID])});
+		rect.addEventListener("click", (e)=>{fnList.showDescription([attributes.id, detailsID])})
 		return rect;
 	},
 
 	appendSVG: (element, containerID) => {
-		document.getElementById(containerID).appendChild(element);
+		$(containerID).appendChild(element);
+	},
+
+	showDescription: (str, detailsID) => {
+		$(detailsID).innerHTML = obj.state.svgElements[str].msg;
+		$(detailsID).style.display = "block";
+	},
+
+	hideDescription: (detailsID) => {
+		$(detailsID).style.display = "none"
 	},
 
 	showDetails: (e, str, obj, svgTagID, detailsID) => {
 		if (!obj.state.isDragging) {
-			document.getElementById(svgTagID).innerHTML = obj.state.svgElements[str].msg;
-			document.getElementById(svgTagID).style.display = "block";
-			document.getElementById(svgTagID).style.left = `${e.pageX + 15}px`;
-			document.getElementById(svgTagID).style.top = `${e.pageY}px`;
-			document.getElementById(detailsID).innerHTML = obj.state.svgElements[str].msg;
-			document.getElementById(detailsID).style.display = "block";
+			$(svgTagID).innerHTML = obj.state.svgElements[str].msg;
+			$(svgTagID).style.display = "block";
+			$(svgTagID).style.left = `${e.pageX + 15}px`;
+			$(svgTagID).style.top = `${e.pageY}px`;
+			$(detailsID).innerHTML = obj.state.svgElements[str].msg;
+			$(detailsID).style.display = "block";
 		} else {
-			document.getElementById(svgTagID).style.display = "none";
-			document.getElementById(detailsID).style.display = "none";
+			$(svgTagID).style.display = "none";
+			$(detailsID).style.display = "none";
 		}
 	},
 
 	hideDetails: (svgTagID, detailsID) => {
-		document.getElementById(svgTagID).style.display = "none";
-		document.getElementById(detailsID).style.display = "none";
+		$(svgTagID).style.display = "none";
+		$(detailsID).style.display = "none";
 	},
 
 	handleMouseDown: (e,str, obj) => {
@@ -139,7 +150,7 @@ export default {
 	handleMouseMove: (e, obj, containerID) => {
 		if (obj.state.isDragging) {
 			const {draggedItem, socket} = obj.state;
-			const rect = document.getElementById(containerID).getElementById(draggedItem.id);
+			const rect = $(containerID).getElementById(draggedItem.id);
 
 			const px = parseInt(e.pageX);
 			const py = parseInt(e.pageY);
@@ -169,7 +180,7 @@ export default {
 
 		if (obj.state.isDragging){
 			const {draggedItem, socket, svgElements} = obj.state;
-			const dragged = document.getElementById(containerID).getElementById(draggedItem.id);
+			const dragged = $(containerID).getElementById(draggedItem.id);
 			svgElements[draggedItem.id].y = parseInt(dragged.getAttributeNS(null, "y"));
 			svgElements[draggedItem.id].x = parseInt(dragged.getAttributeNS(null, "x"));
 		
