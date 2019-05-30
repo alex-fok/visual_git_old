@@ -8,6 +8,7 @@ const svgNS = "http://www.w3.org/2000/svg";
 const containerID = "svgContainer";
 const svgTagID = "svgTag";
 const detailsID = "details";
+const detailsContentID = "details-content";
 const size = 800;
 
 class DragBoard extends Component {
@@ -27,13 +28,23 @@ class DragBoard extends Component {
 	}
 
 	componentDidMount() {
-		svgElementController.initSocket(this, containerID, svgTagID, detailsID,
+		//svgElementController.initSocket(obj, idList, fnList)
+		svgElementController.initSocket(this, 
+			{
+				containerID: containerID,
+				infoIDs: {
+					svgTagID: svgTagID,
+					detailsID: detailsID,
+					detailsContentID: detailsContentID
+				}
+			},
 			{
 			createRectSVGElement: (data => { return svgElementController.createRectSVGElement(...data)}),
 			appendSVG: (data => {svgElementController.appendSVG(...data)}),
 			handleMouseDown: (data => {svgElementController.handleMouseDown(...data)}),
-			showDetails: (data => {svgElementController.showDetails(...data)}),
-			hideDetails: (data => {svgElementController.hideDetails(...data)})
+			showTag: (data => {svgElementController.showTag(...data)}),
+			hideTag: (data => {svgElementController.hideTag(...data)}),
+			showDetails: (data => {svgElementController.showDetails(...data)})
 		});
 	}
 
@@ -74,7 +85,12 @@ class DragBoard extends Component {
 							</div>
 							<div className="col">
 								<div style={{width: divW*.25, height: divH}}>
-									<div id={detailsID}></div>
+									<div id={detailsID}>
+										<div id="details-content"></div>
+										<button
+											onClick={()=> {document.getElementById(detailsID).style.display = "none"}}
+										>Close</button>
+									</div>
 								</div>
 							</div>
 						</div>
