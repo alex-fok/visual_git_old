@@ -1,4 +1,7 @@
+import svgElementFunctions from './svgElementFunctions';
+
 const svgNS = "http://www.w3.org/2000/svg";
+const htmlNS = "http://www.w3.org/1999/xhtml";
 const $ = (id) => {return document.getElementById(id)};
 
 export default {
@@ -13,12 +16,12 @@ export default {
 			obj.setState(prev => ({
 				svgElements: Object.assign(svgElements, data)
 			}));
-			fnList.appendSVG([fnList.createRectSVGElement([svgObj, idList.infoIDs, {
-				handleMouseDown: fnList.handleMouseDown,
-				showTag: fnList.showTag,
-				hideTag: fnList.hideTag,
-				showDetails: fnList.showDetails
-			}, obj]), idList.containerID]);
+			svgElementFunctions.appendSVG(svgElementFunctions.createRectSVGElement(svgObj, idList.infoIDs, {
+				handleMouseDown: svgElementFunctions.handleMouseDown,
+				showTag: svgElementFunctions.showTag,
+				hideTag: svgElementFunctions.hideTag,
+				showDetails: svgElementFunctions.showDetails
+			}, obj), idList.containerID);
 		});
 
 		socket.on("svgMove", (data) => {
@@ -56,13 +59,13 @@ export default {
 					updated: true
 				});
 				Object.keys(data).forEach(key => {
-					fnList.appendSVG([fnList.createRectSVGElement([data[key], idList.infoIDs,
+					svgElementFunctions.appendSVG(svgElementFunctions.createRectSVGElement(data[key], idList.infoIDs,
 					{
-					handleMouseDown: fnList.handleMouseDown,
-					showTag: fnList.showTag,
-					hideTag: fnList.hideTag,
-					showDetails: fnList.showDetails
-					}, obj]), idList.containerID]);
+					handleMouseDown: svgElementFunctions.handleMouseDown,
+					showTag: svgElementFunctions.showTag,
+					hideTag: svgElementFunctions.hideTag,
+					showDetails: svgElementFunctions.showDetails
+					}, obj), idList.containerID);
 				})
 			}
 		});
@@ -70,126 +73,34 @@ export default {
 		socket.emit("svgCopyRequest", obj.props.jwt);
 	},
 
-	createRectSVGElement: (attributes, infoIDs, fnList, obj) => {
-		var rect = document.createElementNS(svgNS,"rect");
-		rect.setAttributeNS(null, "id", attributes.id);
-		rect.setAttributeNS(null, "x", parseInt(attributes.x));
-		rect.setAttributeNS(null, "y", parseInt(attributes.y));
-		rect.setAttributeNS(null, "width", parseInt(attributes.width));
-		rect.setAttributeNS(null, "height", parseInt(attributes.height));
-		rect.setAttributeNS(null, "fill", attributes.fill);
-		rect.addEventListener("mousedown", (e)=>{fnList.handleMouseDown([e, attributes.id, obj])});
-		rect.addEventListener("mouseover", (e)=>{fnList.showTag([e, attributes.id, obj, infoIDs.svgTagID, infoIDs.detailsID])});
-		rect.addEventListener("mousemove", (e)=>{fnList.showTag([e, attributes.id, obj, infoIDs.svgTagID, infoIDs.detailsID])});
-		rect.addEventListener("mouseleave", (e)=>{fnList.hideTag([infoIDs.svgTagID])});
-		rect.addEventListener("click", (e)=>{fnList.showDetails([attributes.id, obj, infoIDs.detailsID, infoIDs.detailsContentID])})
-		return rect;
-	},
+	initDisplay: (divContainerID, containerID, svgW, svgH, obj) => {
+		var svg = document.createElementNS(svgNS, "svg");
+		svg.setAttributeNS(null, "id", containerID);
+		svg.setAttributeNS(null, "viewBox", `0 0 ${svgW} ${svgH}`);
+		svg.setAttributeNS(null, "width", "100%");
+		svg.setAttributeNS(null, "height", "100%");
+		svg.style.setProperty("background-color", "#999");
+		svg.addEventListener("mousemove", (e)=>{svgElementFunctions.handleMouseMove(e, obj, containerID)});
+		svg.addEventListener("mouseleave", (e)=>{svgElementFunctions.notDragged(e, obj, containerID)});
+		svg.addEventListener("mouseup", (e)=>{svgElementFunctions.notDragged(e, obj, containerID)});
 
-	appendSVG: (element, containerID) => {
-		$(containerID).appendChild(element);
-	},
+		$(divContainerID).appendChild(svg);
 
-	showDetails: (str, obj, detailsID, detailsContentID) => {
-		$("details-content").innerHTML = `${obj.state.svgElements[str].msg}`;
-		$(detailsID).style.display = "block";
-},
+		var msgInput = document.createElementNS(htmlNS, "input");
+		msgInput.setAttributeNS(null, "id", "message");
+		msgInput.setAttributeNS(null, "type", "text");
+		msgInput.setAttributeNS(null, "placeholder", "Add message...");
 
-	hideDescription: (detailsID) => {
-		$(detailsID).style.display = "none"
-	},
+		$("message-input").appendChild(msgInput);
 
-	showTag: (e, str, obj, svgTagID, detailsID) => {
-		if (!obj.state.isDragging) {
-			$(svgTagID).innerHTML = obj.state.svgElements[str].msg;
-			$(svgTagID).style.display = "block";
-			$(svgTagID).style.left = `${e.pageX + 15}px`;
-			$(svgTagID).style.top = `${e.pageY}px`;
-		} else {
-			$(svgTagID).style.display = "none";
-			$(detailsID).style.display = "none";
-		}
-	},
+		var btn = document.createElementNS(htmlNS, "button");
+		btn.addEventListener("click", (e)=> {
+			svgElementFunctions.handleNewSVGElementRequest(e, $("message").value, obj);
+			$("message").value = "";
+		});
+		var txtnode = document.createTextNode("Add");
+		btn.appendChild(txtnode);		
 
-	hideTag: (svgTagID, detailsID) => {
-		$(svgTagID).style.display = "none";
-	},
-
-	handleMouseDown: (e,str, obj) => {
-		if (!obj.state.isDragging) {
-			const px = parseInt(e.pageX);
-			const py = parseInt(e.pageY);
-
-			obj.setState({
-				draggedItem: {
-					id: str,
-					xFrom: px,
-					yFrom: py 
-				},
-				isDragging: true
-			});
-		}
-	},
-
-	handleNewSVGElementRequest: (e, msg, obj) => {
-		const id = "newItem" + Date.now();
-		let data = {
-			[id] : {
-				msg: msg, 
-				x: 10,
-				y: 50,
-				width: 10,
-				height: 10,
-				fill: "#FFF",
-				id: "newItem" + Date.now(),
-			}
-		}
-		const {socket} = obj.state;
-		socket.emit("createSVG", data);
-	},
-
-	handleMouseMove: (e, obj, containerID) => {
-		if (obj.state.isDragging) {
-			const {draggedItem, socket} = obj.state;
-			const rect = $(containerID).getElementById(draggedItem.id);
-
-			const px = parseInt(e.pageX);
-			const py = parseInt(e.pageY);
-			const dx = px - draggedItem.xFrom;
-			const dy = py - draggedItem.yFrom;
-
-			obj.setState(prev => ({
-				draggedItem: Object.assign(prev.draggedItem, {xFrom: px, yFrom: py}) 
-			}));
-			
-			const rectX = parseInt(rect.getAttributeNS(null, "x"));
-			const rectY = parseInt(rect.getAttributeNS(null, "y"));
-
-			rect.setAttributeNS(null, "x", (rectX + dx));
-			rect.setAttributeNS(null, "y", (rectY + dy));
-
-			socket.emit("moveSVG", {
-				id: draggedItem.id,
-				x: rectX + dx,
-				y: rectY + dy,
-				fill: "#F00"
-			})
-		}
-	},
-
-	notDragged: (e, obj, containerID) => {
-		if (obj.state.isDragging){
-			const {draggedItem, socket, svgElements} = obj.state;
-			const dragged = $(containerID).getElementById(draggedItem.id);
-			svgElements[draggedItem.id].y = parseInt(dragged.getAttributeNS(null, "y"));
-			svgElements[draggedItem.id].x = parseInt(dragged.getAttributeNS(null, "x"));
-		
-			obj.setState({
-				draggedItem: {id: "", xFrom: 0, yFrom: 0},
-				isDragging: false,
-				svgElements: svgElements
-			});
-			socket.emit("releaseSvg", draggedItem.id);
-		}
+		$("add-button").appendChild(btn);
 	}
 }

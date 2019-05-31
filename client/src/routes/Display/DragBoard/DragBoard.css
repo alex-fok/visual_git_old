@@ -14,6 +14,10 @@
 	background-color: rgba(200,200,200,1);
 }
 
+.inlineType {
+	display: inline-block;
+}
+
 .noPadding{
 	padding: 0 !important;
 	margin: 0 !important;

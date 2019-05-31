@@ -5,11 +5,20 @@ import svgElementController from './svgElementController';
 import './DragBoard.css';
 
 const svgNS = "http://www.w3.org/2000/svg";
+
+const divContainerID = "divContainer"
 const containerID = "svgContainer";
 const svgTagID = "svgTag";
 const detailsID = "details";
 const detailsContentID = "details-content";
+
 const size = 800;
+
+const divW = size;
+const divH = size*.5;
+
+const svgW = divW*.5;
+const svgH = divH;
 
 class DragBoard extends Component {
 	constructor(props) {
@@ -46,6 +55,8 @@ class DragBoard extends Component {
 			hideTag: (data => {svgElementController.hideTag(...data)}),
 			showDetails: (data => {svgElementController.showDetails(...data)})
 		});
+
+		svgElementController.initDisplay(divContainerID, containerID, svgW, svgH, this);
 	}
 
 	componentWillUnmount() {
@@ -53,10 +64,6 @@ class DragBoard extends Component {
 	}
 
 	render() {
-		const divW = size;
-		const divH = size*.5;
-		const svgW = divW*.5;
-		const svgH = divH;
 
 		return(
 			<div>
@@ -64,7 +71,8 @@ class DragBoard extends Component {
 					<div style={{width:divW, height:divH}}>
 						<div className="row">
 							<div className="col">
-								<div style={{width:svgW, height:svgH}}>
+								<div id={divContainerID} style={{width:svgW, height:svgH}}>
+								{/*
 									<svg
 										id={containerID}
 										xmlns={svgNS}
@@ -75,13 +83,22 @@ class DragBoard extends Component {
 										onMouseLeave={(e)=>svgElementController.notDragged(e, this, containerID)}
 										onMouseUp={(e)=>svgElementController.notDragged(e, this, containerID)}
 										style={{backgroundColor: "#999"}}
-									></svg></div>
-								<input type="text" id="message" placeholder="Add message..."/>
-								<button onClick={(e) => {
+									></svg>
+									*/
+								}</div>
+								{/*<input type="text" id="message" placeholder="Add message..."/>
+								*/
+								}
+								<div className="inlineType" id="message-input"></div>
+								<div className="inlineType" id="add-button">
+								{/*<button onClick={(e) => {
 									const val = document.getElementById("message").value;
 									svgElementController.handleNewSVGElementRequest(e, val, this);
 									document.getElementById("message").value = "";
 								}}>BUTTON</button>
+								*/
+								}
+								</div>
 							</div>
 							<div className="col">
 								<div style={{width: divW*.25, height: divH}}>
