@@ -46,17 +46,9 @@ class DragBoard extends Component {
 					detailsID: detailsID,
 					detailsContentID: detailsContentID
 				}
-			},
-			{
-			createRectSVGElement: (data => { return svgElementController.createRectSVGElement(...data)}),
-			appendSVG: (data => {svgElementController.appendSVG(...data)}),
-			handleMouseDown: (data => {svgElementController.handleMouseDown(...data)}),
-			showTag: (data => {svgElementController.showTag(...data)}),
-			hideTag: (data => {svgElementController.hideTag(...data)}),
-			showDetails: (data => {svgElementController.showDetails(...data)})
-		});
+			});
 
-		svgElementController.initDisplay(divContainerID, containerID, svgW, svgH, this);
+		svgElementController.initDisplay({divContainerID: divContainerID, containerID: containerID}, {w: svgW, h: svgH}, this);
 	}
 
 	componentWillUnmount() {

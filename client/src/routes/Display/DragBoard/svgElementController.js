@@ -5,7 +5,7 @@ const htmlNS = "http://www.w3.org/1999/xhtml";
 const $ = (id) => {return document.getElementById(id)};
 
 export default {
-	initSocket: (obj, idList, fnList) => {
+	initSocket: (obj, idList) => {
 		console.log("initSocket: idList.infoIDs : " + JSON.stringify(idList.infoIDs));
 		const {socket} = obj.state;
 
@@ -73,10 +73,12 @@ export default {
 		socket.emit("svgCopyRequest", obj.props.jwt);
 	},
 
-	initDisplay: (divContainerID, containerID, svgW, svgH, obj) => {
+	initDisplay: (idList, dimension, obj) => {
+		const {w, h} = dimension;
+		const {containerID, divContainerID} = idList;
 		var svg = document.createElementNS(svgNS, "svg");
 		svg.setAttributeNS(null, "id", containerID);
-		svg.setAttributeNS(null, "viewBox", `0 0 ${svgW} ${svgH}`);
+		svg.setAttributeNS(null, "viewBox", `0 0 ${w} ${h}`);
 		svg.setAttributeNS(null, "width", "100%");
 		svg.setAttributeNS(null, "height", "100%");
 		svg.style.setProperty("background-color", "#999");
