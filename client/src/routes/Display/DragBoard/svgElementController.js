@@ -21,7 +21,7 @@ export default {
 				showTag: svgElementFunctions.showTag,
 				hideTag: svgElementFunctions.hideTag,
 				showDetails: svgElementFunctions.showDetails
-			}, obj), idList.containerID);
+			}, obj), idList.svgElementID);
 		});
 
 		socket.on("svgMove", (data) => {
@@ -65,7 +65,7 @@ export default {
 					showTag: svgElementFunctions.showTag,
 					hideTag: svgElementFunctions.hideTag,
 					showDetails: svgElementFunctions.showDetails
-					}, obj), idList.containerID);
+					}, obj), idList.svgElementID);
 				})
 			}
 		});
@@ -75,34 +75,35 @@ export default {
 
 	initDisplay: (idList, dimension, obj) => {
 		const {w, h} = dimension;
-		const {containerID, divContainerID} = idList;
+		const {svgContainerID, svgElementID, messageInputID, addButtonID} = idList;
 		var svg = document.createElementNS(svgNS, "svg");
-		svg.setAttributeNS(null, "id", containerID);
+		svg.setAttributeNS(null, "id", svgElementID);
 		svg.setAttributeNS(null, "viewBox", `0 0 ${w} ${h}`);
 		svg.setAttributeNS(null, "width", "100%");
 		svg.setAttributeNS(null, "height", "100%");
 		svg.style.setProperty("background-color", "#999");
-		svg.addEventListener("mousemove", (e)=>{svgElementFunctions.handleMouseMove(e, obj, containerID)});
-		svg.addEventListener("mouseleave", (e)=>{svgElementFunctions.notDragged(e, obj, containerID)});
-		svg.addEventListener("mouseup", (e)=>{svgElementFunctions.notDragged(e, obj, containerID)});
+		svg.addEventListener("mousemove", (e)=>{svgElementFunctions.handleMouseMove(e, obj, svgElementID)});
+		svg.addEventListener("mouseleave", (e)=>{svgElementFunctions.notDragged(e, obj, svgElementID)});
+		svg.addEventListener("mouseup", (e)=>{svgElementFunctions.notDragged(e, obj, svgElementID)});
 
-		$(divContainerID).appendChild(svg);
+		$(svgContainerID).appendChild(svg);
 
 		var msgInput = document.createElementNS(htmlNS, "input");
-		msgInput.setAttributeNS(null, "id", "message");
+		const messageID = "message";
+		msgInput.setAttributeNS(null, "id", messageID);
 		msgInput.setAttributeNS(null, "type", "text");
 		msgInput.setAttributeNS(null, "placeholder", "Add message...");
 
-		$("message-input").appendChild(msgInput);
+		$(messageInputID).appendChild(msgInput);
 
 		var btn = document.createElementNS(htmlNS, "button");
 		btn.addEventListener("click", (e)=> {
-			svgElementFunctions.handleNewSVGElementRequest(e, $("message").value, obj);
-			$("message").value = "";
+			svgElementFunctions.handleNewSVGElementRequest(e, $(messageID).value, obj);
+			$(messageID).value = "";
 		});
 		var txtnode = document.createTextNode("Add");
 		btn.appendChild(txtnode);		
 
-		$("add-button").appendChild(btn);
+		$(addButtonID).appendChild(btn);
 	}
 }

@@ -11,9 +11,9 @@ export default {
 		rect.setAttributeNS(null, "height", parseInt(attributes.height));
 		rect.setAttributeNS(null, "fill", attributes.fill);
 		rect.addEventListener("mousedown", (e)=>{fnList.handleMouseDown(e, attributes.id, obj)});
-		rect.addEventListener("mouseover", (e)=>{fnList.showTag(e, attributes.id, obj, infoIDs.svgTagID, infoIDs.detailsID)});
-		rect.addEventListener("mousemove", (e)=>{fnList.showTag(e, attributes.id, obj, infoIDs.svgTagID, infoIDs.detailsID)});
-		rect.addEventListener("mouseleave", (e)=>{fnList.hideTag(infoIDs.svgTagID)});
+		rect.addEventListener("mouseover", (e)=>{fnList.showTag(e, attributes.id, obj, infoIDs.svgObjTagID, infoIDs.detailsID)});
+		rect.addEventListener("mousemove", (e)=>{fnList.showTag(e, attributes.id, obj, infoIDs.svgObjTagID, infoIDs.detailsID)});
+		rect.addEventListener("mouseleave", (e)=>{fnList.hideTag(infoIDs.svgObjTagID)});
 		rect.addEventListener("click", (e)=>{fnList.showDetails(attributes.id, obj, infoIDs.detailsID, infoIDs.detailsContentID)})
 		return rect;
 	},
@@ -23,7 +23,7 @@ export default {
 	},
 
 	showDetails: (str, obj, detailsID, detailsContentID) => {
-		$("details-content").innerHTML = `${obj.state.svgElements[str].msg}`;
+		$(detailsContentID).innerHTML = `${obj.state.svgElements[str].msg}`;
 		$(detailsID).style.display = "block";
 },
 
@@ -31,20 +31,20 @@ export default {
 		$(detailsID).style.display = "none"
 	},
 
-	showTag: (e, str, obj, svgTagID, detailsID) => {
+	showTag: (e, str, obj, svgObjTagID, detailsID) => {
 		if (!obj.state.isDragging) {
-			$(svgTagID).innerHTML = obj.state.svgElements[str].msg;
-			$(svgTagID).style.display = "block";
-			$(svgTagID).style.left = `${e.pageX + 15}px`;
-			$(svgTagID).style.top = `${e.pageY}px`;
+			$(svgObjTagID).innerHTML = obj.state.svgElements[str].msg;
+			$(svgObjTagID).style.display = "block";
+			$(svgObjTagID).style.left = `${e.pageX + 15}px`;
+			$(svgObjTagID).style.top = `${e.pageY}px`;
 		} else {
-			$(svgTagID).style.display = "none";
+			$(svgObjTagID).style.display = "none";
 			$(detailsID).style.display = "none";
 		}
 	},
 
-	hideTag: (svgTagID, detailsID) => {
-		$(svgTagID).style.display = "none";
+	hideTag: (svgObjTagID, detailsID) => {
+		$(svgObjTagID).style.display = "none";
 	},
 
 	handleMouseDown: (e,str, obj) => {

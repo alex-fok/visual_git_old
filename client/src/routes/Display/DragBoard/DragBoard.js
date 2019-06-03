@@ -6,11 +6,14 @@ import './DragBoard.css';
 
 const svgNS = "http://www.w3.org/2000/svg";
 
-const divContainerID = "divContainer"
-const containerID = "svgContainer";
-const svgTagID = "svgTag";
+const svgContainerID = "svgContainer"
+const svgElementID = "dragBoard";
+const svgObjTagID = "svgObjTag";
 const detailsID = "details";
 const detailsContentID = "details-content";
+const messageInputID = "message-input";
+const addButtonID = "add-button";
+const messageID = "message";
 
 const size = 800;
 
@@ -40,15 +43,21 @@ class DragBoard extends Component {
 		//svgElementController.initSocket(obj, idList, fnList)
 		svgElementController.initSocket(this, 
 			{
-				containerID: containerID,
+				svgElementID: svgElementID,
 				infoIDs: {
-					svgTagID: svgTagID,
+					svgObjTagID: svgObjTagID,
 					detailsID: detailsID,
 					detailsContentID: detailsContentID
 				}
 			});
 
-		svgElementController.initDisplay({divContainerID: divContainerID, containerID: containerID}, {w: svgW, h: svgH}, this);
+		svgElementController.initDisplay(
+			{
+				svgContainerID: svgContainerID,
+				svgElementID: svgElementID,
+				messageInputID: messageInputID,
+				addButtonID: addButtonID
+			}, {w: svgW, h: svgH}, this);
 	}
 
 	componentWillUnmount() {
@@ -63,17 +72,17 @@ class DragBoard extends Component {
 					<div style={{width:divW, height:divH}}>
 						<div className="row">
 							<div className="col">
-								<div id={divContainerID} style={{width:svgW, height:svgH}}>
+								<div id={svgContainerID} style={{width:svgW, height:svgH}}>
 								{/*
 									<svg
-										id={containerID}
+										id={svgElementID}
 										xmlns={svgNS}
 										viewBox={`0 0 ${svgW} ${svgH}`}
 										width="100%"
 										height="100%"
-										onMouseMove={(e)=>svgElementController.handleMouseMove(e, this, containerID)}
-										onMouseLeave={(e)=>svgElementController.notDragged(e, this, containerID)}
-										onMouseUp={(e)=>svgElementController.notDragged(e, this, containerID)}
+										onMouseMove={(e)=>svgElementController.handleMouseMove(e, this, svgElementID)}
+										onMouseLeave={(e)=>svgElementController.notDragged(e, this, svgElementID)}
+										onMouseUp={(e)=>svgElementController.notDragged(e, this, svgElementID)}
 										style={{backgroundColor: "#999"}}
 									></svg>
 									*/
@@ -95,7 +104,7 @@ class DragBoard extends Component {
 							<div className="col">
 								<div style={{width: divW*.25, height: divH}}>
 									<div id={detailsID}>
-										<div id="details-content"></div>
+										<div id={detailsContentID}></div>
 										<button
 											onClick={()=> {document.getElementById(detailsID).style.display = "none"}}
 										>Close</button>
@@ -105,7 +114,7 @@ class DragBoard extends Component {
 						</div>
 					</div>
 				</div>
-				<div id="svgTag"></div>
+				<div id="svgObjTag"></div>
 			</div>
 		);
 	}
