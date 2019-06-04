@@ -75,35 +75,39 @@ export default {
 
 	initDisplay: (idList, dimension, obj) => {
 		const {w, h} = dimension;
-		const {svgContainerID, svgElementID, messageInputID, addButtonID} = idList;
-		var svg = document.createElementNS(svgNS, "svg");
-		svg.setAttributeNS(null, "id", svgElementID);
-		svg.setAttributeNS(null, "viewBox", `0 0 ${w} ${h}`);
-		svg.setAttributeNS(null, "width", "100%");
-		svg.setAttributeNS(null, "height", "100%");
-		svg.style.setProperty("background-color", "#999");
-		svg.addEventListener("mousemove", (e)=>{svgElementFunctions.handleMouseMove(e, obj, svgElementID)});
-		svg.addEventListener("mouseleave", (e)=>{svgElementFunctions.notDragged(e, obj, svgElementID)});
-		svg.addEventListener("mouseup", (e)=>{svgElementFunctions.notDragged(e, obj, svgElementID)});
+		const {svgContainerID, svgElementID, messageInputID, messageID, addButtonID} = idList;
 
-		$(svgContainerID).appendChild(svg);
+		$(svgContainerID).appendChild((()=> {
+			var svg = document.createElementNS(svgNS, "svg");
+			svg.setAttributeNS(null, "id", svgElementID);
+			svg.setAttributeNS(null, "viewBox", `0 0 ${w} ${h}`);
+			svg.setAttributeNS(null, "width", "100%");
+			svg.setAttributeNS(null, "height", "100%");
+			svg.style.setProperty("background-color", "#999");
+			svg.addEventListener("mousemove", (e)=>{svgElementFunctions.handleMouseMove(e, obj, svgElementID)});
+			svg.addEventListener("mouseleave", (e)=>{svgElementFunctions.notDragged(e, obj, svgElementID)});
+			svg.addEventListener("mouseup", (e)=>{svgElementFunctions.notDragged(e, obj, svgElementID)});
+			return svg;
+		})());
 
-		var msgInput = document.createElementNS(htmlNS, "input");
-		const messageID = "message";
-		msgInput.setAttributeNS(null, "id", messageID);
-		msgInput.setAttributeNS(null, "type", "text");
-		msgInput.setAttributeNS(null, "placeholder", "Add message...");
+		$(messageInputID).appendChild((()=> {
+			var messageInput = document.createElementNS(htmlNS, "input");
+			messageInput.setAttributeNS(null, "id", messageID);
+			messageInput.setAttributeNS(null, "type", "text");
+			messageInput.setAttributeNS(null, "placeholder", "Add message...");
+			return messageInput;
+		})());	
 
-		$(messageInputID).appendChild(msgInput);
-
-		var btn = document.createElementNS(htmlNS, "button");
-		btn.addEventListener("click", (e)=> {
-			svgElementFunctions.handleNewSVGElementRequest(e, $(messageID).value, obj);
-			$(messageID).value = "";
-		});
-		var txtnode = document.createTextNode("Add");
-		btn.appendChild(txtnode);		
-
-		$(addButtonID).appendChild(btn);
+		$(addButtonID).appendChild((()=>{
+			var btn = document.createElementNS(htmlNS, "button");
+			btn.addEventListener("click", (e)=> {
+				svgElementFunctions.handleNewSVGElementRequest(e, $(messageID).value, obj);
+				$(messageID).value = "";
+			});
+			btn.appendChild((()=> {
+				return document.createTextNode("Add");
+			})());
+			return btn;
+		})());
 	}
 }

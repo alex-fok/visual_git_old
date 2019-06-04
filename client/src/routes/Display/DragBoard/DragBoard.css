@@ -3,15 +3,20 @@
 	position: fixed;
 	top: 0;
 	left: 0;
-	background-color: rgba(255, 255, 255, 0.3);
+	padding: 2px 5px;
+	background-color: rgba(220, 220, 220, 0.5);
+}
+
+#controlPanel{
+	display: block;
+	width: 100%;
+	height: 100%;
+	padding: 5px;
+	background-color: rgba(200,200,200,1);
 }
 
 #details{
 	display: none;
-	width: auto;
-	height: auto;
-	padding: 5px;
-	background-color: rgba(200,200,200,1);
 }
 
 .inlineType {

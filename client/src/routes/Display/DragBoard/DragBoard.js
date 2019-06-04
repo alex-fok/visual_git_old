@@ -9,19 +9,27 @@ const svgNS = "http://www.w3.org/2000/svg";
 const svgContainerID = "svgContainer"
 const svgElementID = "dragBoard";
 const svgObjTagID = "svgObjTag";
+
+const controlPanelID = "controlPanel";
+
 const detailsID = "details";
 const detailsContentID = "details-content";
 const messageInputID = "message-input";
+
+const inputID = "input"
 const addButtonID = "add-button";
 const messageID = "message";
 
 const size = 800;
 
-const divW = size;
-const divH = size*.5;
+const div_w = size;
+const div_h = size*.5;
 
-const svgW = divW*.5;
-const svgH = divH;
+const svg_w = div_w*.4;
+const svg_h = div_h;
+
+const details_w = div_w*.4;
+const details_h = div_h;
 
 class DragBoard extends Component {
 	constructor(props) {
@@ -56,8 +64,9 @@ class DragBoard extends Component {
 				svgContainerID: svgContainerID,
 				svgElementID: svgElementID,
 				messageInputID: messageInputID,
+				messageID: messageID,
 				addButtonID: addButtonID
-			}, {w: svgW, h: svgH}, this);
+			}, {w: svg_w, h: svg_h}, this);
 	}
 
 	componentWillUnmount() {
@@ -69,15 +78,11 @@ class DragBoard extends Component {
 		return(
 			<div>
 				<div className="container-fluid noPadding">
-					<div style={{width:divW, height:divH}}>
+					<div style={{width:div_w, height:div_h}}>
 						<div className="row">
 							<div className="col">
-								<div id={svgContainerID} style={{width:svgW, height:svgH}}>
-								{/*
-									<svg
-										id={svgElementID}
-										xmlns={svgNS}
-										viewBox={`0 0 ${svgW} ${svgH}`}
+								<div id={svgContainerID} style={{width:svg_w, height:svg_h}}></div>
+								{/*<svg
 										width="100%"
 										height="100%"
 										onMouseMove={(e)=>svgElementController.handleMouseMove(e, this, svgElementID)}
@@ -86,12 +91,10 @@ class DragBoard extends Component {
 										style={{backgroundColor: "#999"}}
 									></svg>
 									*/
-								}</div>
+								}
 								{/*<input type="text" id="message" placeholder="Add message..."/>
 								*/
-								}
-								<div className="inlineType" id="message-input"></div>
-								<div className="inlineType" id="add-button">
+								}	
 								{/*<button onClick={(e) => {
 									const val = document.getElementById("message").value;
 									svgElementController.handleNewSVGElementRequest(e, val, this);
@@ -99,15 +102,20 @@ class DragBoard extends Component {
 								}}>BUTTON</button>
 								*/
 								}
-								</div>
 							</div>
 							<div className="col">
-								<div style={{width: divW*.25, height: divH}}>
-									<div id={detailsID}>
-										<div id={detailsContentID}></div>
-										<button
-											onClick={()=> {document.getElementById(detailsID).style.display = "none"}}
-										>Close</button>
+								<div style={{width: details_w, height: details_h}}>
+									<div id={controlPanelID}>
+										<div id={detailsID}>
+											<div className="inlineType" id={detailsContentID}></div>
+											<button className="inlineType" onClick = {(e)=> {
+												document.getElementById(detailsID).style.display = "none";
+											}}>Close</button>
+										</div>
+										<div id={inputID}>
+											<div className="inlineType" id="message-input"></div>
+											<div className="inlineType" id="add-button"></div>
+										</div>
 									</div>
 								</div>
 							</div>
