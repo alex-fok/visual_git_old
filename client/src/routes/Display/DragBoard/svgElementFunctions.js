@@ -11,10 +11,10 @@ export default {
 		rect.setAttributeNS(null, "height", parseInt(attributes.height));
 		rect.setAttributeNS(null, "fill", attributes.fill);
 		rect.addEventListener("mousedown", (e)=>{fnList.handleMouseDown(e, attributes.id, obj)});
-		rect.addEventListener("mouseover", (e)=>{fnList.showTag(e, attributes.id, obj, infoIDs.svgObjTagID, infoIDs.detailsID)});
-		rect.addEventListener("mousemove", (e)=>{fnList.showTag(e, attributes.id, obj, infoIDs.svgObjTagID, infoIDs.detailsID)});
+		rect.addEventListener("mouseover", (e)=>{fnList.showTag(e, attributes.id, obj, infoIDs)});
+		rect.addEventListener("mousemove", (e)=>{fnList.showTag(e, attributes.id, obj, infoIDs)});
 		rect.addEventListener("mouseleave", (e)=>{fnList.hideTag(infoIDs.svgObjTagID)});
-		rect.addEventListener("click", (e)=>{fnList.showDetails(attributes.id, obj, infoIDs.detailsID, infoIDs.detailsContentID)})
+		rect.addEventListener("click", (e)=>{fnList.showDetails(attributes.id, obj, infoIDs)})
 		return rect;
 	},
 
@@ -22,16 +22,21 @@ export default {
 		$(containerID).appendChild(element);
 	},
 
-	showDetails: (str, obj, detailsID, detailsContentID) => {
+	showDetails: (str, obj, infoIDs) => {
+		const {detailsID, detailsContentID, inputID} = infoIDs;
 		$(detailsContentID).innerHTML = `${obj.state.svgElements[str].msg}`;
 		$(detailsID).style.display = "block";
+		$(inputID).style.display = "none";
 },
 
-	hideDescription: (detailsID) => {
-		$(detailsID).style.display = "none"
+	hideDetails: (detailsID, inputID) => {
+		$(detailsID).style.display = "none";
+		$(inputID).style.display = "block";
 	},
 
-	showTag: (e, str, obj, svgObjTagID, detailsID) => {
+	showTag: (e, str, obj, infoIDs) => {
+		const {svgObjTagID, detailsID, inputID} = infoIDs;
+
 		if (!obj.state.isDragging) {
 			$(svgObjTagID).innerHTML = obj.state.svgElements[str].msg;
 			$(svgObjTagID).style.display = "block";
@@ -40,6 +45,7 @@ export default {
 		} else {
 			$(svgObjTagID).style.display = "none";
 			$(detailsID).style.display = "none";
+			$(inputID).style.display = "block";
 		}
 	},
 

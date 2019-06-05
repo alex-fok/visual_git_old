@@ -15,8 +15,9 @@ const controlPanelID = "controlPanel";
 const detailsID = "details";
 const detailsContentID = "details-content";
 const messageInputID = "message-input";
+const closeButtonID = "close-button";
 
-const inputID = "input"
+const inputID = "input";
 const addButtonID = "add-button";
 const messageID = "message";
 
@@ -55,6 +56,7 @@ class DragBoard extends Component {
 				infoIDs: {
 					svgObjTagID: svgObjTagID,
 					detailsID: detailsID,
+					inputID: inputID,
 					detailsContentID: detailsContentID
 				}
 			});
@@ -65,7 +67,10 @@ class DragBoard extends Component {
 				svgElementID: svgElementID,
 				messageInputID: messageInputID,
 				messageID: messageID,
-				addButtonID: addButtonID
+				addButtonID: addButtonID,
+				closeButtonID: closeButtonID,
+				detailsID: detailsID,
+				inputID: inputID
 			}, {w: svg_w, h: svg_h}, this);
 	}
 
@@ -108,9 +113,7 @@ class DragBoard extends Component {
 									<div id={controlPanelID}>
 										<div id={detailsID}>
 											<div className="inlineType" id={detailsContentID}></div>
-											<button className="inlineType" onClick = {(e)=> {
-												document.getElementById(detailsID).style.display = "none";
-											}}>Close</button>
+											<div className="absoluteBottom" id={closeButtonID}></div>
 										</div>
 										<div id={inputID}>
 											<div className="inlineType" id="message-input"></div>

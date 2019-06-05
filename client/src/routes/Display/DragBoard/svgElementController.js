@@ -75,7 +75,7 @@ export default {
 
 	initDisplay: (idList, dimension, obj) => {
 		const {w, h} = dimension;
-		const {svgContainerID, svgElementID, messageInputID, messageID, addButtonID} = idList;
+		const {svgContainerID, svgElementID, messageInputID, messageID, addButtonID, closeButtonID} = idList;
 
 		$(svgContainerID).appendChild((()=> {
 			var svg = document.createElementNS(svgNS, "svg");
@@ -104,8 +104,19 @@ export default {
 				svgElementFunctions.handleNewSVGElementRequest(e, $(messageID).value, obj);
 				$(messageID).value = "";
 			});
-			btn.appendChild((()=> {
+			btn.appendChild((()=>{
 				return document.createTextNode("Add");
+			})());
+			return btn;
+		})());
+
+		$(closeButtonID).appendChild((()=>{
+			var btn = document.createElementNS(htmlNS, "button");
+			btn.addEventListener("click", (e)=> {
+				svgElementFunctions.hideDetails(idList.detailsID, idList.inputID)
+			});
+			btn.appendChild((()=>{
+				return document.createTextNode("Close");
 			})());
 			return btn;
 		})());

@@ -23,6 +23,12 @@
 	display: inline-block;
 }
 
+.absoluteBottom {
+	display: absolute;
+	bottom: 30px;
+	left: 15px;
+}
+
 .noPadding{
 	padding: 0 !important;
 	margin: 0 !important;
