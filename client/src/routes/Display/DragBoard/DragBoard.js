@@ -10,7 +10,7 @@ const svgContainerID = "svgContainer"
 const svgElementID = "dragBoard";
 const svgObjTagID = "svgObjTag";
 
-const controlPanelID = "controlPanel";
+const panelID = "panel";
 
 const detailsID = "details";
 const detailsContentID = "details-content";
@@ -20,6 +20,8 @@ const closeButtonID = "close-button";
 const inputID = "input";
 const addButtonID = "add-button";
 const messageID = "message";
+const imageID = "image";
+const imgPreviewID = "imagePreview";
 
 const size = 800;
 
@@ -67,6 +69,8 @@ class DragBoard extends Component {
 				svgElementID: svgElementID,
 				messageInputID: messageInputID,
 				messageID: messageID,
+				imageID: imageID,
+				imgPreviewID: imgPreviewID,
 				addButtonID: addButtonID,
 				closeButtonID: closeButtonID,
 				detailsID: detailsID,
@@ -110,12 +114,13 @@ class DragBoard extends Component {
 							</div>
 							<div className="col">
 								<div style={{width: details_w, height: details_h}}>
-									<div id={controlPanelID}>
+									<div className="panel" id={panelID}>
 										<div id={detailsID}>
 											<div className="inlineType" id={detailsContentID}></div>
-											<div className="absoluteBottom" id={closeButtonID}></div>
+											<div id={imgPreviewID}></div>
+											<div className="atBottom" id={closeButtonID}></div>
 										</div>
-										<div id={inputID}>
+										<div id={inputID} className="atBottom">
 											<div className="inlineType" id="message-input"></div>
 											<div className="inlineType" id="add-button"></div>
 										</div>
