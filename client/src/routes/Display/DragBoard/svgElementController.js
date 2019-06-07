@@ -108,26 +108,32 @@ export default {
 
 		// File (image) input type
 		$(messageInputID).appendChild((()=>{
-			var imgInput = document.createElementNS(htmlNS, "input");
-			imgInput.setAttributeNS(null, "id", imageID);
-			imgInput.setAttributeNS(null, "type", "file");
-			imgInput.setAttributeNS(null, "accept", "image/*");
-			imgInput.setAttributeNS(null, "class", "btn btn-custom")
+			var imgInputLabel = document.createElementNS(htmlNS, "label");
+			imgInputLabel.setAttributeNS(null, "class", "btn btn-secondary");
+			
+			imgInputLabel.appendChild((()=>{
+				var imgInput = document.createElementNS(htmlNS, "input");
+				imgInput.setAttributeNS(null, "id", imageID);
+				imgInput.setAttributeNS(null, "type", "file");
+				imgInput.setAttributeNS(null, "accept", "image/*");
+				imgInput.setAttributeNS(null, "class", "btn btn-custom");
+				imgInput.setAttributeNS(null, "style", "display: none");
+				imgInput.addEventListener("change", (e)=> {
+					const imgs = e.target.files;
+					var fr = new FileReader();
+					fr.readAsDataURL(imgs[0]);
 
-			imgInput.addEventListener("change", (e)=> {
-				const imgs = e.target.files;
-				var fr = new FileReader();
-				fr.readAsDataURL(imgs[0]);
-
-				fr.onload = ()=>{
-					$(imgPreviewID).appendChild( (()=>{
-						var imgElement = document.createElementNS(htmlNS, "img");
-						imgElement.setAttributeNS(null, "src", (()=> {return fr.result})());
-						return imgElement;
-					})());	
-				};
-			});
-			return imgInput;
+					fr.onload = ()=>{
+						$(imgPreviewID).appendChild( (()=>{
+							var imgElement = document.createElementNS(htmlNS, "img");
+							imgElement.setAttributeNS(null, "src", (()=> {return fr.result})());
+							return imgElement;
+						})());	
+					};
+				});
+				return imgInput;
+			})());
+			return imgInputLabel;
 		})());
 
 		$(addButtonID).appendChild((()=>{
