@@ -112,22 +112,21 @@ export default {
 			imgInput.setAttributeNS(null, "id", imageID);
 			imgInput.setAttributeNS(null, "type", "file");
 			imgInput.setAttributeNS(null, "accept", "image/*");
+			imgInput.setAttributeNS(null, "class", "btn btn-custom")
 
 			imgInput.addEventListener("change", (e)=> {
-				
-				$(imgPreviewID).appendChild((()=>{
-					
-					const imgs = e.target.files;
-					var imgElement = document.createElementNS(htmlNS, "img");
-					var fr = new FileReader();
-					fr.readAsDataURL(imgs[0]);
+				const imgs = e.target.files;
+				var fr = new FileReader();
+				fr.readAsDataURL(imgs[0]);
 
-					imgElement.setAttributeNS(null, "src", (()=> {
-						return fr.result;
-					})());
-				})());	
-			}, false);
-
+				fr.onload = ()=>{
+					$(imgPreviewID).appendChild( (()=>{
+						var imgElement = document.createElementNS(htmlNS, "img");
+						imgElement.setAttributeNS(null, "src", (()=> {return fr.result})());
+						return imgElement;
+					})());	
+				};
+			});
 			return imgInput;
 		})());
 

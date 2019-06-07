@@ -117,12 +117,12 @@ class DragBoard extends Component {
 									<div className="panel" id={panelID}>
 										<div id={detailsID}>
 											<div className="inlineType" id={detailsContentID}></div>
-											<div id={imgPreviewID}></div>
 											<div className="atBottom" id={closeButtonID}></div>
 										</div>
-										<div id={inputID} className="atBottom">
-											<div className="inlineType" id="message-input"></div>
-											<div className="inlineType" id="add-button"></div>
+										<div id={inputID}>
+											<div className="inlineType" id={messageInputID}></div>
+											<div id={imgPreviewID}></div>
+											<div className="inlineType  atBottom" id={addButtonID}></div>
 										</div>
 									</div>
 								</div>
