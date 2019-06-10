@@ -89,19 +89,18 @@ export default {
 	handleMouseMove: (e, obj, containerID) => {
 		if (obj.state.isDragging) {
 			const {draggedItem, socket} = obj.state;
-			const rect = $(containerID).getElementById(draggedItem.id);
-
-			const px = parseInt(e.pageX);
-			const py = parseInt(e.pageY);
-			const dx = px - draggedItem.xFrom;
-			const dy = py - draggedItem.yFrom;
+			const rect = $(containerID).getElementById(draggedItem.id),
+						px = parseInt(e.pageX),
+						py = parseInt(e.pageY),
+						dx = px - draggedItem.xFrom,
+						dy = py - draggedItem.yFrom;
 
 			obj.setState(prev => ({
 				draggedItem: Object.assign(prev.draggedItem, {xFrom: px, yFrom: py}) 
 			}));
 			
-			const rectX = parseInt(rect.getAttributeNS(null, "x"));
-			const rectY = parseInt(rect.getAttributeNS(null, "y"));
+			const rectX = parseInt(rect.getAttributeNS(null, "x")),
+						rectY = parseInt(rect.getAttributeNS(null, "y"));
 
 			rect.setAttributeNS(null, "x", (rectX + dx));
 			rect.setAttributeNS(null, "y", (rectY + dy));

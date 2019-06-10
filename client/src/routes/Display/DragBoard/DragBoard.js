@@ -6,33 +6,28 @@ import './DragBoard.css';
 
 const svgNS = "http://www.w3.org/2000/svg";
 
-const svgContainerID = "svgContainer"
-const svgElementID = "dragBoard";
-const svgObjTagID = "svgObjTag";
+const svgContainerID = "svgContainer",
+			svgElementID = "dragBoard",
+			svgObjTagID = "svgObjTag",
+			panelID = "panel",
+			detailsID = "details",
+			detailsContentID = "details-content",
+			messageInputID = "message-input",
+			closeButtonID = "close-button",
+			inputID = "input",
+			addButtonID = "add-button",
+			messageID = "message",
+			imgInputID = "imgInput",
+			imageID = "image",
+			imgPreviewID = "imagePreview";
 
-const panelID = "panel";
-
-const detailsID = "details";
-const detailsContentID = "details-content";
-const messageInputID = "message-input";
-const closeButtonID = "close-button";
-
-const inputID = "input";
-const addButtonID = "add-button";
-const messageID = "message";
-const imageID = "image";
-const imgPreviewID = "imagePreview";
-
-const size = 800;
-
-const div_w = size;
-const div_h = size*.5;
-
-const svg_w = div_w*.4;
-const svg_h = div_h;
-
-const details_w = div_w*.4;
-const details_h = div_h;
+const size = 800,
+			div_w = size,
+			div_h = size*.5,
+			svg_w = div_w*.4,
+			svg_h = div_h,
+			details_w = div_w*.4,
+			details_h = div_h;
 
 class DragBoard extends Component {
 	constructor(props) {
@@ -69,6 +64,7 @@ class DragBoard extends Component {
 				svgElementID: svgElementID,
 				messageInputID: messageInputID,
 				messageID: messageID,
+				imgInputID: imgInputID,
 				imageID: imageID,
 				imgPreviewID: imgPreviewID,
 				addButtonID: addButtonID,
@@ -120,7 +116,8 @@ class DragBoard extends Component {
 											<div className="atBottom" id={closeButtonID}></div>
 										</div>
 										<div id={inputID}>
-											<div className="inlineType" id={messageInputID}></div>
+											<div id={messageInputID}></div>
+											<div id={imgInputID} className="input-group"> </div>
 											<div id={imgPreviewID}></div>
 											<div className="inlineType  atBottom" id={addButtonID}></div>
 										</div>

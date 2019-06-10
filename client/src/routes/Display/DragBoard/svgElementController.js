@@ -1,7 +1,7 @@
 import svgElementFunctions from './svgElementFunctions';
 
-const svgNS = "http://www.w3.org/2000/svg";
-const htmlNS = "http://www.w3.org/1999/xhtml";
+const svgNS = "http://www.w3.org/2000/svg",
+			htmlNS = "http://www.w3.org/1999/xhtml";
 const $ = (id) => {return document.getElementById(id)};
 
 export default {
@@ -79,6 +79,7 @@ export default {
 			svgContainerID,
 			svgElementID,
 			messageInputID,
+			imgInputID,
 			messageID,
 			imageID,
 			imgPreviewID,
@@ -107,31 +108,40 @@ export default {
 		})());
 
 		// File (image) input type
-		$(messageInputID).appendChild((()=>{
+		$(imgInputID).appendChild((()=>{
 			var imgInputLabel = document.createElementNS(htmlNS, "label");
-			imgInputLabel.setAttributeNS(null, "class", "btn btn-secondary");
+			imgInputLabel.setAttributeNS(null, "class", "input-group-btn");
 			
-			imgInputLabel.appendChild((()=>{
-				var imgInput = document.createElementNS(htmlNS, "input");
-				imgInput.setAttributeNS(null, "id", imageID);
-				imgInput.setAttributeNS(null, "type", "file");
-				imgInput.setAttributeNS(null, "accept", "image/*");
-				imgInput.setAttributeNS(null, "class", "btn btn-custom");
-				imgInput.setAttributeNS(null, "style", "display: none");
-				imgInput.addEventListener("change", (e)=> {
-					const imgs = e.target.files;
-					var fr = new FileReader();
-					fr.readAsDataURL(imgs[0]);
+			imgInputLabel.appendChild((()=> {
+				var imgInputSpan = document.createElementNS(htmlNS, "span");
+				imgInputSpan.setAttributeNS(null, "class", "btn btn-secondary");
 
-					fr.onload = ()=>{
-						$(imgPreviewID).appendChild( (()=>{
-							var imgElement = document.createElementNS(htmlNS, "img");
-							imgElement.setAttributeNS(null, "src", (()=> {return fr.result})());
-							return imgElement;
-						})());	
-					};
-				});
-				return imgInput;
+				imgInputSpan.appendChild((()=> {
+					return document.createTextNode("Browse...");
+				})());
+				imgInputSpan.appendChild((()=>{
+					var imgInput = document.createElementNS(htmlNS, "input");
+					imgInput.setAttributeNS(null, "id", imageID);
+					imgInput.setAttributeNS(null, "type", "file");
+					imgInput.setAttributeNS(null, "accept", "image/*");
+					//imgInput.setAttributeNS(null, "class", "btn btn-custom");
+					imgInput.setAttributeNS(null, "style", "display: none");
+					imgInput.addEventListener("change", (e)=> {
+						const imgs = e.target.files;
+						var fr = new FileReader();
+						fr.readAsDataURL(imgs[0]);
+
+						fr.onload = ()=>{
+							$(imgPreviewID).appendChild( (()=>{
+								var imgElement = document.createElementNS(htmlNS, "img");
+								imgElement.setAttributeNS(null, "src", (()=> {return fr.result})());
+								return imgElement;
+							})());	
+						};
+					});
+					return imgInput;
+				})());
+				return imgInputSpan;
 			})());
 			return imgInputLabel;
 		})());
