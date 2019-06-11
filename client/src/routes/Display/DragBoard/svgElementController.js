@@ -110,11 +110,11 @@ export default {
 		// File (image) input type
 		$(imgInputID).appendChild((()=>{
 			var imgInputLabel = document.createElementNS(htmlNS, "label");
-			imgInputLabel.setAttributeNS(null, "class", "input-group-btn");
+			imgInputLabel.setAttributeNS(null, "class", "input-group");
 			
 			imgInputLabel.appendChild((()=> {
 				var imgInputSpan = document.createElementNS(htmlNS, "span");
-				imgInputSpan.setAttributeNS(null, "class", "btn btn-secondary");
+				imgInputSpan.setAttributeNS(null, "class", "btn btn-outline-secondary");
 
 				imgInputSpan.appendChild((()=> {
 					return document.createTextNode("Browse...");
@@ -124,6 +124,7 @@ export default {
 					imgInput.setAttributeNS(null, "id", imageID);
 					imgInput.setAttributeNS(null, "type", "file");
 					imgInput.setAttributeNS(null, "accept", "image/*");
+					imgInput.setAttributeNS(null, "class", "form-control-file");
 					//imgInput.setAttributeNS(null, "class", "btn btn-custom");
 					imgInput.setAttributeNS(null, "style", "display: none");
 					imgInput.addEventListener("change", (e)=> {
@@ -144,6 +145,15 @@ export default {
 				return imgInputSpan;
 			})());
 			return imgInputLabel;
+		})());
+
+		$(imgInputID).appendChild((()=> {
+			var imgTxt = document.createElementNS(htmlNS, "input");
+			imgTxt.setAttributeNS(null, "type", "text");
+			imgTxt.setAttributeNS(null, "value", "img");
+			imgTxt.setAttributeNS(null, "readonly", true)
+
+			return imgTxt;
 		})());
 
 		$(addButtonID).appendChild((()=>{

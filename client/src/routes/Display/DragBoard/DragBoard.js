@@ -21,7 +21,7 @@ const svgContainerID = "svgContainer",
 			imageID = "image",
 			imgPreviewID = "imagePreview";
 
-const size = 800,
+const size = 1200,
 			div_w = size,
 			div_h = size*.5,
 			svg_w = div_w*.4,
