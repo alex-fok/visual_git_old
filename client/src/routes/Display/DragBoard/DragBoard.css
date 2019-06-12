@@ -19,6 +19,10 @@
 	display: none;
 }
 
+#test1{
+	display:none;
+}
+
 .inlineType {
 	display: inline-block;
 }

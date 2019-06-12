@@ -110,7 +110,7 @@ export default {
 		// File (image) input type
 		$(imgInputID).appendChild((()=>{
 			var imgInputLabel = document.createElementNS(htmlNS, "label");
-			imgInputLabel.setAttributeNS(null, "class", "input-group");
+			//imgInputLabel.setAttributeNS(null, "class", "input-group-btn");
 			
 			imgInputLabel.appendChild((()=> {
 				var imgInputSpan = document.createElementNS(htmlNS, "span");
