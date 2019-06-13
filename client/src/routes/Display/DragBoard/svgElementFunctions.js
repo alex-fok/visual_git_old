@@ -40,8 +40,8 @@ export default {
 		if (!obj.state.isDragging) {
 			$(svgObjTagID).innerHTML = obj.state.svgElements[str].msg;
 			$(svgObjTagID).style.display = "block";
-			$(svgObjTagID).style.left = `${e.pageX + 15}px`;
-			$(svgObjTagID).style.top = `${e.pageY}px`;
+			$(svgObjTagID).style.left = `${e.pageX - window.scrollX + 15}px`;
+			$(svgObjTagID).style.top = `${e.pageY - window.scrollY}px`;
 		} else {
 			$(svgObjTagID).style.display = "none";
 			$(detailsID).style.display = "none";

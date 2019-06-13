@@ -40,3 +40,7 @@
 .img-input-height{
 	height: 35px;
 }
+
+.imgContainer {
+	overflow: auto;
+}
