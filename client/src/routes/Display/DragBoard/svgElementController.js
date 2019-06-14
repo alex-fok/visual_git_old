@@ -130,8 +130,6 @@ export default {
 					imgInput.setAttributeNS(null, "style", "display: none");
 					imgInput.addEventListener("change", (e)=> {
 						const val = imgInput.value;
-						console.log(val);
-						console.log(imgInput.get(0));
 						$(imgTxtID).value = val.replace(/\\/g, '/').replace(/.*\//, '');
 
 						const imgs = e.target.files;
@@ -158,7 +156,6 @@ export default {
 			imgTxt.setAttributeNS(null, "type", "text");
 			imgTxt.setAttributeNS(null, "class", "img-input-height form-control")
 			imgTxt.setAttributeNS(null, "id", imgTxtID);
-			imgTxt.setAttributeNS(null, "value", "img");
 			imgTxt.setAttributeNS(null, "readonly", true)
 
 			return imgTxt;
