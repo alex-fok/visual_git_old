@@ -18,7 +18,7 @@ const svgContainerID = "svgContainer",
 			addButtonID = "add-button",
 			messageID = "message",
 			imgInputID = "imgInput",
-			imageID = "image",
+			imgID = "image",
 			imgPreviewID = "imagePreview",
 			imgTxtID = "imgTxtID";
 
@@ -66,7 +66,7 @@ class DragBoard extends Component {
 				messageInputID: messageInputID,
 				messageID: messageID,
 				imgInputID: imgInputID,
-				imageID: imageID,
+				imgID: imgID,
 				imgPreviewID: imgPreviewID,
 				imgTxtID: imgTxtID,
 				addButtonID: addButtonID,

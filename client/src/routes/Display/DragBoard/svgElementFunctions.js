@@ -1,4 +1,5 @@
-const svgNS = "http://www.w3.org/2000/svg";
+const svgNS = "http://www.w3.org/2000/svg",
+	  htmlNS = "http://www.w3.org/1999/xhtml";
 const $ = (id) => {return document.getElementById(id)};
 
 export default {
@@ -38,7 +39,16 @@ export default {
 		const {svgObjTagID, detailsID, inputID} = infoIDs;
 
 		if (!obj.state.isDragging) {
-			$(svgObjTagID).innerHTML = obj.state.svgElements[str].msg;
+			const {msg, img} = obj.state.svgElements[str];
+			
+			$(svgObjTagID).innerHTML = 
+				msg + ((()=>{
+					var imgElement = document.createElementNS(htmlNS, "img");
+					imgElement.setAttributeNS(null, "src", img);
+					return imgElement;
+				})());
+				
+
 			$(svgObjTagID).style.display = "block";
 			$(svgObjTagID).style.left = `${e.pageX - window.scrollX + 15}px`;
 			$(svgObjTagID).style.top = `${e.pageY - window.scrollY}px`;
@@ -69,11 +79,12 @@ export default {
 		}
 	},
 
-	handleNewSVGElementRequest: (e, msg, obj) => {
+	handleNewSVGElementRequest: (e, input, obj) => {
 		const id = "item_" + Date.now();
 		let data = {
 			[id] : {
-				msg: msg, 
+				msg: input.msg,
+				img: input.img,
 				x: 10,
 				y: 50,
 				width: 10,

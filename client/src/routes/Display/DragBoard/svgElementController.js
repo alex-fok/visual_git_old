@@ -81,8 +81,9 @@ export default {
 			messageInputID,
 			imgInputID,
 			messageID,
-			imageID,
+			imageInputID,
 			imgPreviewID,
+			imgID,
 			imgTxtID,
 			addButtonID,
 			closeButtonID} = idList;
@@ -122,16 +123,16 @@ export default {
 
 				imgInputSpan.appendChild((()=>{
 					var imgInput = document.createElementNS(htmlNS, "input");
-					imgInput.setAttributeNS(null, "id", imageID);
+					imgInput.setAttributeNS(null, "id", imageInputID);
 					imgInput.setAttributeNS(null, "type", "file");
 					imgInput.setAttributeNS(null, "accept", "image/*");
 					imgInput.setAttributeNS(null, "class", "form-control-file");
-					//imgInput.setAttributeNS(null, "class", "btn btn-custom");
 					imgInput.setAttributeNS(null, "style", "display: none");
+					imgInput.setAttributeNS(null, "multiple", true);
 					imgInput.addEventListener("change", (e)=> {
 						const val = imgInput.value;
 						$(imgTxtID).value = val.replace(/\\/g, '/').replace(/.*\//, '');
-
+						// imgInput.files ? 
 						const imgs = e.target.files;
 						var fr = new FileReader();
 						fr.readAsDataURL(imgs[0]);
@@ -139,7 +140,9 @@ export default {
 						fr.onload = ()=>{
 							$(imgPreviewID).appendChild( (()=>{
 								var imgElement = document.createElementNS(htmlNS, "img");
+								imgElement.setAttributeNS(null, "id", imgID);
 								imgElement.setAttributeNS(null, "src", (()=> {return fr.result})());
+								
 								return imgElement;
 							})());	
 						};
@@ -166,7 +169,10 @@ export default {
 			btn.setAttributeNS(null, "type", "button");
 			btn.setAttributeNS(null, "class", "btn btn-secondary");
 			btn.addEventListener("click", (e)=> {
-				svgElementFunctions.handleNewSVGElementRequest(e, $(messageID).value, obj);
+				svgElementFunctions.handleNewSVGElementRequest(e, {
+					msg: $(messageID).value,
+					img: $(imgID) ? $(imgID).src : ""
+				}, obj);
 				$(messageID).value = "";
 			});
 			btn.appendChild((()=>{
