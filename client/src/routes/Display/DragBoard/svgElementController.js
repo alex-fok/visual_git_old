@@ -83,6 +83,7 @@ export default {
 			messageID,
 			imageID,
 			imgPreviewID,
+			imgTxtID,
 			addButtonID,
 			closeButtonID} = idList;
 
@@ -128,6 +129,11 @@ export default {
 					//imgInput.setAttributeNS(null, "class", "btn btn-custom");
 					imgInput.setAttributeNS(null, "style", "display: none");
 					imgInput.addEventListener("change", (e)=> {
+						const val = imgInput.value;
+						console.log(val);
+						console.log(imgInput.get(0));
+						$(imgTxtID).value = val.replace(/\\/g, '/').replace(/.*\//, '');
+
 						const imgs = e.target.files;
 						var fr = new FileReader();
 						fr.readAsDataURL(imgs[0]);
@@ -151,6 +157,7 @@ export default {
 			var imgTxt = document.createElementNS(htmlNS, "input");
 			imgTxt.setAttributeNS(null, "type", "text");
 			imgTxt.setAttributeNS(null, "class", "img-input-height form-control")
+			imgTxt.setAttributeNS(null, "id", imgTxtID);
 			imgTxt.setAttributeNS(null, "value", "img");
 			imgTxt.setAttributeNS(null, "readonly", true)
 
