@@ -136,7 +136,6 @@ export default {
 							$(imgPreviewID).appendChild( (()=>{
 								var imgElement = document.createElementNS(htmlNS, "img");
 								imgElement.setAttributeNS(null, "src", (()=> {return fr.result})());
-								imgElement.setAttributeNS(null, "class", "overflow-auto");
 								return imgElement;
 							})());	
 						};
