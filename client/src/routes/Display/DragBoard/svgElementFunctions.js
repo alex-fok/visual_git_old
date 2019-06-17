@@ -25,7 +25,20 @@ export default {
 
 	showDetails: (str, obj, infoIDs) => {
 		const {detailsID, detailsContentID, inputID} = infoIDs;
-		$(detailsContentID).innerHTML = `${obj.state.svgElements[str].msg}`;
+		const {msg, img} = obj.state.svgElements[str];
+		
+		$(detailsContentID).textContent = ``;
+		
+		$(detailsContentID).appendChild((()=>{
+			return document.createTextNode(msg);
+		})());
+		
+		$(detailsContentID).appendChild((()=>{		
+			var imgElement = document.createElementNS(htmlNS, "img");
+			imgElement.setAttributeNS(null, "src", img);
+			return imgElement;
+		})());
+		
 		$(detailsID).style.display = "block";
 		$(inputID).style.display = "none";
 },
@@ -39,16 +52,9 @@ export default {
 		const {svgObjTagID, detailsID, inputID} = infoIDs;
 
 		if (!obj.state.isDragging) {
-			const {msg, img} = obj.state.svgElements[str];
+			const {msg} = obj.state.svgElements[str];
 			
-			$(svgObjTagID).innerHTML = 
-				msg + ((()=>{
-					var imgElement = document.createElementNS(htmlNS, "img");
-					imgElement.setAttributeNS(null, "src", img);
-					return imgElement;
-				})());
-				
-
+			$(svgObjTagID).innerHTML = msg;			
 			$(svgObjTagID).style.display = "block";
 			$(svgObjTagID).style.left = `${e.pageX - window.scrollX + 15}px`;
 			$(svgObjTagID).style.top = `${e.pageY - window.scrollY}px`;

@@ -114,7 +114,7 @@ class DragBoard extends Component {
 								<div style={{width: details_w, height: details_h}}>
 									<div className="panel" id={panelID}>
 										<div id={detailsID}>
-											<div className="inlineType" id={detailsContentID}></div>
+											<div className="inlineType imgContainer" id={detailsContentID}></div>
 											<div className="atBottom" id={closeButtonID}></div>
 										</div>
 										<div id={inputID}>
