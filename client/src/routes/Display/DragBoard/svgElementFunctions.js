@@ -24,16 +24,17 @@ export default {
 	},
 
 	showDetails: (str, obj, infoIDs) => {
-		const {detailsID, detailsContentID, inputID} = infoIDs;
+		const {detailsID, detailsMsgID, detailsImgID, inputID} = infoIDs;
 		const {msg, img} = obj.state.svgElements[str];
 		
-		$(detailsContentID).textContent = ``;
+		$(detailsMsgID).textContent = "";
+		$(detailsImgID).textContent = "";
 		
-		$(detailsContentID).appendChild((()=>{
+		$(detailsMsgID).appendChild((()=>{
 			return document.createTextNode(msg);
 		})());
 		
-		$(detailsContentID).appendChild((()=>{		
+		$(detailsImgID).appendChild((()=>{		
 			var imgElement = document.createElementNS(htmlNS, "img");
 			imgElement.setAttributeNS(null, "src", img);
 			return imgElement;

@@ -11,7 +11,8 @@ const svgContainerID = "svgContainer",
 			svgObjTagID = "svgObjTag",
 			panelID = "panel",
 			detailsID = "details",
-			detailsContentID = "details-content",
+			detailsMsgID = "details-msg",
+			detailsImgID = "details-img",
 			messageInputID = "message-input",
 			closeButtonID = "close-button",
 			inputID = "input",
@@ -55,7 +56,8 @@ class DragBoard extends Component {
 					svgObjTagID: svgObjTagID,
 					detailsID: detailsID,
 					inputID: inputID,
-					detailsContentID: detailsContentID
+					detailsMsgID: detailsMsgID,
+					detailsImgID: detailsImgID
 				}
 			});
 
@@ -89,32 +91,13 @@ class DragBoard extends Component {
 						<div className="row">
 							<div className="col">
 								<div id={svgContainerID} style={{width:svg_w, height:svg_h}}></div>
-								{/*<svg
-										width="100%"
-										height="100%"
-										onMouseMove={(e)=>svgElementController.handleMouseMove(e, this, svgElementID)}
-										onMouseLeave={(e)=>svgElementController.notDragged(e, this, svgElementID)}
-										onMouseUp={(e)=>svgElementController.notDragged(e, this, svgElementID)}
-										style={{backgroundColor: "#999"}}
-									></svg>
-									*/
-								}
-								{/*<input type="text" id="message" placeholder="Add message..."/>
-								*/
-								}	
-								{/*<button onClick={(e) => {
-									const val = document.getElementById("message").value;
-									svgElementController.handleNewSVGElementRequest(e, val, this);
-									document.getElementById("message").value = "";
-								}}>BUTTON</button>
-								*/
-								}
 							</div>
 							<div className="col">
 								<div style={{width: details_w, height: details_h}}>
 									<div className="panel" id={panelID}>
 										<div id={detailsID}>
-											<div className="inlineType imgContainer" id={detailsContentID}></div>
+											<div className="inlineType" id={detailsMsgID}></div>
+											<div className="imgContainer" id={detailsImgID}></div>
 											<div className="atBottom" id={closeButtonID}></div>
 										</div>
 										<div id={inputID}>

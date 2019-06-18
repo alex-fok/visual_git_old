@@ -118,7 +118,7 @@ export default {
 				var imgInputSpan = document.createElementNS(htmlNS, "span");
 				imgInputSpan.setAttributeNS(null, "class", "btn btn-outline-secondary img-input-height");
 				imgInputSpan.appendChild((()=> {
-					return document.createTextNode("Button");
+					return document.createTextNode("Add File");
 				})());
 
 				imgInputSpan.appendChild((()=>{
@@ -170,10 +170,12 @@ export default {
 			btn.setAttributeNS(null, "class", "btn btn-secondary");
 			btn.addEventListener("click", (e)=> {
 				svgElementFunctions.handleNewSVGElementRequest(e, {
-					msg: $(messageID).value,
+					msg: $(messageID).value ? $(messageID).value : "[No Message]",
 					img: $(imgID) ? $(imgID).src : ""
 				}, obj);
 				$(messageID).value = "";
+				$(imgPreviewID).textContent = "";
+				$(imgTxtID).value = "";
 			});
 			btn.appendChild((()=>{
 				return document.createTextNode("Add");
