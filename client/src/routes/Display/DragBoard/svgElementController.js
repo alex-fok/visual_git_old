@@ -79,9 +79,10 @@ export default {
 			svgContainerID,
 			svgElementID,
 			messageInputID,
-			imgInputID,
+			messagePrependID,
 			messageID,
-			imageInputID,
+			imgInputID,
+			imgPrependID,
 			imgPreviewID,
 			imgID,
 			imgTxtID,
@@ -102,64 +103,119 @@ export default {
 		})());
 
 		$(messageInputID).appendChild((()=> {
+			var messagePrepend = document.createElementNS(htmlNS, "div");
+			messagePrepend.setAttributeNS(null, "class", "input-group-prepend");
+
+			messagePrepend.appendChild((()=> {
+				var messagePrependText = document.createElementNS(htmlNS, "span");
+				messagePrependText.setAttributeNS(null, "class", "input-group-text bg-white text-secondary border-secondary");
+				messagePrependText.setAttributeNS(null, "id", messagePrependID);
+				messagePrependText.appendChild(document.createTextNode("Add Text"));
+				return messagePrependText;
+			})());
+			return messagePrepend;
+		})());
+
+		$(messageInputID).appendChild((()=> {
 			var messageInput = document.createElementNS(htmlNS, "input");
-			messageInput.setAttributeNS(null, "id", messageID);
 			messageInput.setAttributeNS(null, "type", "text");
-			messageInput.setAttributeNS(null, "placeholder", "Add message...");
+			messageInput.setAttributeNS(null, "id", messageID);
+			messageInput.setAttributeNS(null, "class", "form-control");
+			messageInput.setAttributeNS(null, "placeholder", "Text...");
+			messageInput.setAttributeNS(null, "aria-label", "Text...");
+			messageInput.setAttributeNS(null, "aria-describedby", messagePrependID);
 			return messageInput;
 		})());
 
-		// File (image) input type
-		$(imgInputID).appendChild((()=>{
-			var imgInputLabel = document.createElementNS(htmlNS, "label");
-			imgInputLabel.setAttributeNS(null, "class", "input-group-btn");
+		// $(imgInputID).appendChild((()=>{
+			// var imgInputLabel = document.createElementNS(htmlNS, "label");
+			// imgInputLabel.setAttributeNS(null, "class", "input-group-btn");
 			
-			imgInputLabel.appendChild((()=> {
-				var imgInputSpan = document.createElementNS(htmlNS, "span");
-				imgInputSpan.setAttributeNS(null, "class", "btn btn-outline-secondary img-input-height");
-				imgInputSpan.appendChild((()=> {
-					return document.createTextNode("Add File");
-				})());
+			// imgInputLabel.appendChild((()=> {
+			// 	var imgInputSpan = document.createElementNS(htmlNS, "span");
+			// 	imgInputSpan.setAttributeNS(null, "class", "btn btn-outline-secondary");
+			// 	imgInputSpan.appendChild(document.createTextNode("Add File"));
 
-				imgInputSpan.appendChild((()=>{
-					var imgInput = document.createElementNS(htmlNS, "input");
-					imgInput.setAttributeNS(null, "id", imageInputID);
-					imgInput.setAttributeNS(null, "type", "file");
-					imgInput.setAttributeNS(null, "accept", "image/*");
-					imgInput.setAttributeNS(null, "class", "form-control-file");
-					imgInput.setAttributeNS(null, "style", "display: none");
-					imgInput.setAttributeNS(null, "multiple", true);
-					imgInput.addEventListener("change", (e)=> {
-						const val = imgInput.value;
-						$(imgTxtID).value = val.replace(/\\/g, '/').replace(/.*\//, '');
-						// imgInput.files ? 
-						const imgs = e.target.files;
-						var fr = new FileReader();
-						fr.readAsDataURL(imgs[0]);
+			// 	imgInputSpan.appendChild((()=>{
+			// 		var imgInput = document.createElementNS(htmlNS, "input");
+			// 		imgInput.setAttributeNS(null, "type", "file");
+			// 		imgInput.setAttributeNS(null, "accept", "image/*");
+			// 		imgInput.setAttributeNS(null, "class", "form-control-file");
+			// 		imgInput.setAttributeNS(null, "style", "display: none");
+			// 		imgInput.setAttributeNS(null, "multiple", true);
+			// 		imgInput.addEventListener("change", (e)=> {
+			// 			const val = imgInput.value;
+			// 			$(imgTxtID).value = val.replace(/\\/g, '/').replace(/.*\//, '');
+			// 			// imgInput.files ? 
+			// 			const imgs = e.target.files;
+			// 			var fr = new FileReader();
+			// 			fr.readAsDataURL(imgs[0]);
 
-						fr.onload = ()=>{
-							$(imgPreviewID).appendChild( (()=>{
-								var imgElement = document.createElementNS(htmlNS, "img");
-								imgElement.setAttributeNS(null, "id", imgID);
-								imgElement.setAttributeNS(null, "src", (()=> {return fr.result})());
+			// 			fr.onload = ()=>{
+			// 				$(imgPreviewID).appendChild( (()=>{
+			// 					var imgElement = document.createElementNS(htmlNS, "img");
+			// 					imgElement.setAttributeNS(null, "id", imgID);
+			// 					imgElement.setAttributeNS(null, "src", (()=> {return fr.result})());
 								
-								return imgElement;
-							})());	
-						};
-					});
-					return imgInput;
+			// 					return imgElement;
+			// 				})());	
+			// 			};
+			// 		});
+			// 		return imgInput;
+			// 	})());
+			// 	return imgInputSpan;
+			// })());
+			// return imgInputLabel;
+		// })());
+
+		$(imgInputID).appendChild((()=> {
+			var imgPrepend = document.createElementNS(htmlNS, "div");
+			imgPrepend.setAttributeNS(null, "class", "input-group-prepend");
+
+			imgPrepend.appendChild((()=> {
+				var imgPrependBtn = document.createElementNS(htmlNS, "button");
+				imgPrependBtn.setAttributeNS(null, "type", "button");
+				imgPrependBtn.setAttributeNS(null, "id", imgPrependID);
+				imgPrependBtn.setAttributeNS(null, "class", "btn btn-outline-secondary");
+				imgPrependBtn.appendChild(document.createTextNode("Add Image"));
+				imgPrependBtn.appendChild((()=>{
+					var imgFileInput = document.createElementNS(htmlNS, "input");
+					imgFileInput.setAttributeNS(null, "type", "file");
+					imgFileInput.setAttributeNS(null, "style", "display: none");
+
+					imgFileInput.addEventListener("change", (e)=> {
+					const val = imgInput.value;
+					$(imgTxtID).value = val.replace(/\\/g, '/').replace(/.*\//, '');
+					const imgs = e.target.files;
+					var fr = new FileReader();
+					fr.readAsDataURL(imgs[0]);
+
+					fr.onload = ()=>{
+						$(imgPreviewID).appendChild( (()=>{
+							var imgElement = document.createElementNS(htmlNS, "img");
+							imgElement.setAttributeNS(null, "id", imgID);
+							imgElement.setAttributeNS(null, "src", (()=> {return fr.result})());
+							return imgElement;
+						})());	
+					};
+				});
+
+					return imgFileInput; 
 				})());
-				return imgInputSpan;
+
+
+				return imgPrependBtn;
 			})());
-			return imgInputLabel;
+			return imgPrepend;
 		})());
 
 		$(imgInputID).appendChild((()=> {
 			var imgTxt = document.createElementNS(htmlNS, "input");
 			imgTxt.setAttributeNS(null, "type", "text");
-			imgTxt.setAttributeNS(null, "class", "img-input-height form-control")
+			imgTxt.setAttributeNS(null, "class", "form-control")
 			imgTxt.setAttributeNS(null, "id", imgTxtID);
-			imgTxt.setAttributeNS(null, "readonly", true)
+			imgTxt.setAttributeNS(null, "readonly", true);
+			imgTxt.setAttributeNS(null, "aria-describedby", imgPrependID)
 
 			return imgTxt;
 		})());

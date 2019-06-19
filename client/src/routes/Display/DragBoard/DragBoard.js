@@ -14,11 +14,13 @@ const svgContainerID = "svgContainer",
 			detailsMsgID = "details-msg",
 			detailsImgID = "details-img",
 			messageInputID = "message-input",
+			messagePrependID = "message-prepend",
+			messageID = "message",
 			closeButtonID = "close-button",
 			inputID = "input",
 			addButtonID = "add-button",
-			messageID = "message",
 			imgInputID = "imgInput",
+			imgPrependID = "imgPrepend",
 			imgID = "image",
 			imgPreviewID = "imagePreview",
 			imgTxtID = "imgTxtID";
@@ -66,8 +68,10 @@ class DragBoard extends Component {
 				svgContainerID: svgContainerID,
 				svgElementID: svgElementID,
 				messageInputID: messageInputID,
+				messagePrependID: messagePrependID,
 				messageID: messageID,
 				imgInputID: imgInputID,
+				imgPrependID: imgPrependID,
 				imgID: imgID,
 				imgPreviewID: imgPreviewID,
 				imgTxtID: imgTxtID,
@@ -94,16 +98,16 @@ class DragBoard extends Component {
 							</div>
 							<div className="col">
 								<div style={{width: details_w, height: details_h}}>
-									<div className="panel" id={panelID}>
+									<div className="panel border" id={panelID}>
 										<div id={detailsID}>
 											<div className="inlineType" id={detailsMsgID}></div>
 											<div className="imgContainer" id={detailsImgID}></div>
 											<div className="atBottom" id={closeButtonID}></div>
 										</div>
+
 										<div id={inputID}>
-											<div id={messageInputID}></div>
-											<br/>
-											<div id={imgInputID} className="input-group"></div>
+											<div id={messageInputID} className="input-group mb-3"></div>
+											<div id={imgInputID} className="input-group mb-3"></div>
 											<div id={imgPreviewID} className="imgContainer"></div>
 											<div className="inlineType atBottom" id={addButtonID}></div>
 										</div>
