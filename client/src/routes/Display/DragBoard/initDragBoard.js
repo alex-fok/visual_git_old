@@ -1,5 +1,5 @@
 import svgElementFunctions from './svgElementFunctions';
-import displayController from './displayController';
+import nodeInfoController from './nodeInfoController';
 
 const svgNS = "http://www.w3.org/2000/svg",
 			htmlNS = "http://www.w3.org/1999/xhtml";
@@ -103,12 +103,12 @@ export default {
 			return svg;
 		})());
 
-		displayController.insertMsgInput({
+		nodeInfoController.insertMsgInput({
 			messageInputID: idList.messageInputID,
 			messagePrependID: idList.messagePrependID,
 			messageID: idList.messageID
 		}, true);
-		displayController.insertImgInput({
+		nodeInfoController.insertImgInput({
 			imgInputID: imgInputID,
 			imgPrependID: imgPrependID,
 			imgPreviewID: imgPreviewID,
