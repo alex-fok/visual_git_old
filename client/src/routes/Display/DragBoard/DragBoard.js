@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import ReactDOM from "react-dom";
 import io from 'socket.io-client';
-import svgElementController from './svgElementController';
+import initDragBoard from './initDragBoard';
 import './DragBoard.css';
 
 const svgNS = "http://www.w3.org/2000/svg";
@@ -23,7 +23,7 @@ const svgContainerID = "svgContainer",
 			imgPrependID = "imgPrepend",
 			imgID = "image",
 			imgPreviewID = "imagePreview",
-			imgTxtID = "imgTxtID";
+			imgTxtID = "imgTxt";
 
 const size = 1200,
 			div_w = size,
@@ -50,8 +50,8 @@ class DragBoard extends Component {
 	}
 
 	componentDidMount() {
-		//svgElementController.initSocket(obj, idList, fnList)
-		svgElementController.initSocket(this, 
+		//initDragBoard.initSocket(obj, idList, fnList)
+		initDragBoard.initSocket(this, 
 			{
 				svgElementID: svgElementID,
 				infoIDs: {
@@ -63,7 +63,7 @@ class DragBoard extends Component {
 				}
 			});
 
-		svgElementController.initDisplay(
+		initDragBoard.initDisplay(
 			{
 				svgContainerID: svgContainerID,
 				svgElementID: svgElementID,

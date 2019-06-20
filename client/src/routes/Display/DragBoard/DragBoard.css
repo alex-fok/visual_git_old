@@ -1,3 +1,7 @@
+input[disabled="true"]{
+	background-color: white;
+}
+
 #svgObjTag{
 	display: none;
 	position: fixed;
