@@ -6,7 +6,7 @@
 		"detailsID" : "details",
 		"detailsMsgID" : "details-msg",
 		"detailsImgID" : "details-img",
-		"closeButtonID" : "close-button",
+		"closeButtonID" : "close-button"
 	},
 	"IDofInputs" : {
 		"inputID" : "input",
