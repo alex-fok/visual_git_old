@@ -1,0 +1,26 @@
+{
+	"svgContainerID" : "svgContainer",
+	"svgElementID": "dragBoard",
+	"svgObjTagID" : "svgObjTag",
+	"IDofDetails" : {
+		"detailsID" : "details",
+		"detailsMsgID" : "details-msg",
+		"detailsImgID" : "details-img",
+		"closeButtonID" : "close-button",
+	},
+	"IDofInputs" : {
+		"inputID" : "input",
+		"messageInputID" : "message-input",
+		"messagePrependID" : "message-prepend",
+		"messageID" : "message",
+		"imgInputID" : "imgInput",
+		"imgPrependID" : "imgPrepend",
+		"imgID" : "image",
+		"imgPreviewID" : "imagePreview",
+		"imgTxtID" : "imgTxt",
+		"addButtonID" : "add-button"
+	},
+	
+	
+	
+}

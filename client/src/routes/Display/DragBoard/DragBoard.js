@@ -3,13 +3,12 @@ import ReactDOM from "react-dom";
 import io from 'socket.io-client';
 import initDragBoard from './initDragBoard';
 import './DragBoard.css';
-
+import idList from './idList.json';
 const svgNS = "http://www.w3.org/2000/svg";
 
 const svgContainerID = "svgContainer",
 			svgElementID = "dragBoard",
 			svgObjTagID = "svgObjTag",
-			panelID = "panel",
 			detailsID = "details",
 			detailsMsgID = "details-msg",
 			detailsImgID = "details-img",
@@ -98,7 +97,7 @@ class DragBoard extends Component {
 							</div>
 							<div className="col">
 								<div style={{width: details_w, height: details_h}}>
-									<div className="panel border" id={panelID}>
+									<div className="panel border">
 										<div id={detailsID}>
 											<div className="inlineType" id={detailsMsgID}></div>
 											<div className="imgContainer" id={detailsImgID}></div>
