@@ -23,9 +23,10 @@ class InfoPanel extends Component {
 				className="panel border"
 				id={idList.panelID}
 				style={{width: dimension.width, height: dimension.height}}
-			>	
+			>			
+				<InputsInfo idList={idList} style={isInput ? {display: "none"} : {display: "block"}}/>
+				<DetailsInfo idList={idList} style={isInput ? {display: "block"} : {display: "none"}}/>		
 			{
-				this.toggleDisplayedInfo(isInput, idList)
 				// 					<div id={detailsID}>
 				// 						<div className="inlineType" id={detailsMsgID}></div>
 				// 						<div className="imgContainer" id={detailsImgID}></div>
