@@ -1,26 +1,25 @@
 {
-	"svgContainerID" : "svgContainer",
-	"svgElementID": "dragBoard",
-	"svgObjTagID" : "svgObjTag",
-	"IDofDetails" : {
+	"idOfSVGs": {
+		"svgContainerID" : "svgContainer",
+		"svgElementID": "dragBoard",
+		"svgObjTagID" : "svgObjTag"
+	},
+	"idOfDetails" : {
 		"detailsID" : "details",
 		"detailsMsgID" : "details-msg",
 		"detailsImgID" : "details-img",
 		"closeButtonID" : "close-button"
 	},
-	"IDofInputs" : {
+	"idOfInputs" : {
 		"inputID" : "input",
 		"messageInputID" : "message-input",
 		"messagePrependID" : "message-prepend",
 		"messageID" : "message",
 		"imgInputID" : "imgInput",
 		"imgPrependID" : "imgPrepend",
+		"imgTxtID" : "imgTxt",
 		"imgID" : "image",
 		"imgPreviewID" : "imagePreview",
-		"imgTxtID" : "imgTxt",
 		"addButtonID" : "add-button"
-	},
-	
-	
-	
+	}	
 }

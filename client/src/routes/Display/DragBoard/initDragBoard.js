@@ -1,13 +1,13 @@
 import svgElementFunctions from './svgElementFunctions';
 import nodeInfoController from './nodeInfoController';
 
-const svgNS = "http://www.w3.org/2000/svg",
-			htmlNS = "http://www.w3.org/1999/xhtml";
+const 	svgNS = "http://www.w3.org/2000/svg",
+		htmlNS = "http://www.w3.org/1999/xhtml";
 const $ = (id) => {return document.getElementById(id)};
 
 export default {
 	initSocket: (obj, idList) => {
-		console.log("initSocket: idList.infoIDs : " + JSON.stringify(idList.infoIDs));
+		//console.log("initSocket: idList.infoIDs : " + JSON.stringify(idList.infoIDs));
 		const {socket} = obj.state;
 
 		socket.on("svgAdd", (data) => {
@@ -74,11 +74,15 @@ export default {
 		socket.emit("svgCopyRequest", obj.props.jwt);
 	},
 
+	svgAddListener: (svgElementID, obj) => {
+		$(svgElementID).addEventListener("mousemove", (e)=>{svgElementFunctions.handleMouseMove(e, obj, svgElementID)});
+		$(svgElementID).addEventListener("mouseleave", (e)=>{svgElementFunctions.notDragged(e, obj, svgElementID)});
+		$(svgElementID).addEventListener("mouseup", (e)=>{svgElementFunctions.notDragged(e, obj, svgElementID)});
+	},
+
 	initDisplay: (idList, dimension, obj) => {
 		const {w, h} = dimension;
 		const {
-			svgContainerID,
-			svgElementID,
 			messageInputID,
 			messagePrependID,
 			messageID,
@@ -88,20 +92,22 @@ export default {
 			imgID,
 			imgTxtID,
 			addButtonID,
-			closeButtonID} = idList;
+			closeButtonID,
+			detailsID,
+			inputID} = idList;
 
-		$(svgContainerID).appendChild((()=> {
-			var svg = document.createElementNS(svgNS, "svg");
-			svg.setAttributeNS(null, "id", svgElementID);
-			svg.setAttributeNS(null, "viewBox", `0 0 ${w} ${h}`);
-			svg.setAttributeNS(null, "width", "100%");
-			svg.setAttributeNS(null, "height", "100%");
-			svg.style.setProperty("background-color", "#999");
-			svg.addEventListener("mousemove", (e)=>{svgElementFunctions.handleMouseMove(e, obj, svgElementID)});
-			svg.addEventListener("mouseleave", (e)=>{svgElementFunctions.notDragged(e, obj, svgElementID)});
-			svg.addEventListener("mouseup", (e)=>{svgElementFunctions.notDragged(e, obj, svgElementID)});
-			return svg;
-		})());
+		// $(svgContainerID).appendChild((()=> {
+		// 	var svg = document.createElementNS(svgNS, "svg");
+		// 	svg.setAttributeNS(null, "id", svgElementID);
+		// 	svg.setAttributeNS(null, "viewBox", `0 0 ${w} ${h}`);
+		// 	svg.setAttributeNS(null, "width", "100%");
+		// 	svg.setAttributeNS(null, "height", "100%");
+		// 	svg.style.setProperty("background-color", "#999");
+		// 	svg.addEventListener("mousemove", (e)=>{svgElementFunctions.handleMouseMove(e, obj, svgElementID)});
+		// 	svg.addEventListener("mouseleave", (e)=>{svgElementFunctions.notDragged(e, obj, svgElementID)});
+		// 	svg.addEventListener("mouseup", (e)=>{svgElementFunctions.notDragged(e, obj, svgElementID)});
+		// 	return svg;
+		// })());
 
 		nodeInfoController.insertMsgInput({
 			messageInputID: idList.messageInputID,
@@ -135,17 +141,17 @@ export default {
 			return btn;
 		})());
 
-		$(closeButtonID).appendChild((()=>{
-			var btn = document.createElementNS(htmlNS, "button");
-			btn.setAttributeNS(null, "type", "button");
-			btn.setAttributeNS(null, "class", "btn btn-secondary");
-			btn.addEventListener("click", (e)=> {
-				svgElementFunctions.hideDetails(idList.detailsID, idList.inputID)
-			});
-			btn.appendChild((()=>{
-				return document.createTextNode("Close");
-			})());
-			return btn;
-		})());
+		// $(closeButtonID).appendChild((()=>{
+		// 	var btn = document.createElementNS(htmlNS, "button");
+		// 	btn.setAttributeNS(null, "type", "button");
+		// 	btn.setAttributeNS(null, "class", "btn btn-secondary");
+		// 	btn.addEventListener("click", (e)=> {
+		// 		svgElementFunctions.hideDetails(idList.detailsID, idList.inputID)
+		// 	});
+		// 	btn.appendChild((()=>{
+		// 		return document.createTextNode("Close");
+		// 	})());
+		// 	return btn;
+		// })());
 	}
 }

@@ -1,28 +1,30 @@
-import React, {Component} from "react";
-import ReactDOM from "react-dom";
+import React, {Component} from 'react';
+import ReactDOM from 'react-dom';
 import io from 'socket.io-client';
 import initDragBoard from './initDragBoard';
+import SVGPanel from './SVGPanel';
+import InfoPanel from './InfoPanel';	
 import './DragBoard.css';
 import idList from './idList.json';
 const svgNS = "http://www.w3.org/2000/svg";
 
-const svgContainerID = "svgContainer",
-			svgElementID = "dragBoard",
-			svgObjTagID = "svgObjTag",
-			detailsID = "details",
-			detailsMsgID = "details-msg",
-			detailsImgID = "details-img",
-			messageInputID = "message-input",
-			messagePrependID = "message-prepend",
-			messageID = "message",
-			closeButtonID = "close-button",
-			inputID = "input",
-			addButtonID = "add-button",
-			imgInputID = "imgInput",
-			imgPrependID = "imgPrepend",
-			imgID = "image",
-			imgPreviewID = "imagePreview",
-			imgTxtID = "imgTxt";
+const 	svgContainerID = "svgContainer",
+		svgElementID = "dragBoard",
+		svgObjTagID = "svgObjTag",
+		detailsID = "details",
+		detailsMsgID = "details-msg",
+		detailsImgID = "details-img",
+		closeButtonID = "close-button",
+		inputID = "input",
+		messageInputID = "message-input",
+		imgInputID = "imgInput",
+		imgPreviewID = "imagePreview",
+		addButtonID = "add-button",
+		messagePrependID = "message-prepend",
+		messageID = "message",
+		imgPrependID = "imgPrepend",
+		imgID = "image",
+		imgTxtID = "imgTxt";
 
 const size = 1200,
 			div_w = size,
@@ -62,10 +64,10 @@ class DragBoard extends Component {
 				}
 			});
 
+		initDragBoard.svgAddListener(idList.idOfSVGs.svgElementID, this);
+
 		initDragBoard.initDisplay(
 			{
-				svgContainerID: svgContainerID,
-				svgElementID: svgElementID,
 				messageInputID: messageInputID,
 				messagePrependID: messagePrependID,
 				messageID: messageID,
@@ -87,31 +89,51 @@ class DragBoard extends Component {
 
 	render() {
 
+		const idListTemp = {
+			detailsID: detailsID,
+			detailsMsgID: detailsMsgID,
+			detailsImgID: detailsImgID,
+			closeButtonID: closeButtonID,
+			inputID: inputID,
+			messageInputID: messageInputID,
+			imgInputID: imgInputID,
+			imgPreviewID: imgPreviewID,
+			addButtonID: addButtonID,
+		};
+
 		return(
 			<div>
 				<div className="container-fluid noPadding">
 					<div style={{width:div_w, height:div_h}}>
 						<div className="row">
 							<div className="col">
-								<div id={svgContainerID} style={{width:svg_w, height:svg_h}}></div>
+								<SVGPanel
+									dimension={{width: svg_w, height: svg_h}}
+									idOfSVGs={idList.idOfSVGs}
+								/>
+								{//<div id={svgContainerID} style={{width:svg_w, height:svg_h}}></div>
+								}	
 							</div>
 							<div className="col">
-								<div style={{width: details_w, height: details_h}}>
-									<div className="panel border">
-										<div id={detailsID}>
-											<div className="inlineType" id={detailsMsgID}></div>
-											<div className="imgContainer" id={detailsImgID}></div>
-											<div className="atBottom" id={closeButtonID}></div>
-										</div>
+							{
+								<InfoPanel idList={idListTemp} dimension={{width: details_w, height: details_h}} isInput />
+							//	<div className="panel border" style={{width: details_w, height: details_h}}>
+									
+									// <div id={detailsID}>
+									// 	<div className="inlineType" id={detailsMsgID}></div>
+									// 	<div className="imgContainer" id={detailsImgID}></div>
+									// 	<div className="atBottom" id={closeButtonID}></div>
+									// </div>
 
-										<div id={inputID}>
-											<div id={messageInputID} className="input-group mb-3"></div>
-											<div id={imgInputID} className="input-group mb-3"></div>
-											<div id={imgPreviewID} className="imgContainer"></div>
-											<div className="inlineType atBottom" id={addButtonID}></div>
-										</div>
-									</div>
-								</div>
+									// <div id={inputID}>
+									// 	<div id={messageInputID} className="input-group mb-3"></div>
+									// 	<div id={imgInputID} className="input-group mb-3"></div>
+									// 	<div id={imgPreviewID} className="imgContainer"></div>
+									// 	<div className="inlineType atBottom" id={addButtonID}></div>
+									// </div>
+									
+							//	</div>
+							}
 							</div>
 						</div>
 					</div>
