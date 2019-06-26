@@ -3,51 +3,44 @@ const htmlNS = "http://www.w3.org/1999/xhtml";
 
 export default {
 	insertMsgInput: (idList, editable)=> {
-		const {
-			messageInputID,
-			messagePrependID,
-			messageID} = idList;
+		// const {
+		// 	messageInputID,
+		// 	messagePrependID,
+		// 	messageID} = idList;
 		
-		$(messageInputID).appendChild((()=> {
-			var messagePrepend = document.createElementNS(htmlNS, "div");
-			messagePrepend.setAttributeNS(null, "class", "input-group-prepend");
+		// $(messageInputID).appendChild((()=> {
+		// 	var messagePrepend = document.createElementNS(htmlNS, "div");
+		// 	messagePrepend.setAttributeNS(null, "class", "input-group-prepend");
 
-			messagePrepend.appendChild((()=> {
-				var messagePrependText = document.createElementNS(htmlNS, "span");
-				messagePrependText.setAttributeNS(null, "class", "input-group-text bg-white text-secondary border-secondary");
-				messagePrependText.setAttributeNS(null, "id", messagePrependID);
-				messagePrependText.appendChild(document.createTextNode("Text"));
-				return messagePrependText;
-			})());
-			return messagePrepend;
-		})());
+		// 	messagePrepend.appendChild((()=> {
+		// 		var messagePrependText = document.createElementNS(htmlNS, "span");
+		// 		messagePrependText.setAttributeNS(null, "class", "input-group-text bg-white text-secondary border-secondary");
+		// 		messagePrependText.setAttributeNS(null, "id", messagePrependID);
+		// 		messagePrependText.appendChild(document.createTextNode("Text"));
+		// 		return messagePrependText;
+		// 	})());
+		// 	return messagePrepend;
+		// })());
 
-		$(messageInputID).appendChild((()=> {
-			var messageInput = document.createElementNS(htmlNS, "input");
-			messageInput.setAttributeNS(null, "type", "text");
-			messageInput.setAttributeNS(null, "id", messageID);
-			messageInput.setAttributeNS(null, "class", "form-control");
-			messageInput.setAttributeNS(null, "placeholder", "Text...");
-			messageInput.setAttributeNS(null, "aria-label", "Text...");
-			messageInput.setAttributeNS(null, "aria-describedby", messagePrependID);
-			return messageInput;
-		})());
+		// $(messageInputID).appendChild((()=> {
+		// 	var messageInput = document.createElementNS(htmlNS, "input");
+		// 	messageInput.setAttributeNS(null, "type", "text");
+		// 	messageInput.setAttributeNS(null, "id", messageID);
+		// 	messageInput.setAttributeNS(null, "class", "form-control");
+		// 	messageInput.setAttributeNS(null, "placeholder", "Text...");
+		// 	messageInput.setAttributeNS(null, "aria-label", "Text...");
+		// 	messageInput.setAttributeNS(null, "aria-describedby", messagePrependID);
+		// 	return messageInput;
+		// })());
 	},
 
 	insertImgInput: (idList, editable)=> {
 		const {
-			svgContainerID,
-			svgElementID,
-			messageInputID,
-			messagePrependID,
-			messageID,
 			imgInputID,
 			imgPrependID,
 			imgPreviewID,
 			imgID,
-			imgTxtID,
-			addButtonID,
-			closeButtonID} = idList;
+			imgTxtID} = idList;
 		
 		$(imgInputID).appendChild((()=> {
 			var imgPrepend = document.createElementNS(htmlNS, "label");
@@ -94,7 +87,7 @@ export default {
 			var imgTxt = document.createElementNS(htmlNS, "input");
 			imgTxt.setAttributeNS(null, "type", "text");
 			imgTxt.setAttributeNS(null, "class", "form-control")
-			imgTxt.setAttributeNS(null, "id", imgTxtID);
+			//imgTxt.setAttributeNS(null, "id", imgTxtID);
 			imgTxt.setAttributeNS(null, "disabled", true);
 			imgTxt.setAttributeNS(null, "aria-labelledby", imgPrependID)
 

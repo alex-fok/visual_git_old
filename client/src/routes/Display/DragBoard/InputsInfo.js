@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
+import MessageInput from './InputComponents/MessageInput';
+import ImageInput from './InputComponents/ImageInput';	
 
 class InputsInfo extends Component {
 	constructor(props) {
@@ -8,10 +10,10 @@ class InputsInfo extends Component {
 
 	render() {
 		const {idList} = this.props;
-		console.log(idList.messageInputID);
 		return (
-			<div id={idList.inputID}>				
-				<div id={idList.messageInputID} className="input-group mb-3"></div>
+			<div id={idList.inputID}>
+				<MessageInput idList={idList} />
+				<ImageInput idList={idList} />
 				<div id={idList.imgInputID} className="input-group mb-3"></div>
 				<div id={idList.imgPreviewID} className="imgContainer"></div>
 				<div id={idList.addButtonID} className="inlineType atBottom"></div>
