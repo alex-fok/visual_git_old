@@ -96,32 +96,6 @@ export default {
 			detailsID,
 			inputID} = idList;
 
-		// $(svgContainerID).appendChild((()=> {
-		// 	var svg = document.createElementNS(svgNS, "svg");
-		// 	svg.setAttributeNS(null, "id", svgElementID);
-		// 	svg.setAttributeNS(null, "viewBox", `0 0 ${w} ${h}`);
-		// 	svg.setAttributeNS(null, "width", "100%");
-		// 	svg.setAttributeNS(null, "height", "100%");
-		// 	svg.style.setProperty("background-color", "#999");
-		// 	svg.addEventListener("mousemove", (e)=>{svgElementFunctions.handleMouseMove(e, obj, svgElementID)});
-		// 	svg.addEventListener("mouseleave", (e)=>{svgElementFunctions.notDragged(e, obj, svgElementID)});
-		// 	svg.addEventListener("mouseup", (e)=>{svgElementFunctions.notDragged(e, obj, svgElementID)});
-		// 	return svg;
-		// })());
-
-		nodeInfoController.insertMsgInput({
-			messageInputID: idList.messageInputID,
-			messagePrependID: idList.messagePrependID,
-			messageID: idList.messageID
-		}, true);
-		nodeInfoController.insertImgInput({
-			imgInputID: imgInputID,
-			imgPrependID: imgPrependID,
-			imgPreviewID: imgPreviewID,
-			imgID: imgID,
-			imgTxtID: imgTxtID
-		}, true);
-
 		$(addButtonID).appendChild((()=>{
 			var btn = document.createElementNS(htmlNS, "button");
 			btn.setAttributeNS(null, "type", "button");
@@ -129,10 +103,11 @@ export default {
 			btn.addEventListener("click", (e)=> {
 				svgElementFunctions.handleNewSVGElementRequest(e, {
 					msg: $(messageID).value ? $(messageID).value : "[No Message]",
-					img: $(imgID) ? $(imgID).src : ""
+					img: $(imgID) ? $(imgID).src : "[No Image]"
 				}, obj);
 				$(messageID).value = "";
 				$(imgPreviewID).textContent = "";
+				console.log(imgTxtID);
 				$(imgTxtID).value = "";
 			});
 			btn.appendChild((()=>{

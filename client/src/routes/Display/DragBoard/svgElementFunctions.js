@@ -36,6 +36,7 @@ export default {
 		
 		$(detailsImgID).appendChild((()=>{		
 			var imgElement = document.createElementNS(htmlNS, "img");
+			console.log(img);
 			imgElement.setAttributeNS(null, "src", img);
 			return imgElement;
 		})());

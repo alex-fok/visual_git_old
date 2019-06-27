@@ -5,7 +5,7 @@ class MessageInput extends Component {
 		super(props);
 	}
 	render() {
-		const {idList} = this.props;
+		const {idList, setMsg} = this.props;
 		return (
 			<div id={idList.messageInputID} className="input-group mb-3">
 
@@ -18,11 +18,11 @@ class MessageInput extends Component {
 
 				<input
 					type="text"
-					id={idList.messageID}
 					className="form-control"
+					id={idList.messageID}
 					placeholder="Text..."
-					aria-label="Text"
-					aria-labelledby={idList.messagePrependID}
+					aria-labelledby={idList.imgPrependID}
+					onChange={setMsg}
 				/>
 			</div>
 		)

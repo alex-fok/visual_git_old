@@ -18,13 +18,15 @@ const 	svgContainerID = "svgContainer",
 		inputID = "input",
 		messageInputID = "message-input",
 		imgInputID = "imgInput",
+		imgFileInputID = "imgFileInput",
 		imgPreviewID = "imagePreview",
 		addButtonID = "add-button",
 		messagePrependID = "message-prepend",
 		messageID = "message",
 		imgPrependID = "imgPrepend",
 		imgID = "image",
-		imgTxtID = "imgTxt";
+		imgTxtID = "imgTxt",
+		fileInputID = "fileInput";
 
 const size = 1200,
 			div_w = size,
@@ -99,8 +101,11 @@ class DragBoard extends Component {
 			messageInputID: messageInputID,
 			messageID: messageID,
 			imgInputID: imgInputID,
+			imgTxtID: imgTxtID,
+			imgFileInputID: imgFileInputID,
+			imgID: imgID,
 			imgPreviewID: imgPreviewID,
-			addButtonID: addButtonID,
+			addButtonID: addButtonID
 		};
 
 		return(
