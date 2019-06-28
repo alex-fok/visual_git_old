@@ -123,7 +123,11 @@ class DragBoard extends Component {
 							</div>
 							<div className="col">
 							{
-								<InfoPanel idList={idListTemp} dimension={{width: details_w, height: details_h}} isInput />
+								<InfoPanel
+									idList={idListTemp}
+									dimension={{width: details_w, height: details_h}}
+									socket={this.state.socket}
+									isInput />
 							//	<div className="panel border" style={{width: details_w, height: details_h}}>
 									
 									// <div id={detailsID}>

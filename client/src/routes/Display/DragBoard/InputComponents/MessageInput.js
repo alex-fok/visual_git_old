@@ -20,9 +20,9 @@ class MessageInput extends Component {
 					type="text"
 					className="form-control"
 					id={idList.messageID}
-					placeholder="Text..."
+					value={this.props.msg}
 					aria-labelledby={idList.imgPrependID}
-					onChange={setMsg}
+					onChange={(e)=> {setMsg(e.target.value)}}
 				/>
 			</div>
 		)

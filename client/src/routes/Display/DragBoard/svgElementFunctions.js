@@ -36,7 +36,6 @@ export default {
 		
 		$(detailsImgID).appendChild((()=>{		
 			var imgElement = document.createElementNS(htmlNS, "img");
-			console.log(img);
 			imgElement.setAttributeNS(null, "src", img);
 			return imgElement;
 		})());
@@ -87,12 +86,12 @@ export default {
 		}
 	},
 
-	handleNewSVGElementRequest: (e, input, obj) => {
+	handleNewSVGElementRequest: (input, socket) => {
 		const id = "item_" + Date.now();
 		let data = {
 			[id] : {
 				msg: input.msg,
-				img: input.img,
+				img: input.img.src,
 				x: 10,
 				y: 50,
 				width: 10,
@@ -101,7 +100,6 @@ export default {
 				id: id
 			}
 		}
-		const {socket} = obj.state;
 		socket.emit("createSVG", data);
 	},
 

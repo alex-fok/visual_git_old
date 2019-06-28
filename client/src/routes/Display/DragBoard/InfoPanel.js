@@ -24,7 +24,11 @@ class InfoPanel extends Component {
 				id={idList.panelID}
 				style={{width: dimension.width, height: dimension.height}}
 			>			
-				<InputsInfo idList={idList} style={isInput ? {display: "none"} : {display: "block"}}/>
+				<InputsInfo
+					idList={idList}
+					style={isInput ? {display: "none"} : {display: "block"}}
+					socket={this.props.socket}
+					/>
 				<DetailsInfo idList={idList} style={isInput ? {display: "block"} : {display: "none"}}/>		
 			{
 				// 					<div id={detailsID}>
