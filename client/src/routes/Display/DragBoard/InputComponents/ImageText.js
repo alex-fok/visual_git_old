@@ -9,7 +9,7 @@ class ImageText extends Component {
 			<input
 				type="text"
 				className="form-control"
-				//value={this.props.fileName}
+				value={this.props.fileName}
 				aria-labelledby={this.props.idList.imgPrependID}
 				disabled
 			/>

@@ -32,7 +32,9 @@ class InputsInfo extends Component {
 	}
 
 	setImgInfo(event) {
+
 		const fileDirectory = event.target.value;
+		console.log(fileDirectory);
 		var fr = new FileReader();
 		fr.readAsDataURL(event.target.files[0]);
 		fr.onload = () => {
@@ -61,7 +63,10 @@ class InputsInfo extends Component {
 
 		this.setState({
 			msg: "",
-			img: ""
+			img: {
+				fileName: "",
+				src: ""
+			}
 		})
 	}
 

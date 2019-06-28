@@ -51,6 +51,7 @@ class ImageInput extends Component {
 						onChange={(e)=> {this.props.setImgInfo(e)}}
 					/>
 					</span>
+					{console.log("IMAGEINPUT.JS: img.fileName " + img.fileName)}
 					<ImageText
 						fileName={img.fileName}
 						idList={{
