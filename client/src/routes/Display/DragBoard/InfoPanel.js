@@ -10,26 +10,26 @@ class InfoPanel extends Component {
 		super(props);
 	}
 
-	toggleDisplayedInfo(isInput, idList){
-		return isInput ? 
-			<InputsInfo idList={idList} /> : 
-			<DetailsInfo idList={idList} />
-	}
-
 	render(){
-		const {isInput, idList, dimension} = this.props;
+		console.log(this.props.isInput);
+		const {isInput, setIsInput, idList, dimension} = this.props;
 		return (
 			<div 
 				className="panel border"
 				id={idList.panelID}
 				style={{width: dimension.width, height: dimension.height}}
-			>			
+			>
+			{isInput ?		
 				<InputsInfo
 					idList={idList}
 					style={isInput ? {display: "none"} : {display: "block"}}
-					socket={this.props.socket}
-					/>
-				<DetailsInfo idList={idList} style={isInput ? {display: "block"} : {display: "none"}}/>		
+					socket={this.props.socket}/>
+			:
+				<DetailsInfo
+					idList={idList}
+					setIsInput={this.props.setIsInput}
+					style={isInput ? {display: "block"} : {display: "none"}}/>		
+			}
 			{
 				// 					<div id={detailsID}>
 				// 						<div className="inlineType" id={detailsMsgID}></div>

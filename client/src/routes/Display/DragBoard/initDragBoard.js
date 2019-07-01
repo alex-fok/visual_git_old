@@ -115,17 +115,17 @@ export default {
 		// 	return btn;
 		// })());
 
-		$(closeButtonID).appendChild((()=>{
-			var btn = document.createElementNS(htmlNS, "button");
-			btn.setAttributeNS(null, "type", "button");
-			btn.setAttributeNS(null, "class", "btn btn-secondary");
-			btn.addEventListener("click", (e)=> {
-				svgElementFunctions.hideDetails(idList.detailsID, idList.inputID)
-			});
-			btn.appendChild((()=>{
-				return document.createTextNode("Close");
-			})());
-			return btn;
-		})());
+		// $(closeButtonID).appendChild((()=>{
+		// 	var btn = document.createElementNS(htmlNS, "button");
+		// 	btn.setAttributeNS(null, "type", "button");
+		// 	btn.setAttributeNS(null, "class", "btn btn-secondary");
+		// 	btn.addEventListener("click", (e)=> {
+		// 		svgElementFunctions.hideDetails(idList.detailsID, idList.inputID)
+		// 	});
+		// 	btn.appendChild((()=>{
+		// 		return document.createTextNode("Close");
+		// 	})());
+		// 	return btn;
+		// })());
 	}
 }

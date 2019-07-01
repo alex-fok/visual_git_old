@@ -25,23 +25,26 @@ export default {
 
 	showDetails: (str, obj, infoIDs) => {
 		const {detailsID, detailsMsgID, detailsImgID, inputID} = infoIDs;
-		const {msg, img} = obj.state.svgElements[str];
+		// const {msg, img} = obj.state.svgElements[str];
 		
-		$(detailsMsgID).textContent = "";
-		$(detailsImgID).textContent = "";
+		// $(detailsMsgID).textContent = "";
+		// $(detailsImgID).textContent = "";
 		
-		$(detailsMsgID).appendChild((()=>{
-			return document.createTextNode(msg);
-		})());
+		// $(detailsMsgID).appendChild((()=>{
+		// 	return document.createTextNode(msg);
+		// })());
 		
-		$(detailsImgID).appendChild((()=>{		
-			var imgElement = document.createElementNS(htmlNS, "img");
-			imgElement.setAttributeNS(null, "src", img);
-			return imgElement;
-		})());
+		// $(detailsImgID).appendChild((()=>{		
+		// 	var imgElement = document.createElementNS(htmlNS, "img");
+		// 	imgElement.setAttributeNS(null, "src", img);
+		// 	return imgElement;
+		//})());
 		
-		$(detailsID).style.display = "block";
-		$(inputID).style.display = "none";
+		// $(detailsID).style.display = "block";
+		// $(inputID).style.display = "none";
+		obj.setState({
+			isInput: false
+		})
 },
 
 	hideDetails: (detailsID, inputID) => {
@@ -61,8 +64,8 @@ export default {
 			$(svgObjTagID).style.top = `${e.pageY - window.scrollY}px`;
 		} else {
 			$(svgObjTagID).style.display = "none";
-			$(detailsID).style.display = "none";
-			$(inputID).style.display = "block";
+			// $(detailsID).style.display = "none";
+			// $(inputID).style.display = "block";
 		}
 	},
 

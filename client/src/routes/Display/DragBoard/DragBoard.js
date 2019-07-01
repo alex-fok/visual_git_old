@@ -48,8 +48,11 @@ class DragBoard extends Component {
 				yFrom: 0
 			},
 			isDragging: false,
-			updated: false
+			updated: false,
+			isInput: true
 		}
+
+		this.setIsInput = this.setIsInput.bind(this);
 	}
 
 	componentDidMount() {
@@ -89,6 +92,12 @@ class DragBoard extends Component {
 		this.state.socket.close();
 	}
 
+	setIsInput() {
+		this.setState({
+			isInput: isInput ? !isInput : isInput
+		})
+	}
+
 	render() {
 
 		const idListTemp = {
@@ -122,29 +131,14 @@ class DragBoard extends Component {
 								}	
 							</div>
 							<div className="col">
-							{
+							
 								<InfoPanel
 									idList={idListTemp}
 									dimension={{width: details_w, height: details_h}}
 									socket={this.state.socket}
-									isInput />
-							//	<div className="panel border" style={{width: details_w, height: details_h}}>
-									
-									// <div id={detailsID}>
-									// 	<div className="inlineType" id={detailsMsgID}></div>
-									// 	<div className="imgContainer" id={detailsImgID}></div>
-									// 	<div className="atBottom" id={closeButtonID}></div>
-									// </div>
-
-									// <div id={inputID}>
-									// 	<div id={messageInputID} className="input-group mb-3"></div>
-									// 	<div id={imgInputID} className="input-group mb-3"></div>
-									// 	<div id={imgPreviewID} className="imgContainer"></div>
-									// 	<div className="inlineType atBottom" id={addButtonID}></div>
-									// </div>
-									
-							//	</div>
-							}
+									setIsInput={this.setIsInput}
+									isInput={this.state.isInput} />
+						
 							</div>
 						</div>
 					</div>

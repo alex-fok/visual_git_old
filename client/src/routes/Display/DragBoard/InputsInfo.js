@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 
-import svgElementFunctions from './svgElementFunctions'
+import svgElementFunctions from './svgElementFunctions';
 
-import MessageInput from './InputComponents/MessageInput';
-import ImageInput from './InputComponents/ImageInput';	
+import ImageTemplate from './InfoTemplates/ImageTemplate';
+import MessageTemplate from './InfoTemplates/MessageTemplate';
 
 const $ = (id) => {return document.getElementById(id)};
 
@@ -34,7 +34,6 @@ class InputsInfo extends Component {
 	setImgInfo(event) {
 
 		const fileDirectory = event.target.value;
-		console.log(fileDirectory);
 		var fr = new FileReader();
 		fr.readAsDataURL(event.target.files[0]);
 		fr.onload = () => {
@@ -74,17 +73,18 @@ class InputsInfo extends Component {
 		const {idList} = this.props;
 		return (
 			<div id={idList.inputID}>
-				<MessageInput
+				<MessageTemplate
+					isInput
 					idList={idList}
 					msg={this.state.msg}
-					setMsg={this.setMsg}
-					/>
+					setMsg={this.setMsg}/>
 				
-				<ImageInput
+				<ImageTemplate
+					isInput
 					idList={idList}
 					img={this.state.img}
 					setImgInfo={this.setImgInfo}/>
-				
+
 				<div 
 					id={idList.addButtonID}
 					className="inlineType atBottom"
