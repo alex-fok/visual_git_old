@@ -18,10 +18,6 @@ input[disabled="true"]{
 	padding: 10px;
 }
 
-#details{
-	display: none;
-}
-
 #test1{
 	display:none;
 }

@@ -30,7 +30,7 @@ class ImageTemplate extends Component {
 						}
 					</span>
 					<ImageText
-						fileName={img.fileName}
+						fileName={img ? img.fileName : ""}
 						imgPrependID= {idList.imgPrependID}	
 					/>
 				</label>
@@ -38,7 +38,7 @@ class ImageTemplate extends Component {
 				<div
 					className="imgContainer">
 					{img.src ?
-						<img src={img.src} /> :
+						<img src={img ? img.src : ""} /> :
 						<p>[No Image to display]</p>
 					}
 				</div>

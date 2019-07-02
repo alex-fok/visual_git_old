@@ -17,9 +17,6 @@ class DetailsInfo extends Component {
 		const {idList} = this.props;
 		return (
 			<div id={idList.detailsID}>
-				{// <div className="inlineType" id={idList.detailsMsgID}></div>
-				// <div className="imgContainer" id={idList.detailsImgID}></div>
-				}
 				<MessageTemplate
 					isInput = {false}
 					idList={idList}
@@ -31,7 +28,6 @@ class DetailsInfo extends Component {
 					img={this.state.img}/>
 
 				<div className="atBottom">
-				<p>fejidof</p>
 					<button
 						type="button"
 						className="btn btn-secondary"

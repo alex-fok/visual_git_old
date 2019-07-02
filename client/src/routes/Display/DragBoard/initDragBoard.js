@@ -81,20 +81,20 @@ export default {
 	},
 
 	initDisplay: (idList, dimension, obj) => {
-		const {w, h} = dimension;
-		const {
-			messageInputID,
-			messagePrependID,
-			messageID,
-			imgInputID,
-			imgPrependID,
-			imgPreviewID,
-			imgID,
-			imgTxtID,
-			addButtonID,
-			closeButtonID,
-			detailsID,
-			inputID} = idList;
+		// const {w, h} = dimension;
+		// const {
+		// 	messageInputID,
+		// 	messagePrependID,
+		// 	messageID,
+		// 	imgInputID,
+		// 	imgPrependID,
+		// 	imgPreviewID,
+		// 	imgID,
+		// 	imgTxtID,
+		// 	addButtonID,
+		// 	closeButtonID,
+		// 	detailsID,
+		// 	inputID} = idList;
 
 		// $(addButtonID).appendChild((()=>{
 		// 	var btn = document.createElementNS(htmlNS, "button");

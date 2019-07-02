@@ -49,7 +49,8 @@ class DragBoard extends Component {
 			},
 			isDragging: false,
 			updated: false,
-			isInput: true
+			isInput: true,
+			selectedItem: ""
 		}
 
 		this.setIsInput = this.setIsInput.bind(this);
@@ -93,13 +94,14 @@ class DragBoard extends Component {
 	}
 
 	setIsInput() {
-		this.setState({
-			isInput: isInput ? !isInput : isInput
-		})
+		this.setState(prev => ({
+			isInput: !prev.isInput
+		}))
 	}
 
 	render() {
-
+		const {svgElements, selectedItem, socket, setIsInput} = this.state;
+		
 		const idListTemp = {
 			detailsID: detailsID,
 			detailsMsgID: detailsMsgID,
@@ -127,8 +129,6 @@ class DragBoard extends Component {
 									dimension={{width: svg_w, height: svg_h}}
 									idOfSVGs={idList.idOfSVGs}
 								/>
-								{//<div id={svgContainerID} style={{width:svg_w, height:svg_h}}></div>
-								}	
 							</div>
 							<div className="col">
 							
@@ -136,9 +136,11 @@ class DragBoard extends Component {
 									idList={idListTemp}
 									dimension={{width: details_w, height: details_h}}
 									socket={this.state.socket}
-									setIsInput={this.setIsInput}
-									isInput={this.state.isInput} />
-						
+									setIsInput={setIsInput}
+									isInput={isInput} 
+									msg={isInput ? msg : ""}
+									img={isInput ? img : ""}/>
+
 							</div>
 						</div>
 					</div>

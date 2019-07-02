@@ -5,11 +5,12 @@ class ImageText extends Component {
 		super(props);
 	}
 	render() {
+		const {fileName, imgPrependID} = this.props;
 		return (
 			<input
 				type="text"
 				className="form-control"
-				value={this.props.fileName}
+				value={fileName ? fileName : ""}
 				aria-labelledby={this.props.imgPrependID}
 				disabled
 			/>

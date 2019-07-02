@@ -11,7 +11,6 @@ class InfoPanel extends Component {
 	}
 
 	render(){
-		console.log(this.props.isInput);
 		const {isInput, setIsInput, idList, dimension} = this.props;
 		return (
 			<div 
@@ -27,6 +26,8 @@ class InfoPanel extends Component {
 			:
 				<DetailsInfo
 					idList={idList}
+					msg={this.props.msg}
+					img={this.props.img}
 					setIsInput={this.props.setIsInput}
 					style={isInput ? {display: "block"} : {display: "none"}}/>		
 			}

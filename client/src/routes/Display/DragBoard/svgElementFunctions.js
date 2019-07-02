@@ -25,6 +25,7 @@ export default {
 
 	showDetails: (str, obj, infoIDs) => {
 		const {detailsID, detailsMsgID, detailsImgID, inputID} = infoIDs;
+
 		// const {msg, img} = obj.state.svgElements[str];
 		
 		// $(detailsMsgID).textContent = "";
@@ -43,6 +44,7 @@ export default {
 		// $(detailsID).style.display = "block";
 		// $(inputID).style.display = "none";
 		obj.setState({
+			selectedItem: str,
 			isInput: false
 		})
 },
