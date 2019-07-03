@@ -54,10 +54,12 @@ class InputsInfo extends Component {
 
 	addInfo(socket) {
 		const {msg, img} = this.state;
-		const {idList} = this.props;
 		svgElementFunctions.handleNewSVGElementRequest({
 			msg: msg ? msg : "[No Message]",
-			img: img
+			img: img ? img : {
+				fileName: "[No File]",
+				src:""
+			}
 		}, socket);
 
 		this.setState({
@@ -70,23 +72,19 @@ class InputsInfo extends Component {
 	}
 
 	render() {
-		const {idList} = this.props;
 		return (
-			<div id={idList.inputID}>
+			<div>
 				<MessageTemplate
 					isInput
-					idList={idList}
 					msg={this.state.msg}
 					setMsg={this.setMsg}/>
 				
 				<ImageTemplate
 					isInput
-					idList={idList}
 					img={this.state.img}
 					setImgInfo={this.setImgInfo}/>
 
 				<div 
-					id={idList.addButtonID}
 					className="inlineType atBottom"
 				><button
 					type="button"

@@ -6,14 +6,14 @@ class ImageTemplate extends Component {
 		super(props);
 	}
 	render() {
-		const {idList, img, isInput} = this.props;
-
+		const {img, isInput} = this.props;
+		const imgPrependID = "imgPrepend"
 		return (
 
 			<div>		
 				<label className="input-group-prepend">
 					<span
-						id={idList.imgPrependID}
+						id={imgPrependID}
 						className={isInput ? 
 							"btn btn-outline-secondary" :
 							"input-group-text bg-white text-secondary border-secondary"
@@ -29,9 +29,10 @@ class ImageTemplate extends Component {
 							/> : ""
 						}
 					</span>
+					
 					<ImageText
-						fileName={img ? img.fileName : ""}
-						imgPrependID= {idList.imgPrependID}	
+						fileName={img&&img.fileName ? img.fileName : ""}
+						imgPrependID= {imgPrependID}	
 					/>
 				</label>
 

@@ -50,14 +50,16 @@ class DragBoard extends Component {
 			isDragging: false,
 			updated: false,
 			isInput: true,
-			selectedItem: ""
+			selectedItem: {
+				msg: "",
+				img: ""
+			}
 		}
 
 		this.setIsInput = this.setIsInput.bind(this);
 	}
 
 	componentDidMount() {
-		//initDragBoard.initSocket(obj, idList, fnList)
 		initDragBoard.initSocket(this, 
 			{
 				svgElementID: svgElementID,
@@ -71,22 +73,6 @@ class DragBoard extends Component {
 			});
 
 		initDragBoard.svgAddListener(idList.idOfSVGs.svgElementID, this);
-
-		initDragBoard.initDisplay(
-			{
-				messageInputID: messageInputID,
-				messagePrependID: messagePrependID,
-				messageID: messageID,
-				imgInputID: imgInputID,
-				imgPrependID: imgPrependID,
-				imgID: imgID,
-				imgPreviewID: imgPreviewID,
-				imgTxtID: imgTxtID,
-				addButtonID: addButtonID,
-				closeButtonID: closeButtonID,
-				detailsID: detailsID,
-				inputID: inputID
-			}, {w: svg_w, h: svg_h}, this);
 	}
 
 	componentWillUnmount() {
@@ -100,25 +86,7 @@ class DragBoard extends Component {
 	}
 
 	render() {
-		const {svgElements, selectedItem, socket, setIsInput} = this.state;
-		
-		const idListTemp = {
-			detailsID: detailsID,
-			detailsMsgID: detailsMsgID,
-			detailsImgID: detailsImgID,
-			closeButtonID: closeButtonID,
-			inputID: inputID,
-			messagePrependID: messagePrependID,
-			messageInputID: messageInputID,
-			messageID: messageID,
-			imgInputID: imgInputID,
-			imgTxtID: imgTxtID,
-			imgFileInputID: imgFileInputID,
-			imgID: imgID,
-			imgPreviewID: imgPreviewID,
-			addButtonID: addButtonID
-		};
-
+		const {svgElements, selectedItem, socket, isInput, setIsInput} = this.state;
 		return(
 			<div>
 				<div className="container-fluid noPadding">
@@ -133,13 +101,12 @@ class DragBoard extends Component {
 							<div className="col">
 							
 								<InfoPanel
-									idList={idListTemp}
 									dimension={{width: details_w, height: details_h}}
 									socket={this.state.socket}
-									setIsInput={setIsInput}
+									setIsInput={this.setIsInput}
 									isInput={isInput} 
-									msg={isInput ? msg : ""}
-									img={isInput ? img : ""}/>
+									msg={!isInput ? selectedItem.msg : ""}
+									img={!isInput ? selectedItem.img : ""}/>
 
 							</div>
 						</div>

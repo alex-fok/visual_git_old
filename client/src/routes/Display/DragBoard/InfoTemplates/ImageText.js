@@ -11,7 +11,7 @@ class ImageText extends Component {
 				type="text"
 				className="form-control"
 				value={fileName ? fileName : ""}
-				aria-labelledby={this.props.imgPrependID}
+				aria-labelledby={imgPrependID}
 				disabled
 			/>
 		)

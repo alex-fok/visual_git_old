@@ -24,35 +24,15 @@ export default {
 	},
 
 	showDetails: (str, obj, infoIDs) => {
-		const {detailsID, detailsMsgID, detailsImgID, inputID} = infoIDs;
-
-		// const {msg, img} = obj.state.svgElements[str];
-		
-		// $(detailsMsgID).textContent = "";
-		// $(detailsImgID).textContent = "";
-		
-		// $(detailsMsgID).appendChild((()=>{
-		// 	return document.createTextNode(msg);
-		// })());
-		
-		// $(detailsImgID).appendChild((()=>{		
-		// 	var imgElement = document.createElementNS(htmlNS, "img");
-		// 	imgElement.setAttributeNS(null, "src", img);
-		// 	return imgElement;
-		//})());
-		
-		// $(detailsID).style.display = "block";
-		// $(inputID).style.display = "none";
+		const {msg, img} = obj.state.svgElements[str];
 		obj.setState({
-			selectedItem: str,
+			selectedItem: {
+				msg: msg,
+				img: img
+			},
 			isInput: false
 		})
 },
-
-	hideDetails: (detailsID, inputID) => {
-		$(detailsID).style.display = "none";
-		$(inputID).style.display = "block";
-	},
 
 	showTag: (e, str, obj, infoIDs) => {
 		const {svgObjTagID, detailsID, inputID} = infoIDs;
@@ -65,9 +45,7 @@ export default {
 			$(svgObjTagID).style.left = `${e.pageX - window.scrollX + 15}px`;
 			$(svgObjTagID).style.top = `${e.pageY - window.scrollY}px`;
 		} else {
-			$(svgObjTagID).style.display = "none";
-			// $(detailsID).style.display = "none";
-			// $(inputID).style.display = "block";
+			$(svgObjTagID).style.display = "none";;
 		}
 	},
 
@@ -96,7 +74,7 @@ export default {
 		let data = {
 			[id] : {
 				msg: input.msg,
-				img: input.img.src,
+				img: input.img	,
 				x: 10,
 				y: 50,
 				width: 10,

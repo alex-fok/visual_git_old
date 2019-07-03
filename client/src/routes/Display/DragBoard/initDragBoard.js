@@ -78,54 +78,5 @@ export default {
 		$(svgElementID).addEventListener("mousemove", (e)=>{svgElementFunctions.handleMouseMove(e, obj, svgElementID)});
 		$(svgElementID).addEventListener("mouseleave", (e)=>{svgElementFunctions.notDragged(e, obj, svgElementID)});
 		$(svgElementID).addEventListener("mouseup", (e)=>{svgElementFunctions.notDragged(e, obj, svgElementID)});
-	},
-
-	initDisplay: (idList, dimension, obj) => {
-		// const {w, h} = dimension;
-		// const {
-		// 	messageInputID,
-		// 	messagePrependID,
-		// 	messageID,
-		// 	imgInputID,
-		// 	imgPrependID,
-		// 	imgPreviewID,
-		// 	imgID,
-		// 	imgTxtID,
-		// 	addButtonID,
-		// 	closeButtonID,
-		// 	detailsID,
-		// 	inputID} = idList;
-
-		// $(addButtonID).appendChild((()=>{
-		// 	var btn = document.createElementNS(htmlNS, "button");
-		// 	btn.setAttributeNS(null, "type", "button");
-		// 	btn.setAttributeNS(null, "class", "btn btn-secondary");
-		// 	btn.addEventListener("click", (e)=> {
-		// 		svgElementFunctions.handleNewSVGElementRequest(e, {
-		// 			msg: $(messageID).value ? $(messageID).value : "[No Message]",
-		// 			img: $(imgID) ? $(imgID).src : "[No Image]"
-		// 		}, obj);
-		// 		$(messageID).value = "";
-		// 		$(imgPreviewID).textContent = "";
-		// 		$(imgTxtID).value = "";
-		// 	});
-		// 	btn.appendChild((()=>{
-		// 		return document.createTextNode("Add");
-		// 	})());
-		// 	return btn;
-		// })());
-
-		// $(closeButtonID).appendChild((()=>{
-		// 	var btn = document.createElementNS(htmlNS, "button");
-		// 	btn.setAttributeNS(null, "type", "button");
-		// 	btn.setAttributeNS(null, "class", "btn btn-secondary");
-		// 	btn.addEventListener("click", (e)=> {
-		// 		svgElementFunctions.hideDetails(idList.detailsID, idList.inputID)
-		// 	});
-		// 	btn.appendChild((()=>{
-		// 		return document.createTextNode("Close");
-		// 	})());
-		// 	return btn;
-		// })());
 	}
 }

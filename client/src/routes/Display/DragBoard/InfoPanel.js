@@ -11,39 +11,25 @@ class InfoPanel extends Component {
 	}
 
 	render(){
-		const {isInput, setIsInput, idList, dimension} = this.props;
+		const {isInput, setIsInput, dimension, msg, img} = this.props;
 		return (
 			<div 
 				className="panel border"
-				id={idList.panelID}
 				style={{width: dimension.width, height: dimension.height}}
 			>
 			{isInput ?		
 				<InputsInfo
-					idList={idList}
 					style={isInput ? {display: "none"} : {display: "block"}}
 					socket={this.props.socket}/>
 			:
 				<DetailsInfo
-					idList={idList}
-					msg={this.props.msg}
-					img={this.props.img}
+					msg={msg}
+					img={img && img.fileName ? img : {
+						fileName: "[No Image]",
+						src: ""
+					}}
 					setIsInput={this.props.setIsInput}
 					style={isInput ? {display: "block"} : {display: "none"}}/>		
-			}
-			{
-				// 					<div id={detailsID}>
-				// 						<div className="inlineType" id={detailsMsgID}></div>
-				// 						<div className="imgContainer" id={detailsImgID}></div>
-				// 						<div className="atBottom" id={closeButtonID}></div>
-				// 					</div>
-				
-				// 					<div id={inputID}>
-				// 						<div id={messageInputID} className="input-group mb-3"></div>
-				// 						<div id={imgInputID} className="input-group mb-3"></div>
-				// 						<div id={imgPreviewID} className="imgContainer"></div>
-				// 						<div className="inlineType atBottom" id={addButtonID}></div>
-				// 					</div>
 			}
 				
 			</div>

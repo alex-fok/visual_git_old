@@ -6,14 +6,15 @@ class MessageInput extends Component {
 	}
 
 	render() {
-		const {idList, msg, setMsg, isInput} = this.props;
+		const messagePrependID = "messagePrepend";
+		const {msg, setMsg, isInput} = this.props;
 		return (
-			<div id={idList.messageInputID} className="input-group mb-3">
+			<div className="input-group mb-3">
 
 				<div className="input-group-prepend">
 					<span
 						className="input-group-text bg-white text-secondary border-secondary"
-						id={idList.messagePrependID}
+						id={messagePrependID}
 					>Text</span>
 				</div>
 
@@ -21,7 +22,7 @@ class MessageInput extends Component {
 					type="text"
 					className="form-control"
 					value={msg}
-					aria-labelledby={idList.imgPrependID}
+					aria-labelledby={messagePrependID}
 					onChange={(e)=> {isInput ? setMsg(e.target.value) : ""}}
 					readOnly={!isInput}
 				/>
