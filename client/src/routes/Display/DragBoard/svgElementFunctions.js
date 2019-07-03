@@ -3,7 +3,7 @@ const svgNS = "http://www.w3.org/2000/svg",
 const $ = (id) => {return document.getElementById(id)};
 
 export default {
-	createRectSVGElement: (attributes, infoIDs, fnList, obj) => {
+	createRectSVGElement: (attributes, svgObjTagID, fnList, obj) => {
 		var rect = document.createElementNS(svgNS,"rect");
 		rect.setAttributeNS(null, "id", attributes.id);
 		rect.setAttributeNS(null, "x", parseInt(attributes.x));
@@ -12,10 +12,10 @@ export default {
 		rect.setAttributeNS(null, "height", parseInt(attributes.height));
 		rect.setAttributeNS(null, "fill", attributes.fill);
 		rect.addEventListener("mousedown", (e)=>{fnList.handleMouseDown(e, attributes.id, obj)});
-		rect.addEventListener("mouseover", (e)=>{fnList.showTag(e, attributes.id, obj, infoIDs)});
-		rect.addEventListener("mousemove", (e)=>{fnList.showTag(e, attributes.id, obj, infoIDs)});
-		rect.addEventListener("mouseleave", (e)=>{fnList.hideTag(infoIDs.svgObjTagID)});
-		rect.addEventListener("click", (e)=>{fnList.showDetails(attributes.id, obj, infoIDs)})
+		rect.addEventListener("mouseover", (e)=>{fnList.showTag(e, attributes.id, obj, svgObjTagID)});
+		rect.addEventListener("mousemove", (e)=>{fnList.showTag(e, attributes.id, obj, svgObjTagID)});
+		rect.addEventListener("mouseleave", (e)=>{fnList.hideTag(svgObjTagID)});
+		rect.addEventListener("click", (e)=>{fnList.showDetails(attributes.id, obj)})
 		return rect;
 	},
 
@@ -23,7 +23,7 @@ export default {
 		$(containerID).appendChild(element);
 	},
 
-	showDetails: (str, obj, infoIDs) => {
+	showDetails: (str, obj) => {
 		const {msg, img} = obj.state.svgElements[str];
 		obj.setState({
 			selectedItem: {
@@ -34,8 +34,7 @@ export default {
 		})
 },
 
-	showTag: (e, str, obj, infoIDs) => {
-		const {svgObjTagID, detailsID, inputID} = infoIDs;
+	showTag: (e, str, obj, svgObjTagID) => {
 
 		if (!obj.state.isDragging) {
 			const {msg} = obj.state.svgElements[str];
@@ -49,7 +48,7 @@ export default {
 		}
 	},
 
-	hideTag: (svgObjTagID, detailsID) => {
+	hideTag: (svgObjTagID) => {
 		$(svgObjTagID).style.display = "none";
 	},
 

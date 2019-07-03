@@ -8,25 +8,7 @@ import './DragBoard.css';
 import idList from './idList.json';
 const svgNS = "http://www.w3.org/2000/svg";
 
-const 	svgContainerID = "svgContainer",
-		svgElementID = "dragBoard",
-		svgObjTagID = "svgObjTag",
-		detailsID = "details",
-		detailsMsgID = "details-msg",
-		detailsImgID = "details-img",
-		closeButtonID = "close-button",
-		inputID = "input",
-		messageInputID = "message-input",
-		imgInputID = "imgInput",
-		imgFileInputID = "imgFileInput",
-		imgPreviewID = "imagePreview",
-		addButtonID = "add-button",
-		messagePrependID = "message-prepend",
-		messageID = "message",
-		imgPrependID = "imgPrepend",
-		imgID = "image",
-		imgTxtID = "imgTxt",
-		fileInputID = "fileInput";
+const {svgElementID, svgObjTagID} = idList;
 
 const size = 1200,
 			div_w = size,
@@ -63,13 +45,7 @@ class DragBoard extends Component {
 		initDragBoard.initSocket(this, 
 			{
 				svgElementID: svgElementID,
-				infoIDs: {
-					svgObjTagID: svgObjTagID,
-					detailsID: detailsID,
-					inputID: inputID,
-					detailsMsgID: detailsMsgID,
-					detailsImgID: detailsImgID
-				}
+				svgObjTagID: svgObjTagID,			
 			});
 
 		initDragBoard.svgAddListener(idList.idOfSVGs.svgElementID, this);

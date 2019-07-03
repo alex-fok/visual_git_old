@@ -17,7 +17,7 @@ export default {
 			obj.setState(prev => ({
 				svgElements: Object.assign(svgElements, data)
 			}));
-			svgElementFunctions.appendSVG(svgElementFunctions.createRectSVGElement(svgObj, idList.infoIDs, {
+			svgElementFunctions.appendSVG(svgElementFunctions.createRectSVGElement(svgObj, idList.svgObjTagID, {
 				handleMouseDown: svgElementFunctions.handleMouseDown,
 				showTag: svgElementFunctions.showTag,
 				hideTag: svgElementFunctions.hideTag,
