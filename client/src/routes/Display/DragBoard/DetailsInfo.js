@@ -19,7 +19,7 @@ class DetailsInfo extends Component {
 					isInput = {false}
 					img={img}/>
 
-				<div className="atBottom">
+				<span className="atBottom mb-3 btn-group">
 					<button
 						type="button"
 						className="btn btn-secondary"
@@ -27,7 +27,12 @@ class DetailsInfo extends Component {
 							setIsInput()
 						}}
 					>Close</button>
-				</div>
+					<button
+						className="btn btn-secondary"
+					>
+					Edit
+					</button>
+				</span>
 
 			</div>
 		)

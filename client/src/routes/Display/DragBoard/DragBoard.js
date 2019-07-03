@@ -48,7 +48,7 @@ class DragBoard extends Component {
 				svgObjTagID: svgObjTagID,			
 			});
 
-		initDragBoard.svgAddListener(idList.idOfSVGs.svgElementID, this);
+		initDragBoard.svgAddListener(svgElementID, this);
 	}
 
 	componentWillUnmount() {
@@ -71,7 +71,7 @@ class DragBoard extends Component {
 							<div className="col">
 								<SVGPanel
 									dimension={{width: svg_w, height: svg_h}}
-									idOfSVGs={idList.idOfSVGs}
+									svgElementID={svgElementID}
 								/>
 							</div>
 							<div className="col">

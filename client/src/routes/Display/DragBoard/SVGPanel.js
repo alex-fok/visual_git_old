@@ -7,11 +7,11 @@ class SVGPanel extends Component {
 	};
 
 	render() {
-		const {dimension, idOfSVGs} = this.props;
+		const {dimension, svgElementID} = this.props;
 		return (
 			<div style={{width: dimension.width, height: dimension.height}}>
 				<svg
-					id={idOfSVGs.svgElementID}
+					id={svgElementID}
 					viewBox={`0 0 ${dimension.width} ${dimension.height}`}
 					width="100%"
 					height="100%"
