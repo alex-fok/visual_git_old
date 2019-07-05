@@ -11,7 +11,7 @@ class InfoPanel extends Component {
 	}
 
 	render(){
-		const {isInput, setIsInput, dimension, msg, img} = this.props;
+		const {socket, isInput, setIsInput, dimension, msg, img} = this.props;
 		return (
 			<div 
 				className="panel border"
@@ -20,7 +20,7 @@ class InfoPanel extends Component {
 			{isInput ?		
 				<InputsInfo
 					style={isInput ? {display: "none"} : {display: "block"}}
-					socket={this.props.socket}/>
+					socket={socket}/>
 			:
 				<DetailsInfo
 					msg={msg}
@@ -28,7 +28,9 @@ class InfoPanel extends Component {
 						fileName: "[No Image]",
 						src: ""
 					}}
-					setIsInput={this.props.setIsInput}
+					editing={this.state.editing}
+					setIsInput={setIsInput}
+					setEditing={this.setEditing}
 					style={isInput ? {display: "block"} : {display: "none"}}/>		
 			}
 				

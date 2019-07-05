@@ -1,5 +1,4 @@
 import svgElementFunctions from './svgElementFunctions';
-import nodeInfoController from './nodeInfoController';
 
 const 	svgNS = "http://www.w3.org/2000/svg",
 		htmlNS = "http://www.w3.org/1999/xhtml";

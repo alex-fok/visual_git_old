@@ -6,20 +6,20 @@ class ImageTemplate extends Component {
 		super(props);
 	}
 	render() {
-		const {img, isInput} = this.props;
-		const imgPrependID = "imgPrepend"
+		const {img, isInput, editable} = this.props;
+		const imgPrependID = "imgPrepend";
 		return (
 
 			<div>		
 				<label className="input-group-prepend">
 					<span
 						id={imgPrependID}
-						className={isInput ? 
+						className={isInput || editable ? 
 							"btn btn-outline-secondary" :
 							"input-group-text bg-white text-secondary border-secondary"
 						}
 					>Image
-						{isInput ?  
+						{isInput || editable ?  
 							<input
 								className="form-control-file"
 								type="file"
@@ -31,7 +31,7 @@ class ImageTemplate extends Component {
 					</span>
 					
 					<ImageText
-						fileName={img&&img.fileName ? img.fileName : ""}
+						fileName={img && img.fileName ? img.fileName : ""}
 						imgPrependID= {imgPrependID}	
 					/>
 				</label>

@@ -6,16 +6,37 @@ import ImageTemplate from './InfoTemplates/ImageTemplate';
 class DetailsInfo extends Component {
 	constructor(props) {
 		super(props);
+
+		this.state = {
+			msg: this.props.msg,
+			img: this.props.img,
+			isEditing: false
+		}
+
+		this.setIsEditing = this.setIsEditing.bind(this);
 	};
 
+	setIsEditing(){
+		this.setState(prev => {
+			isEditing: !prev
+		})
+	}
+
+	setImageInfo(e){
+		
+	}
+
 	render() {
-		const {setIsInput, msg, img} = this.props;
+		const {msg, img} = this.state;
+		const {setIsInput, editing, setEditing} = this.props;
 		return (
 			<div>
 				<MessageTemplate
+					editable = {isEditing}
 					isInput = {false}
 					msg={msg}/>
 				<ImageTemplate
+					editable = {isEditing}
 					isInput = {false}
 					img={img}/>
 
@@ -29,8 +50,8 @@ class DetailsInfo extends Component {
 					>Close</button>
 					<button
 						className="btn btn-secondary"
-					>
-					Edit
+						onClick={(e)=> {setIsEditing}}>
+					{isEditing ? "Finish Edit" : "Edit"}
 					</button>
 				</span>
 
