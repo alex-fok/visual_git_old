@@ -21,7 +21,6 @@ class InputsInfo extends Component {
 
 		this.setMsg = this.setMsg.bind(this);
 		this.setImgInfo = this.setImgInfo.bind(this);
-		this.setImg = this.setImg.bind(this);
 		this.addInfo = this.addInfo.bind(this);
 	}
 
@@ -32,7 +31,6 @@ class InputsInfo extends Component {
 	}
 
 	setImgInfo(event) {
-
 		const fileDirectory = event.target.value;
 		var fr = new FileReader();
 		fr.readAsDataURL(event.target.files[0]);
@@ -44,12 +42,6 @@ class InputsInfo extends Component {
 				}
 			})
 		}
-	}
-
-	setImg(img) {
-		this.setState({
-			img: img
-		})
 	}
 
 	addInfo(socket) {
@@ -72,17 +64,18 @@ class InputsInfo extends Component {
 	}
 
 	render() {
+		const {msg, img, setMsg, setImgInfo} = this.props;
 		return (
 			<div>
 				<MessageTemplate
 					isInput
-					msg={this.state.msg}
-					setMsg={this.setMsg}/>
+					msg={msg}
+					setMsg={setMsg}/>
 				
 				<ImageTemplate
 					isInput
-					img={this.state.img}
-					setImgInfo={this.setImgInfo}/>
+					img={img}
+					setImgInfo={setImgInfo}/>
 
 				<div 
 					className="inlineType atBottom"

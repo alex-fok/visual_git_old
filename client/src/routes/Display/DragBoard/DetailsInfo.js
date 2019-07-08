@@ -6,13 +6,11 @@ import ImageTemplate from './InfoTemplates/ImageTemplate';
 class DetailsInfo extends Component {
 	constructor(props) {
 		super(props);
-
 		this.state = {
 			msg: this.props.msg,
 			img: this.props.img,
 			isEditing: false
 		}
-
 		this.setIsEditing = this.setIsEditing.bind(this);
 	};
 
@@ -27,18 +25,19 @@ class DetailsInfo extends Component {
 	}
 
 	render() {
-		const {msg, img} = this.state;
-		const {setIsInput, editing, setEditing} = this.props;
+		const {msg, img} = this.props;
+		const {setIsInput, isEditing, setIsEditing, setImgInfo, setMsg} = this.props;
 		return (
 			<div>
 				<MessageTemplate
-					editable = {isEditing}
-					isInput = {false}
-					msg={msg}/>
+					isInput = {isEditing}
+					msg={msg}
+					setMsg={setMsg}/>
+
 				<ImageTemplate
-					editable = {isEditing}
-					isInput = {false}
-					img={img}/>
+					isInput = {isEditing}
+					img={img}
+					setImgInfo={setImgInfo}/>
 
 				<span className="atBottom mb-3 btn-group">
 					<button
@@ -50,7 +49,7 @@ class DetailsInfo extends Component {
 					>Close</button>
 					<button
 						className="btn btn-secondary"
-						onClick={(e)=> {setIsEditing}}>
+						onClick={(e)=> {setIsEditing()}}>
 					{isEditing ? "Finish Edit" : "Edit"}
 					</button>
 				</span>

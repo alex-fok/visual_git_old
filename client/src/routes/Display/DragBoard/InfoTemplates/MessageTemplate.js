@@ -17,7 +17,6 @@ class MessageInput extends Component {
 						id={messagePrependID}
 					>Text</span>
 				</div>
-
 				<input
 					type="text"
 					className="form-control"

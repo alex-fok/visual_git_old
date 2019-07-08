@@ -8,6 +8,43 @@ import DetailsInfo from './DetailsInfo';
 class InfoPanel extends Component {
 	constructor(props) {
 		super(props);
+		this.state={
+			editing: false,
+			msg: "",
+			img: {
+				fileName: "",
+				src: ""
+			}
+		}
+		this.setIsEditing = this.setIsEditing.bind(this);
+		this.setMsg = this.setMsg.bind(this);
+		this.setImgInfo = this.setImgInfo.bind(this);
+	}
+
+	setMsg(msg) {
+		this.setState({
+			msg: msg
+		})
+	}
+
+	setImgInfo(event) {
+		const fileDirectory = event.target.value;
+		var fr = new FileReader();
+		fr.readAsDataURL(event.target.files[0]);
+		fr.onload = () => {
+			this.setState({
+				img: {
+					fileName: fileDirectory.replace(/\\/g, '/').replace(/.*\//, ''),
+					src: fr.result
+				}
+			})
+		}
+	}
+
+	setIsEditing(){
+		this.setState(prev => ({
+			editing: !prev.editing
+		}));
 	}
 
 	render(){
@@ -20,7 +57,11 @@ class InfoPanel extends Component {
 			{isInput ?		
 				<InputsInfo
 					style={isInput ? {display: "none"} : {display: "block"}}
-					socket={socket}/>
+					socket={socket}
+					msg={this.state.msg}
+					img={this.state.img}
+					setMsg={this.setMsg}
+					setImgInfo={this.setImgInfo}/>
 			:
 				<DetailsInfo
 					msg={msg}
@@ -28,12 +69,13 @@ class InfoPanel extends Component {
 						fileName: "[No Image]",
 						src: ""
 					}}
-					editing={this.state.editing}
+					setMsg={this.setMsg}
+					setImgInfo={this.setImgInfo}
+					isEditing={this.state.editing}
 					setIsInput={setIsInput}
-					setEditing={this.setEditing}
+					setIsEditing={this.setIsEditing}
 					style={isInput ? {display: "block"} : {display: "none"}}/>		
 			}
-				
 			</div>
 		)
 	}
