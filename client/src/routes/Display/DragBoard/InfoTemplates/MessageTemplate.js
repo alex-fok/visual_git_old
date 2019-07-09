@@ -21,6 +21,7 @@ class MessageInput extends Component {
           type="text"
           className="form-control"
           value={msg}
+          placeholder="[No Message]"
           aria-labelledby={messagePrependID}
           onChange={(e)=> {isEditable ? setMsg(e.target.value) : ""}}
           readOnly={!isEditable}

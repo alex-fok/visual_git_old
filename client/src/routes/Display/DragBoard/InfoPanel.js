@@ -28,7 +28,7 @@ class InfoPanel extends Component {
     this.setMsg = this.setMsg.bind(this);
     this.setImgInfo = this.setImgInfo.bind(this);
     this.addInfo = this.addInfo.bind(this);
-    this.setIsEditing = this.setIsEditing.bind(this);
+    this.IsEditMode = this.IsEditMode.bind(this);
   }
 
   setMsg(msg) {
@@ -70,17 +70,25 @@ class InfoPanel extends Component {
     })
   }
 
-  setIsEditing(bool){
-    this.setState({
-      isInput: bool,
-      isEditing: bool
-    });
+  IsEditMode(){
+  	const {msgReceived, imgReceived} = this.props;
+    this.setState(prev => ({
+      isEditing: !prev.isEditing,
+      msgInEdit: prev.msgInEdit ? prev.msgInEdit : msgReceived,
+      imgInEdit: prev.imgInEdit && prev.imgInEdit.fileName ? prev.imgInEdit : imgReceived
+    }));
+  }
+
+  setIsInput(){
+  	this.props.setIsInput(true)
+  	this.setState({
+  		isEditing: false
+  	})
   }
 
   render(){
-    const {socket, msg, img, isInput, setIsInput, dimension} = this.props;
-    const {msgReceived, imgReceived, msgInEdit, imgInEdit, isEditing} = this.state;
-    console.log(this.props.msg);
+    const {socket, msgReceived, imgReceived, isInput, setIsInput, dimension} = this.props;
+    const {msgInEdit, imgInEdit, isEditing} = this.state;
     return (
       <div 
         className="panel border"
@@ -88,19 +96,17 @@ class InfoPanel extends Component {
       >
       {isInput ?      
         <InputsInfo
-          socket={socket}
           msg={msgInEdit}
           img={imgInEdit}
           setMsg={this.setMsg}
-          setImgInfo={this.setImgInfo}
-          addInfo={this.addInfo}/>
+          setImgInfo={this.setImgInfo}/>
       :
         <DetailsInfo
-          msg={msgReceived}
-          img={imgReceived}
+          msg={isEditing ? msgInEdit : msgReceived}
+          img={isEditing ? imgInEdit : imgReceived}
+          isEditing={isEditing}
           setMsg={this.setMsg}
-          setImgInfo={this.setImgInfo}
-          setIsEditing={this.setIsEditing}/>      
+          setImgInfo={this.setImgInfo}/>      
       }
       <OptionButtons
         isInput={isInput}
@@ -108,8 +114,7 @@ class InfoPanel extends Component {
         socket={socket}
         addInfo={this.addInfo}
         setIsInput={setIsInput}
-        setIsEditing={this.setIsEditing}
-      />
+        IsEditMode={this.IsEditMode}/>
       </div>
     )
   }

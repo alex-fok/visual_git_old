@@ -30,12 +30,13 @@ class DetailsInfo extends Component {
     return (
       <div>
         <MessageTemplate
-          isEditable = {false}
+          isEditable = {isEditing}
           msg={msg}
+          img={img}
           setMsg={setMsg}/>
 
         <ImageTemplate
-          isEditable = {false}
+          isEditable = {isEditing}
           img={img}
           setImgInfo={setImgInfo}/>
 
