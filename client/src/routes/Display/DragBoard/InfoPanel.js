@@ -1,84 +1,118 @@
 import React, {Component} from "react";
 import ReactDOM from "react-dom";
 
-import idList from './idList.json';
+import svgElementFunctions from './svgElementFunctions';
 
 import InputsInfo from './InputsInfo';
 import DetailsInfo from './DetailsInfo';
+import OptionButtons from './OptionButtons';
+
 class InfoPanel extends Component {
-	constructor(props) {
-		super(props);
-		this.state={
-			editing: false,
-			msg: "",
-			img: {
-				fileName: "",
-				src: ""
-			}
-		}
-		this.setIsEditing = this.setIsEditing.bind(this);
-		this.setMsg = this.setMsg.bind(this);
-		this.setImgInfo = this.setImgInfo.bind(this);
-	}
+  constructor(props) {
+    super(props);
+    const {msg, img} = this.props;
+    this.state={
+      
+      msgReceived: msg ? msg : "",
+      imgReceived: img ? img : {
+        fileName:"",
+        src:""
+      },
+      msgInEdit: "",
+      imgInEdit: {
+        fileName: "",
+        src: ""
+      },
+      isEditing: false
+    }
+    this.setMsg = this.setMsg.bind(this);
+    this.setImgInfo = this.setImgInfo.bind(this);
+    this.addInfo = this.addInfo.bind(this);
+    this.setIsEditing = this.setIsEditing.bind(this);
+  }
 
-	setMsg(msg) {
-		this.setState({
-			msg: msg
-		})
-	}
+  setMsg(msg) {
+    this.setState({
+        msgInEdit: msg
+    })
+  }
 
-	setImgInfo(event) {
-		const fileDirectory = event.target.value;
-		var fr = new FileReader();
-		fr.readAsDataURL(event.target.files[0]);
-		fr.onload = () => {
-			this.setState({
-				img: {
-					fileName: fileDirectory.replace(/\\/g, '/').replace(/.*\//, ''),
-					src: fr.result
-				}
-			})
-		}
-	}
+  setImgInfo(event) {
+    const fileDirectory = event.target.value;
+    var fr = new FileReader();
+    fr.readAsDataURL(event.target.files[0]);
+    fr.onload = () => {
+      this.setState({
+        imgInEdit: {
+          fileName: fileDirectory.replace(/\\/g, '/').replace(/.*\//, ''),
+          src: fr.result
+        }
+      })
+    }
+  }
 
-	setIsEditing(){
-		this.setState(prev => ({
-			editing: !prev.editing
-		}));
-	}
+  addInfo(socket) {
+    const {msgInEdit, imgInEdit} = this.state;
+    svgElementFunctions.handleNewSVGElementRequest({
+      msg: msgInEdit ? msgInEdit : "",
+      img: imgInEdit ? imgInEdit : {
+        fileName: "",
+        src:""
+      }
+    }, socket);
 
-	render(){
-		const {socket, isInput, setIsInput, dimension, msg, img} = this.props;
-		return (
-			<div 
-				className="panel border"
-				style={{width: dimension.width, height: dimension.height}}
-			>
-			{isInput ?		
-				<InputsInfo
-					style={isInput ? {display: "none"} : {display: "block"}}
-					socket={socket}
-					msg={this.state.msg}
-					img={this.state.img}
-					setMsg={this.setMsg}
-					setImgInfo={this.setImgInfo}/>
-			:
-				<DetailsInfo
-					msg={msg}
-					img={img && img.fileName ? img : {
-						fileName: "[No Image]",
-						src: ""
-					}}
-					setMsg={this.setMsg}
-					setImgInfo={this.setImgInfo}
-					isEditing={this.state.editing}
-					setIsInput={setIsInput}
-					setIsEditing={this.setIsEditing}
-					style={isInput ? {display: "block"} : {display: "none"}}/>		
-			}
-			</div>
-		)
-	}
+    this.setState({
+      msgInEdit: "",
+      imgInEdit: {
+        fileName: "",
+        src: ""
+      }
+    })
+  }
+
+  setIsEditing(bool){
+    this.setState({
+      isInput: bool,
+      isEditing: bool
+    });
+  }
+
+  render(){
+    const {socket, msg, img, isInput, setIsInput, dimension} = this.props;
+    const {msgReceived, imgReceived, msgInEdit, imgInEdit, isEditing} = this.state;
+    console.log(this.props.msg);
+    return (
+      <div 
+        className="panel border"
+        style={{width: dimension.width, height: dimension.height}}
+      >
+      {isInput ?      
+        <InputsInfo
+          socket={socket}
+          msg={msgInEdit}
+          img={imgInEdit}
+          setMsg={this.setMsg}
+          setImgInfo={this.setImgInfo}
+          addInfo={this.addInfo}/>
+      :
+        <DetailsInfo
+          msg={msgReceived}
+          img={imgReceived}
+          setMsg={this.setMsg}
+          setImgInfo={this.setImgInfo}
+          setIsEditing={this.setIsEditing}/>      
+      }
+      <OptionButtons
+        isInput={isInput}
+        isEditing={isEditing}
+        socket={socket}
+        addInfo={this.addInfo}
+        setIsInput={setIsInput}
+        setIsEditing={this.setIsEditing}
+      />
+      </div>
+    )
+  }
 }
 
 export default InfoPanel;
