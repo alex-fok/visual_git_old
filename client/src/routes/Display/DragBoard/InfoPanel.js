@@ -23,6 +23,7 @@ class InfoPanel extends Component {
     this.setImgInfo = this.setImgInfo.bind(this);
     this.addInfo = this.addInfo.bind(this);
     this.toEditMode = this.toEditMode.bind(this);
+    this.finishEdit = this.finishEdit.bind(this);
     this.closeDetails = this.closeDetails.bind(this);
   }
 
@@ -74,6 +75,15 @@ class InfoPanel extends Component {
     }));
   }
 
+  finishEdit(){
+  	const {msgReceived, imgReceived} = this.props;
+    this.setState(prev => ({
+      isEditing: !prev.isEditing,
+      msgInEdit: prev.msgInEdit ? prev.msgInEdit : msgReceived,
+      imgInEdit: prev.imgInEdit && prev.imgInEdit.fileName ? prev.imgInEdit : imgReceived
+    }));
+  }
+
   closeDetails(){
   	this.setState({
   		msgInEdit: "",
@@ -112,8 +122,9 @@ class InfoPanel extends Component {
         isEditing={isEditing}
         socket={socket}
         addInfo={this.addInfo}
-        closeDetails={this.closeDetails}
-        toEditMode={this.toEditMode}/>
+       	toEditMode={this.toEditMode}
+       	finishEdit={this.finishEdit}
+        closeDetails={this.closeDetails}/>
       </div>
     )
   }
