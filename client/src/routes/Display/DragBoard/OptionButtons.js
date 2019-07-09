@@ -5,7 +5,7 @@ class OptionButtons extends Component {
 		super(props);
 	}
 	render() {
-		const {isInput, isEditing, socket, addInfo, setIsInput, IsEditMode} = this.props;
+		const {isInput, isEditing, socket, addInfo, closeDetails, toEditMode} = this.props;
 		return (
 			<div className="inlineType atBottom">
 			{isInput ? 
@@ -20,12 +20,12 @@ class OptionButtons extends Component {
 					<button
 	          type="button"
 	          className="btn btn-secondary"
-	          onClick= {(e)=> {setIsInput(true)}}>
+	          onClick= {(e)=> {closeDetails()}}>
 	          Close
 	        </button>
 					<button
 	        	className="btn btn-secondary"
-	        	onClick={(e)=> {IsEditMode()}}>
+	        	onClick={(e)=> {toEditMode()}}>
 	      		{isEditing ? "Finish Edit" : "Edit"} 
 	      	</button>
       	</span>

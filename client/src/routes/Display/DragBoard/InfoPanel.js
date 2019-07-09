@@ -12,12 +12,6 @@ class InfoPanel extends Component {
     super(props);
     const {msg, img} = this.props;
     this.state={
-      
-      msgReceived: msg ? msg : "",
-      imgReceived: img ? img : {
-        fileName:"",
-        src:""
-      },
       msgInEdit: "",
       imgInEdit: {
         fileName: "",
@@ -28,7 +22,8 @@ class InfoPanel extends Component {
     this.setMsg = this.setMsg.bind(this);
     this.setImgInfo = this.setImgInfo.bind(this);
     this.addInfo = this.addInfo.bind(this);
-    this.IsEditMode = this.IsEditMode.bind(this);
+    this.toEditMode = this.toEditMode.bind(this);
+    this.closeDetails = this.closeDetails.bind(this);
   }
 
   setMsg(msg) {
@@ -70,7 +65,7 @@ class InfoPanel extends Component {
     })
   }
 
-  IsEditMode(){
+  toEditMode(){
   	const {msgReceived, imgReceived} = this.props;
     this.setState(prev => ({
       isEditing: !prev.isEditing,
@@ -79,15 +74,19 @@ class InfoPanel extends Component {
     }));
   }
 
-  setIsInput(){
-  	this.props.setIsInput(true)
+  closeDetails(){
   	this.setState({
-  		isEditing: false
+  		msgInEdit: "",
+  		imgInEdit: {
+        fileName: "",
+        src: ""
+      }
   	})
+  	this.props.setIsInput(true);
   }
 
   render(){
-    const {socket, msgReceived, imgReceived, isInput, setIsInput, dimension} = this.props;
+    const {socket, msgReceived, imgReceived, isInput, dimension} = this.props;
     const {msgInEdit, imgInEdit, isEditing} = this.state;
     return (
       <div 
@@ -113,8 +112,8 @@ class InfoPanel extends Component {
         isEditing={isEditing}
         socket={socket}
         addInfo={this.addInfo}
-        setIsInput={setIsInput}
-        IsEditMode={this.IsEditMode}/>
+        closeDetails={this.closeDetails}
+        toEditMode={this.toEditMode}/>
       </div>
     )
   }
