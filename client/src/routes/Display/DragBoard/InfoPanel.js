@@ -23,7 +23,7 @@ class InfoPanel extends Component {
     this.setImgInfo = this.setImgInfo.bind(this);
     this.addInfo = this.addInfo.bind(this);
     this.toEditMode = this.toEditMode.bind(this);
-    this.finishEdit = this.finishEdit.bind(this);
+    this.saveChanges = this.saveChanges.bind(this);
     this.closeDetails = this.closeDetails.bind(this);
   }
 
@@ -31,6 +31,12 @@ class InfoPanel extends Component {
     this.setState({
         msgInEdit: msg
     })
+  }
+
+  componentDidMount() {
+    this.setState({
+      isEditing: false
+    });
   }
 
   setImgInfo(event) {
@@ -68,20 +74,22 @@ class InfoPanel extends Component {
 
   toEditMode(){
   	const {msgReceived, imgReceived} = this.props;
-    this.setState(prev => ({
-      isEditing: !prev.isEditing,
-      msgInEdit: prev.msgInEdit ? prev.msgInEdit : msgReceived,
-      imgInEdit: prev.imgInEdit && prev.imgInEdit.fileName ? prev.imgInEdit : imgReceived
-    }));
+    const {msgInEdit, imgInEdit} = this.state;
+    console.log(this.state.isEditing);
+    this.setState({
+      isEditing: true,
+      msgInEdit: msgInEdit ? msgInEdit : msgReceived,
+      imgInEdit: imgInEdit && imgInEdit.fileName ? imgInEdit : imgReceived
+    });
   }
 
-  finishEdit(){
-  	const {msgReceived, imgReceived} = this.props;
+  saveChanges(){
+    const {msgInEdit, imgInEdit} = this.state;
     this.setState(prev => ({
-      isEditing: !prev.isEditing,
-      msgInEdit: prev.msgInEdit ? prev.msgInEdit : msgReceived,
-      imgInEdit: prev.imgInEdit && prev.imgInEdit.fileName ? prev.imgInEdit : imgReceived
+      isEditing: false
     }));
+
+    //TODO: save changes made on msgInEdit and imgInEdit using this.props.socket
   }
 
   closeDetails(){
@@ -90,7 +98,8 @@ class InfoPanel extends Component {
   		imgInEdit: {
         fileName: "",
         src: ""
-      }
+      },
+      isEditing: false
   	})
   	this.props.setIsInput(true);
   }
@@ -115,7 +124,8 @@ class InfoPanel extends Component {
           img={isEditing ? imgInEdit : imgReceived}
           isEditing={isEditing}
           setMsg={this.setMsg}
-          setImgInfo={this.setImgInfo}/>      
+          setImgInfo={this.setImgInfo}
+          closeDetails={this.closeDetails}/>      
       }
       <OptionButtons
         isInput={isInput}
@@ -123,7 +133,7 @@ class InfoPanel extends Component {
         socket={socket}
         addInfo={this.addInfo}
        	toEditMode={this.toEditMode}
-       	finishEdit={this.finishEdit}
+       	saveChanges={this.saveChanges}
         closeDetails={this.closeDetails}/>
       </div>
     )
