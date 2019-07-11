@@ -71,6 +71,7 @@ class DragBoard extends Component {
                 <SVGPanel
                     dimension={{width: svg_w, height: svg_h}}
                     svgElementID={svgElementID}
+                    svgElements={this.state.svgElements}
                 />
               </div>
               <div className="col">

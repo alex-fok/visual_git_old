@@ -1,10 +1,25 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 
+import svgElementFunctions from './svgElementFunctions';
+
 class SVGPanel extends Component {
 	constructor(props) {
 		super(props);
 	};
+
+	componentDidMount() {
+		const {svgElements} = this.props;
+		Object.keys(data).forEach(key => {
+	    svgElementFunctions.appendSVG(svgElementFunctions.createRectSVGElement(data[key], idList.infoIDs,
+	    {
+	      handleMouseDown: svgElementFunctions.handleMouseDown,
+	      showTag: svgElementFunctions.showTag,
+	      hideTag: svgElementFunctions.hideTag,
+	      showDetails: svgElementFunctions.showDetails
+	    }, obj), "svgElementID");
+	  });
+	}
 
 	render() {
 		const {dimension, svgElementID} = this.props;
