@@ -38,6 +38,7 @@ class DragBoard extends Component {
         }
       }
       this.setIsInput = this.setIsInput.bind(this);
+      this.setSelectedItem = this.setSelectedItem.bind(this);
     }
 
   componentDidMount() {
@@ -60,6 +61,16 @@ class DragBoard extends Component {
     })
   }
 
+  setSelectedItem(msg, img){
+    this.setState({
+      selectedItem: {
+        msg: msg,
+        img: img
+      },
+      isInput: false
+    })
+  }
+
   render() {
     const {svgElements, selectedItem, socket, isInput, setIsInput} = this.state;
     return(
@@ -69,9 +80,12 @@ class DragBoard extends Component {
             <div className="row">
               <div className="col">
                 <SVGPanel
-                    dimension={{width: svg_w, height: svg_h}}
-                    svgElementID={svgElementID}
-                    svgElements={this.state.svgElements}
+                  dimension={{width: svg_w, height: svg_h}}
+                  svgElementID={svgElementID}
+                  svgObjTagID={svgObjTagID}
+                  svgElements={this.state.svgElements}
+                  isDragging={this.state.isDragging}
+                  setSelectedItem={this.setSelectedItem}
                 />
               </div>
               <div className="col">

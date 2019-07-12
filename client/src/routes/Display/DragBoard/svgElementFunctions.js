@@ -3,25 +3,25 @@ const svgNS = "http://www.w3.org/2000/svg",
 const $ = (id) => {return document.getElementById(id)};
 
 export default {
-	createRectSVGElement: (attributes, svgObjTagID, fnList, obj) => {
-		var rect = document.createElementNS(svgNS,"rect");
-		rect.setAttributeNS(null, "id", attributes.id);
-		rect.setAttributeNS(null, "x", parseInt(attributes.x));
-		rect.setAttributeNS(null, "y", parseInt(attributes.y));
-		rect.setAttributeNS(null, "width", parseInt(attributes.width));
-		rect.setAttributeNS(null, "height", parseInt(attributes.height));
-		rect.setAttributeNS(null, "fill", attributes.fill);
-		rect.addEventListener("mousedown", (e)=>{fnList.handleMouseDown(e, attributes.id, obj)});
-		rect.addEventListener("mouseover", (e)=>{fnList.showTag(e, attributes.id, obj, svgObjTagID)});
-		rect.addEventListener("mousemove", (e)=>{fnList.showTag(e, attributes.id, obj, svgObjTagID)});
-		rect.addEventListener("mouseleave", (e)=>{fnList.hideTag(svgObjTagID)});
-		rect.addEventListener("click", (e)=>{fnList.showDetails(attributes.id, obj)})
-		return rect;
-	},
+	// createRectSVGElement: (attributes, svgObjTagID, fnList, obj) => {
+	// 	var rect = document.createElementNS(svgNS,"rect");
+	// 	rect.setAttributeNS(null, "id", attributes.id);
+	// 	rect.setAttributeNS(null, "x", parseInt(attributes.x));
+	// 	rect.setAttributeNS(null, "y", parseInt(attributes.y));
+	// 	rect.setAttributeNS(null, "width", parseInt(attributes.width));
+	// 	rect.setAttributeNS(null, "height", parseInt(attributes.height));
+	// 	rect.setAttributeNS(null, "fill", attributes.fill);
+	// 	rect.addEventListener("mousedown", (e)=>{fnList.handleMouseDown(e, attributes.id, obj)});
+	// 	rect.addEventListener("mouseover", (e)=>{fnList.showTag(e, attributes.id, obj, svgObjTagID)});
+	// 	rect.addEventListener("mousemove", (e)=>{fnList.showTag(e, attributes.id, obj, svgObjTagID)});
+	// 	rect.addEventListener("mouseleave", (e)=>{fnList.hideTag(svgObjTagID)});
+	// 	rect.addEventListener("click", (e)=>{fnList.showDetails(attributes.id, obj)})
+	// 	return rect;
+	// },
 
-	appendSVG: (element, containerID) => {
-		$(containerID).appendChild(element);
-	},
+	// appendSVG: (element, containerID) => {
+	// 	$(containerID).appendChild(element);
+	// },
 
 	showDetails: (str, obj) => {
 		const {msg, img} = obj.state.svgElements[str];
@@ -34,11 +34,8 @@ export default {
 		})
 },
 
-	showTag: (e, str, obj, svgObjTagID) => {
-
-		if (!obj.state.isDragging) {
-			const {msg} = obj.state.svgElements[str];
-			
+	showTag: (e, msg, svgObjTagID, dragging) => {
+		if (!dragging) {
 			$(svgObjTagID).innerHTML = msg;			
 			$(svgObjTagID).style.display = "block";
 			$(svgObjTagID).style.left = `${e.pageX - window.scrollX + 15}px`;

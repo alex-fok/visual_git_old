@@ -16,12 +16,12 @@ export default {
       obj.setState(prev => ({
         svgElements: Object.assign(svgElements, data)
       }));
-      svgElementFunctions.appendSVG(svgElementFunctions.createRectSVGElement(svgObj, idList.svgObjTagID, {
-        handleMouseDown: svgElementFunctions.handleMouseDown,
-        showTag: svgElementFunctions.showTag,
-        hideTag: svgElementFunctions.hideTag,
-        showDetails: svgElementFunctions.showDetails
-      }, obj), idList.svgElementID);
+      // svgElementFunctions.appendSVG(svgElementFunctions.createRectSVGElement(svgObj, idList.svgObjTagID, {
+      //   handleMouseDown: svgElementFunctions.handleMouseDown,
+      //   showTag: svgElementFunctions.showTag,
+      //   hideTag: svgElementFunctions.hideTag,
+      //   showDetails: svgElementFunctions.showDetails
+      // }, obj), idList.svgElementID);
     });
 
     socket.on("svgMove", (data) => {
@@ -58,15 +58,15 @@ export default {
           svgElements: Object.assign(data),
           updated: true
         });
-        // Object.keys(data).forEach(key => {
-        //   svgElementFunctions.appendSVG(svgElementFunctions.createRectSVGElement(data[key], idList.infoIDs,
-        //   {
-        //     handleMouseDown: svgElementFunctions.handleMouseDown,
-        //     showTag: svgElementFunctions.showTag,
-        //     hideTag: svgElementFunctions.hideTag,
-        //     showDetails: svgElementFunctions.showDetails
-        //   }, obj), idList.svgElementID);
-        // });
+        Object.keys(data).forEach(key => {
+          svgElementFunctions.appendSVG(svgElementFunctions.createRectSVGElement(data[key], idList.svgObjTagID,
+          {
+            handleMouseDown: svgElementFunctions.handleMouseDown,
+            showTag: svgElementFunctions.showTag,
+            hideTag: svgElementFunctions.hideTag,
+            showDetails: svgElementFunctions.showDetails
+          }, obj), idList.svgElementID);
+        });
       }
     });
 
