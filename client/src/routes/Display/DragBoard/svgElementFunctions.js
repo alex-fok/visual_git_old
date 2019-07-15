@@ -23,16 +23,15 @@ export default {
 	// 	$(containerID).appendChild(element);
 	// },
 
-	showDetails: (str, obj) => {
-		const {msg, img} = obj.state.svgElements[str];
-		obj.setState({
-			selectedItem: {
-				msg: msg,
-				img: img
-			},
-			isInput: false
-		})
-},
+	// showDetails: (str, obj) => {
+	// 	const {msg, img} = obj.state.svgElements[str];
+	// 	obj.setState({
+	// 		selectedItem: {
+	// 			msg: msg,
+	// 			img: img
+	// 		},
+	// 		isInput: false
+	// 	})},
 
 	showTag: (e, msg, svgObjTagID, dragging) => {
 		if (!dragging) {
@@ -49,21 +48,21 @@ export default {
 		$(svgObjTagID).style.display = "none";
 	},
 
-	handleMouseDown: (e,str, obj) => {
-		if (!obj.state.isDragging) {
-			const px = parseInt(e.pageX);
-			const py = parseInt(e.pageY);
+	// handleMouseDown: (e,str, obj) => {
+	// 	if (!obj.state.isDragging) {
+	// 		const px = parseInt(e.pageX);
+	// 		const py = parseInt(e.pageY);
 
-			obj.setState({
-				draggedItem: {
-					id: str,
-					xFrom: px,
-					yFrom: py 
-				},
-				isDragging: true
-			});
-		}
-	},
+	// 		obj.setState({
+	// 			draggedItem: {
+	// 				id: str,
+	// 				xFrom: px,
+	// 				yFrom: py 
+	// 			},
+	// 			isDragging: true
+	// 		});
+	// 	}
+	// },
 
 	handleNewSVGElementRequest: (input, socket) => {
 		const id = "item_" + Date.now();
@@ -82,47 +81,47 @@ export default {
 		socket.emit("createSVG", data);
 	},
 
-	handleMouseMove: (e, obj, containerID) => {
-		if (obj.state.isDragging) {
-			const {draggedItem, socket} = obj.state;
-			const rect = $(containerID).getElementById(draggedItem.id),
-						px = parseInt(e.pageX),
-						py = parseInt(e.pageY),
-						dx = px - draggedItem.xFrom,
-						dy = py - draggedItem.yFrom;
+	// handleMouseMove: (e, obj, containerID) => {
+	// 	if (obj.state.isDragging) {
+	// 		const {draggedItem, socket} = obj.state;
+	// 		const rect = $(containerID).getElementById(draggedItem.id),
+	// 					px = parseInt(e.pageX),
+	// 					py = parseInt(e.pageY),
+	// 					dx = px - draggedItem.xFrom,
+	// 					dy = py - draggedItem.yFrom;
 
-			obj.setState(prev => ({
-				draggedItem: Object.assign(prev.draggedItem, {xFrom: px, yFrom: py}) 
-			}));
+	// 		obj.setState(prev => ({
+	// 			draggedItem: Object.assign(prev.draggedItem, {xFrom: px, yFrom: py}) 
+	// 		}));
 			
-			const rectX = parseInt(rect.getAttributeNS(null, "x")),
-						rectY = parseInt(rect.getAttributeNS(null, "y"));
+	// 		const rectX = parseInt(rect.getAttributeNS(null, "x")),
+	// 					rectY = parseInt(rect.getAttributeNS(null, "y"));
 
-			rect.setAttributeNS(null, "x", (rectX + dx));
-			rect.setAttributeNS(null, "y", (rectY + dy));
+	// 		rect.setAttributeNS(null, "x", (rectX + dx));
+	// 		rect.setAttributeNS(null, "y", (rectY + dy));
 
-			socket.emit("moveSVG", {
-				id: draggedItem.id,
-				x: rectX + dx,
-				y: rectY + dy,
-				fill: "#F00"
-			})
-		}
-	},
+	// 		socket.emit("moveSVG", {
+	// 			id: draggedItem.id,
+	// 			x: rectX + dx,
+	// 			y: rectY + dy,
+	// 			fill: "#F00"
+	// 		})
+	// 	}
+	// },
 
-	notDragged: (e, obj, containerID) => {
-		if (obj.state.isDragging){
-			const {draggedItem, socket, svgElements} = obj.state;
-			const dragged = $(containerID).getElementById(draggedItem.id);
-			svgElements[draggedItem.id].y = parseInt(dragged.getAttributeNS(null, "y"));
-			svgElements[draggedItem.id].x = parseInt(dragged.getAttributeNS(null, "x"));
+	// notDragged: (e, obj, containerID) => {
+	// 	if (obj.state.isDragging){
+	// 		const {draggedItem, socket, svgElements} = obj.state;
+	// 		const dragged = $(containerID).getElementById(draggedItem.id);
+	// 		svgElements[draggedItem.id].y = parseInt(dragged.getAttributeNS(null, "y"));
+	// 		svgElements[draggedItem.id].x = parseInt(dragged.getAttributeNS(null, "x"));
 		
-			obj.setState({
-				draggedItem: {id: "", xFrom: 0, yFrom: 0},
-				isDragging: false,
-				svgElements: svgElements
-			});
-			socket.emit("releaseSvg", draggedItem.id);
-		}
-	},
+	// 		obj.setState({
+	// 			draggedItem: {id: "", xFrom: 0, yFrom: 0},
+	// 			isDragging: false,
+	// 			svgElements: svgElements
+	// 		});
+	// 		socket.emit("releaseSvg", draggedItem.id);
+	// 	}
+	// },
 }

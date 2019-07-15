@@ -1,7 +1,36 @@
+// 
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//   NOT USED
+// 
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
 import svgElementFunctions from './svgElementFunctions';
 
-const   svgNS = "http://www.w3.org/2000/svg",
-    htmlNS = "http://www.w3.org/1999/xhtml";
+const svgNS = "http://www.w3.org/2000/svg",
+      htmlNS = "http://www.w3.org/1999/xhtml";
 const $ = (id) => {return document.getElementById(id)};
 
 export default {
@@ -74,8 +103,8 @@ export default {
   },
 
   svgAddListener: (svgElementID, obj) => {
-    $(svgElementID).addEventListener("mousemove", (e)=>{svgElementFunctions.handleMouseMove(e, obj, svgElementID)});
-    $(svgElementID).addEventListener("mouseleave", (e)=>{svgElementFunctions.notDragged(e, obj, svgElementID)});
-    $(svgElementID).addEventListener("mouseup", (e)=>{svgElementFunctions.notDragged(e, obj, svgElementID)});
+     $(svgElementID).addEventListener("mousemove", (e)=>{svgElementFunctions.handleMouseMove(e, obj, svgElementID)});
+     $(svgElementID).addEventListener("mouseleave", (e)=>{svgElementFunctions.notDragged(e, obj, svgElementID)});
+     $(svgElementID).addEventListener("mouseup", (e)=>{svgElementFunctions.notDragged(e, obj, svgElementID)});
   }
 }

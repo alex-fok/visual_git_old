@@ -11,26 +11,18 @@ const svgNS = "http://www.w3.org/2000/svg";
 const {svgElementID, svgObjTagID} = idList;
 
 const size = 1200,
-            div_w = size,
-            div_h = size*.5,
-            svg_w = div_w*.4,
-            svg_h = div_h,
-            details_w = div_w*.4,
-            details_h = div_h;
+      div_w = size,
+      div_h = size*.5,
+      svg_w = div_w*.4,
+      svg_h = div_h,
+      details_w = div_w*.4,
+      details_h = div_h;
 
 class DragBoard extends Component {
   constructor(props) {
       super(props);
       this.state={
         socket: io(this.props.host, {transports: ['websocket']}),
-        svgElements: {},
-        draggedItem: {
-          id: "",
-          xFrom: 0,
-          yFrom: 0
-        },
-        isDragging: false,
-        updated: false,
         isInput: true,
         selectedItem: {
           msg: "",
@@ -42,13 +34,13 @@ class DragBoard extends Component {
     }
 
   componentDidMount() {
-    initDragBoard.initSocket(this, 
-      {
-        svgElementID: svgElementID,
-        svgObjTagID: svgObjTagID,           
-      });
+    // initDragBoard.initSocket(this, 
+    //   {
+    //     svgElementID: svgElementID,
+    //     svgObjTagID: svgObjTagID,           
+    //   });
 
-    initDragBoard.svgAddListener(svgElementID, this);
+    //initDragBoard.svgAddListener(svgElementID, this);
   }
 
   componentWillUnmount() {
@@ -80,11 +72,11 @@ class DragBoard extends Component {
             <div className="row">
               <div className="col">
                 <SVGPanel
+                  socket={socket}
+                  jwt={this.props.jwt}
                   dimension={{width: svg_w, height: svg_h}}
                   svgElementID={svgElementID}
                   svgObjTagID={svgObjTagID}
-                  svgElements={this.state.svgElements}
-                  isDragging={this.state.isDragging}
                   setSelectedItem={this.setSelectedItem}
                 />
               </div>
