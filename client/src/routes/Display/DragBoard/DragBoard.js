@@ -44,13 +44,9 @@ class DragBoard extends Component {
     })
   }
 
-  setSelectedItem(id, msg, img){
+  setSelectedItem(item){
     this.setState({
-      selectedItem: {
-        id: id,
-        msg: msg,
-        img: img
-      },
+      selectedItem: item,
       isInput: false
     })
   }

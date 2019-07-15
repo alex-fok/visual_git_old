@@ -40,7 +40,8 @@ class SVGPanel extends Component {
 			console.log("data[d].id: " + data[d].id);
 			console.log("this.props.selectedItem.id: " + this.props.selectedItem.id);
 			if (data[d].id === this.props.selectedItem.id) {
-				this.props.setSelectedItem(data[d].id, data[d].msg, data[d].img);
+				console.log(data[d].x);
+				this.props.setSelectedItem(data[d]);
 			}
 		})
 
@@ -156,7 +157,7 @@ class SVGPanel extends Component {
 							onMouseOver={(e)=> showTag(e, rect.msg, this.props.svgObjTagID, this.state.isDragging)}
 							onMouseMove={(e)=> showTag(e, rect.msg, this.props.svgObjTagID, this.state.isDragging)}
 							onMouseLeave={(e)=> hideTag(svgObjTagID)}
-							onClick={(e)=> this.props.setSelectedItem(rect.id, rect.msg, rect.img)}
+							onClick={(e)=> this.props.setSelectedItem(rect)}
 						/>
 					)
 					})}
