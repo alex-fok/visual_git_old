@@ -25,6 +25,7 @@ class DragBoard extends Component {
         socket: io(this.props.host, {transports: ['websocket']}),
         isInput: true,
         selectedItem: {
+          id: "",
           msg: "",
           img: ""
         }
@@ -32,16 +33,6 @@ class DragBoard extends Component {
       this.setIsInput = this.setIsInput.bind(this);
       this.setSelectedItem = this.setSelectedItem.bind(this);
     }
-
-  componentDidMount() {
-    // initDragBoard.initSocket(this, 
-    //   {
-    //     svgElementID: svgElementID,
-    //     svgObjTagID: svgObjTagID,           
-    //   });
-
-    //initDragBoard.svgAddListener(svgElementID, this);
-  }
 
   componentWillUnmount() {
     this.state.socket.close();
@@ -53,9 +44,10 @@ class DragBoard extends Component {
     })
   }
 
-  setSelectedItem(msg, img){
+  setSelectedItem(id, msg, img){
     this.setState({
       selectedItem: {
+        id: id,
         msg: msg,
         img: img
       },
@@ -77,6 +69,7 @@ class DragBoard extends Component {
                   dimension={{width: svg_w, height: svg_h}}
                   svgElementID={svgElementID}
                   svgObjTagID={svgObjTagID}
+                  selectedItem={this.state.selectedItem}
                   setSelectedItem={this.setSelectedItem}
                 />
               </div>
@@ -85,7 +78,8 @@ class DragBoard extends Component {
                   dimension={{width: details_w, height: details_h}}
                   socket={this.state.socket}
                   setIsInput={this.setIsInput}
-                  isInput={isInput} 
+                  isInput={isInput}
+                  svgId={!isInput ? selectedItem.id : ""}
                   msgReceived={!isInput ? selectedItem.msg : ""}
                   imgReceived={!isInput ? selectedItem.img : ""}/>
               </div>

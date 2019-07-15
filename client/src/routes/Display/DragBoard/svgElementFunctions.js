@@ -81,6 +81,23 @@ export default {
 		socket.emit("createSVG", data);
 	},
 
+	handleEditRequest: (input, socket) => {
+		const id = input.id;
+		let data = {
+			[id] : {
+				msg: input.msg,
+				img: input.img,
+				x: 10,
+				y: 50,
+				width: 10,
+				height: 10,
+				fill: "#FFF",
+				id: id
+			}
+		}
+		socket.emit("editSVG", data);
+	},
+
 	// handleMouseMove: (e, obj, containerID) => {
 	// 	if (obj.state.isDragging) {
 	// 		const {draggedItem, socket} = obj.state;

@@ -27,12 +27,22 @@ class SVGPanel extends Component {
 		const {svgElements} = this.state;
 
 		socket.on("svgAdd", (data)=> {
-			let svgObj = data[Object.keys(data)[0]];
-
-			this.setState(prev => ({
+			this.setState({
 				svgElements: Object.assign(svgElements, data)
-			}));
+			});
 		});
+
+		socket.on("svgEdit", (data)=> {
+			this.setState({
+				svgElements: Object.assign(svgElements, data)
+			});
+			const d = Object.keys(data)[0];
+			console.log("data[d].id: " + data[d].id);
+			console.log("this.props.selectedItem.id: " + this.props.selectedItem.id);
+			if (data[d].id === this.props.selectedItem.id) {
+				this.props.setSelectedItem(data[d].id, data[d].msg, data[d].img);
+			}
+		})
 
 		socket.on("svgMove", (data)=> {
 			this.setState(prev => ({
@@ -146,7 +156,7 @@ class SVGPanel extends Component {
 							onMouseOver={(e)=> showTag(e, rect.msg, this.props.svgObjTagID, this.state.isDragging)}
 							onMouseMove={(e)=> showTag(e, rect.msg, this.props.svgObjTagID, this.state.isDragging)}
 							onMouseLeave={(e)=> hideTag(svgObjTagID)}
-							onClick={(e)=> this.props.setSelectedItem(rect.msg, rect.img)}
+							onClick={(e)=> this.props.setSelectedItem(rect.id, rect.msg, rect.img)}
 						/>
 					)
 					})}

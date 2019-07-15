@@ -158,6 +158,13 @@ io.on('connection', (socket) => {
     console.log("******END CREATE SVG REQ******")
   });
 
+  socket.on('editSVG', (data)=> {
+    console.log("******EDIT SVG REQ******");
+    console.log("      svg: " + JSON.stringify(data));
+    io.emit("svgEdit", data);
+    console.log("******END EDIT SVG REQ******")
+  })
+
   socket.on('moveSVG', (data)=> {
     console.log("******SVG MOVE******");
     console.log("      svg: " + JSON.stringify(data));

@@ -53,7 +53,7 @@ class InfoPanel extends Component {
     }
   }
 
-  addInfo(socket) {
+  addInfo() {
     const {msgInEdit, imgInEdit} = this.state;
     svgElementFunctions.handleNewSVGElementRequest({
       msg: msgInEdit ? msgInEdit : "",
@@ -61,7 +61,7 @@ class InfoPanel extends Component {
         fileName: "",
         src:""
       }
-    }, socket);
+    }, this.props.socket);
 
     this.setState({
       msgInEdit: "",
@@ -75,7 +75,6 @@ class InfoPanel extends Component {
   toEditMode(){
   	const {msgReceived, imgReceived} = this.props;
     const {msgInEdit, imgInEdit} = this.state;
-    console.log(this.state.isEditing);
     this.setState({
       isEditing: true,
       msgInEdit: msgInEdit ? msgInEdit : msgReceived,
@@ -84,12 +83,17 @@ class InfoPanel extends Component {
   }
 
   saveChanges(){
+    console.log("Save changes");
     const {msgInEdit, imgInEdit} = this.state;
-    this.setState(prev => ({
-      isEditing: false
-    }));
-
-    //TODO: save changes made on msgInEdit and imgInEdit using this.props.socket
+    this.setState({isEditing: false});
+    svgElementFunctions.handleEditRequest({
+      id: this.props.svgId,
+      msg: msgInEdit ? msgInEdit : "",
+      img: imgInEdit ? imgInEdit : {
+        fileName: "",
+        src:""
+      }
+    }, this.props.socket);
   }
 
   closeDetails(){
