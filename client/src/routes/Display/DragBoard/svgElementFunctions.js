@@ -81,20 +81,11 @@ export default {
 		socket.emit("createSVG", data);
 	},
 
-	handleEditRequest: (input, socket) => {
-		const id = input.id;
+	handleEditRequest: (original, input, socket) => {
+		const id = original.id;
 		let data = {
-			[id] : {
-				msg: input.msg,
-				img: input.img,
-				x: 10,
-				y: 50,
-				width: 10,
-				height: 10,
-				fill: "#FFF",
-				id: id
-			}
-		}
+			[id] : Object.assign(original, {msg: input.msg, img: input.img})
+		};
 		socket.emit("editSVG", data);
 	},
 

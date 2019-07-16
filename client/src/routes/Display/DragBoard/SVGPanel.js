@@ -33,15 +33,15 @@ class SVGPanel extends Component {
 		});
 
 		socket.on("svgEdit", (data)=> {
+			const {selectedItem,setSelectedItem} = this.props;
 			this.setState({
 				svgElements: Object.assign(svgElements, data)
 			});
 			const d = Object.keys(data)[0];
 			console.log("data[d].id: " + data[d].id);
-			console.log("this.props.selectedItem.id: " + this.props.selectedItem.id);
-			if (data[d].id === this.props.selectedItem.id) {
-				console.log(data[d].x);
-				this.props.setSelectedItem(data[d]);
+			console.log("this.props.selectedItem.id: " + selectedItem.id);
+			if (data[d].id === selectedItem.id) {
+				setSelectedItem(data[d]);
 			}
 		})
 

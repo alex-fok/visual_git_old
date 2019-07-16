@@ -27,7 +27,12 @@ class DragBoard extends Component {
         selectedItem: {
           id: "",
           msg: "",
-          img: ""
+          img: "",
+          x: 0,
+          y: 0,
+          width: 0,
+          height: 0,
+          fill: "#FFF"
         }
       }
       this.setIsInput = this.setIsInput.bind(this);
@@ -75,9 +80,8 @@ class DragBoard extends Component {
                   socket={this.state.socket}
                   setIsInput={this.setIsInput}
                   isInput={isInput}
-                  svgId={!isInput ? selectedItem.id : ""}
-                  msgReceived={!isInput ? selectedItem.msg : ""}
-                  imgReceived={!isInput ? selectedItem.img : ""}/>
+                  dataReceived={isInput ? {} : selectedItem}/>
+        
               </div>
             </div>
           </div>

@@ -73,21 +73,20 @@ class InfoPanel extends Component {
   }
 
   toEditMode(){
-  	const {msgReceived, imgReceived} = this.props;
+  	const {dataReceived} = this.props;
     const {msgInEdit, imgInEdit} = this.state;
     this.setState({
       isEditing: true,
-      msgInEdit: msgInEdit ? msgInEdit : msgReceived,
-      imgInEdit: imgInEdit && imgInEdit.fileName ? imgInEdit : imgReceived
+      msgInEdit: msgInEdit ? msgInEdit : dataReceived.msg,
+      imgInEdit: imgInEdit && imgInEdit.fileName ? imgInEdit : dataReceived.img
     });
   }
 
   saveChanges(){
-    console.log("Save changes");
+    const {dataReceived, socket} = this.props;
     const {msgInEdit, imgInEdit} = this.state;
     this.setState({isEditing: false});
-    svgElementFunctions.handleEditRequest({
-      id: this.props.svgId,
+    svgElementFunctions.handleEditRequest(dataReceived, {
       msg: msgInEdit ? msgInEdit : "",
       img: imgInEdit ? imgInEdit : {
         fileName: "",
@@ -109,7 +108,7 @@ class InfoPanel extends Component {
   }
 
   render(){
-    const {socket, msgReceived, imgReceived, isInput, dimension} = this.props;
+    const {socket, dataReceived, isInput, dimension} = this.props;
     const {msgInEdit, imgInEdit, isEditing} = this.state;
     return (
       <div 
@@ -124,8 +123,8 @@ class InfoPanel extends Component {
           setImgInfo={this.setImgInfo}/>
       :
         <DetailsInfo
-          msg={isEditing ? msgInEdit : msgReceived}
-          img={isEditing ? imgInEdit : imgReceived}
+          msg={isEditing ? msgInEdit : dataReceived.msg}
+          img={isEditing ? imgInEdit : dataReceived.img}
           isEditing={isEditing}
           setMsg={this.setMsg}
           setImgInfo={this.setImgInfo}
