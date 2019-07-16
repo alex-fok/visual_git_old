@@ -5,7 +5,7 @@ class ImageText extends Component {
     super(props);
   }
   render() {
-    const {fileName, imgPrependID} = this.props;
+    const {fileName, imgPrependID, isEditable} = this.props;
     return (
       <input
         type="text"
@@ -13,6 +13,7 @@ class ImageText extends Component {
         value={fileName ? fileName : ""}
         placeholder={fileName ? "" : "[No Image]"}
         aria-labelledby={imgPrependID}
+        style={isEditable ? {backgroundColor: "white"} : {}}
         disabled
       />
     )
