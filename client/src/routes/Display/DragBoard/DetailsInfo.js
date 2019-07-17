@@ -10,20 +10,18 @@ class DetailsInfo extends Component {
 
   render() {
     const {msg, img} = this.props;
-    const {setIsInput, isEditing, setImgInfo, setMsg} = this.props;
+    const {isEditing, setMsg, setImgInfo} = this.props;
     return (
       <div>
         <MessageTemplate
           isEditable = {isEditing}
           msg={msg}
-          img={img}
           setMsg={setMsg}/>
 
         <ImageTemplate
           isEditable = {isEditing}
           img={img}
           setImgInfo={setImgInfo}/>
-
       </div>
     )
   };

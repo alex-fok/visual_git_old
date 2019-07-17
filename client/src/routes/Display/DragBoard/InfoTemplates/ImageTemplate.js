@@ -32,7 +32,8 @@ class ImageTemplate extends Component {
           
           <ImageText
             fileName={img && img.fileName ? img.fileName : ""}
-            imgPrependID= {imgPrependID}  
+            imgPrependID={imgPrependID}
+            isEditable={isEditable}
           />
         </label>
 

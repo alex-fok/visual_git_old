@@ -37,11 +37,9 @@ class SVGPanel extends Component {
 			this.setState({
 				svgElements: Object.assign(svgElements, data)
 			});
-			const d = Object.keys(data)[0];
-			console.log("data[d].id: " + data[d].id);
-			console.log("this.props.selectedItem.id: " + selectedItem.id);
-			if (data[d].id === selectedItem.id) {
-				setSelectedItem(data[d]);
+			const key = Object.keys(data)[0];
+			if (data[key].id === selectedItem.id) {
+				setSelectedItem(data[key]);
 			}
 		})
 
