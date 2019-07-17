@@ -151,28 +151,30 @@ class App extends Component {
     
     return (
       <div id="topApp">
-        <PrivateRoute setAxiosHeader={this.setAxiosHeader} host={AUTH_SERVER}>
-        <div>
-          <div style={headerStyle}>
-            <Link style={linkStyle} to="/">Home</Link>
-            {" | "}
-            <Link style={linkStyle} to="/textArea">Textarea</Link>
-          </div>
-          <Switch>
-            <Route exact path="/" render={()=>
-              { return HomeInstance }
-            }/>
-            <Route path="/textArea" render={()=>
-              { return TextareaInstance }
-            }/>
-          </Switch>
-        </div>
-        </PrivateRoute>
-
+      {
+        // <PrivateRoute setAxiosHeader={this.setAxiosHeader} host={AUTH_SERVER}>
+        // <div>
+        //   <div style={headerStyle}>
+        //     <Link style={linkStyle} to="/">Home</Link>
+        //     {" | "}
+        //     <Link style={linkStyle} to="/textArea">Textarea</Link>
+        //   </div>
+        //   <Switch>
+        //     <Route exact path="/" render={()=>
+        //       { return HomeInstance }
+        //     }/>
+        //     <Route path="/textArea" render={()=>
+        //       { return TextareaInstance }
+        //     }/>
+        //   </Switch>
+        // </div>
+        // </PrivateRoute>
+      }
         <div className="btn-group">
           <button className="btn btn-secondary" value="d1" onClick={this.setDisplay}>Image</button>
           <button className="btn btn-secondary" value="d2" onClick={this.setDisplay}>Chat</button>
           <button className="btn btn-secondary" value="d3" onClick={this.setDisplay}>Drag</button>
+          <button className="btn btn-secondary" value="d4" onClick={this.setDisplay}>File</button>
         </div>
 
         <Display

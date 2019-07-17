@@ -5,6 +5,7 @@ import io from 'socket.io-client';
 import ImgFromServer from './Imagearea/ImgFromServer';
 import Messenger from './Messenger/Messenger';
 import DragBoard from './DragBoard/DragBoard';
+import FileSpace from './FileSpace/FileSpace';
 
 class Display extends Component {
   constructor(props) {
@@ -13,6 +14,7 @@ class Display extends Component {
     this.getImgDisplayComponent = this.getImgDisplayComponent.bind(this);
     this.getMessengerComponent = this.getMessengerComponent.bind(this);
     this.getDragBoardComponent = this.getDragBoardComponent.bind(this);
+    this.getFileSPaceComponent = this.getFileSpaceComponent.bind(this);
     this.componentToDisplay = this.componentToDisplay.bind(this);
 
   }
@@ -25,9 +27,14 @@ class Display extends Component {
     return <Messenger host={host} jwt={jwt} user={user}/>;
   }
 
-  getDragBoardComponent(host, jwt, user, offset) {
-    return <DragBoard host={host} jwt={jwt} user={user} offset={offset}/>;
+  getDragBoardComponent(host, jwt, user) {
+    return <DragBoard host={host} jwt={jwt} user={user}/>;
   }
+
+  getFileSpaceComponent(host, jwt, user) {
+    return <FileSpace host={host} jwt={jwt} user={user}/>
+  }
+
 
   componentDidMount() {
     console.log("Display.js is mounted")
@@ -39,15 +46,17 @@ class Display extends Component {
 
 
   componentToDisplay() {
-    const {display, host, jwt, user, offset} = this.props;
+    const {display, host, jwt, user} = this.props;
 
     return(
       "d1" === (display) ? 
       this.getImgDisplayComponent(host, jwt, user):
       "d2" === (display) ?
       this.getMessengerComponent(host, jwt, user):
-      //"d3"
-      this.getDragBoardComponent(host, jwt, user, offset)
+      "d3" === (display) ?
+      this.getDragBoardComponent(host, jwt, user):
+      //"d4"
+      this.getFileSpaceComponent(host, jwt, user)
     )
   }
 
