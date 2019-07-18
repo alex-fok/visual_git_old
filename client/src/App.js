@@ -17,7 +17,6 @@ class App extends Component {
     super();
     this.state = {
       user: "",
-      text: "Sending from TopLayer",
       httpRequestHandler: httpRequestHandler,
       display: "d1"
     };
@@ -41,11 +40,6 @@ class App extends Component {
         user: json.data.user
       });
     });
-    console.log("App.js is mounted");  
-  }
-
-  componentWillUnmount() {
-    console.log("App.js is unmounted");
   }
 
   handleClick(event) {
@@ -66,12 +60,6 @@ class App extends Component {
       })
     });
 
-    // fetch; no dependencies
-    /*
-    fetch('/api/helloWorld')
-    .then(response => response.json())
-    .then(data => console.log(data.hello));
-    */
   }
   
   setAxiosHeader(jwt) {
@@ -110,72 +98,18 @@ class App extends Component {
     const jwt = auth ? auth.replace("Bearer ", "") : "";
 
     const Loading = () => <div>Loading...</div>;
-    
-    const Home = Loadable({
-      loader: () => import('./routes/Home/container/FormContainer'),
-      loading: Loading,
-    });
-
-    const Textarea = Loadable({
-      loader: () => import('./routes/Textarea/container/DialogContainer'),
-      loading: Loading,
-    });
-
-    const HomeInstance = <Home
-      onChange = {((e) => {
-        this.setState({
-          text: e.target.value
-        })}).bind(this)
-      }
-      textInput = {this.state.text}
-    />;
-
-    const TextareaInstance = <Textarea
-      onChange = {((e) => {
-        this.setState({
-          text: e.target.value
-        }).bind(this)
-      })}
-    />;
-
-    const headerStyle = {
-      backgroundColor: "#999999",
-      padding: "5px",
-      width: "400px",
-      color: "#FFFFFF"
-    }
-
-    const linkStyle= {
-      color: "#FFFFFF"
-    }
-    
+  
     return (
-      <div id="topApp">
+      <div>
       {
-        // <PrivateRoute setAxiosHeader={this.setAxiosHeader} host={AUTH_SERVER}>
-        // <div>
-        //   <div style={headerStyle}>
-        //     <Link style={linkStyle} to="/">Home</Link>
-        //     {" | "}
-        //     <Link style={linkStyle} to="/textArea">Textarea</Link>
-        //   </div>
-        //   <Switch>
-        //     <Route exact path="/" render={()=>
-        //       { return HomeInstance }
-        //     }/>
-        //     <Route path="/textArea" render={()=>
-        //       { return TextareaInstance }
-        //     }/>
-        //   </Switch>
-        // </div>
-        // </PrivateRoute>
-      }
-        <div className="btn-group">
-          <button className="btn btn-secondary" value="d1" onClick={this.setDisplay}>Image</button>
-          <button className="btn btn-secondary" value="d2" onClick={this.setDisplay}>Chat</button>
-          <button className="btn btn-secondary" value="d3" onClick={this.setDisplay}>Drag</button>
-          <button className="btn btn-secondary" value="d4" onClick={this.setDisplay}>File</button>
-        </div>
+        <PrivateRoute setAxiosHeader={this.setAxiosHeader} host={AUTH_SERVER}>
+        <div>
+          <div className="btn-group">
+            <button className="btn btn-secondary" value="d1" onClick={this.setDisplay}>Image</button>
+            <button className="btn btn-secondary" value="d2" onClick={this.setDisplay}>Chat</button>
+            <button className="btn btn-secondary" value="d3" onClick={this.setDisplay}>Drag</button>
+            <button className="btn btn-secondary" value="d4" onClick={this.setDisplay}>File</button>
+          </div>
 
         <Display
           display={display} 
@@ -183,6 +117,10 @@ class App extends Component {
           jwt={jwt}
           user={user}
         />
+        </div>
+        </PrivateRoute>
+      }
+        
       
       </div>
     );
