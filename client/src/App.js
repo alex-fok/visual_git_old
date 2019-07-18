@@ -1,14 +1,10 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 
-import {BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
-import Loadable from 'react-loadable';
-
-//import ImgFromServer from './routes/Imagearea/ImgFromServer';
-//import Messenger from './routes/Messenger/Messenger';
 import Display from './routes/Display/Display';
 import PrivateRoute from './privateRoute';
 import {httpRequestHandler} from './httpRequestHandler';
+import "bootstrap/dist/js/bootstrap.min.js";
 
 const AUTH_SERVER = process.env.AUTH_SERVER;
 
@@ -59,7 +55,6 @@ class App extends Component {
         text:helloWorld.substring(1, helloWorld.length-1)
       })
     });
-
   }
   
   setAxiosHeader(jwt) {
@@ -104,32 +99,23 @@ class App extends Component {
         <PrivateRoute setAxiosHeader={this.setAxiosHeader} host={AUTH_SERVER}>
         <div>
           <nav className="navbar navbar-expand-lg navbar-light bg-light">
-            <button
-              className="navbar-toggler"
-              type="button"
-              data-toggle="collapse"
-              aria-controls="navbarId"
-              aira-expanded="false"
-              ></button>
-            <div className="collapse navbar-collapse" id="navbarId">
-              <ul className="navbar-nav" style={{cursor: "default"}}>
-                <li className={`${this.state.display==="d1" ? "active" : ""} nav-item`}>
-                  <a className="nav-link" value="d1" onClick={()=>{this.setDisplay("d1")}}>Image</a>
-                </li>
-                <li className={`${this.state.display==="d2" ? "active" : ""} nav-item`}>
-                  <a className="nav-link" value="d2" onClick={()=>{this.setDisplay("d2")}}>Chat</a>
-                </li>
-                <li className={`${this.state.display==="d3" ? "active" : ""} nav-item`}>
-                  <a className="nav-link" value="d3" onClick={()=>{this.setDisplay("d3")}}>Drag</a>
-                </li>
-                <li className={`${this.state.display==="d4" ? "active" : ""} nav-item`}>
-                  <a className="nav-link" value="d4" onClick={()=>{this.setDisplay("d4")}}>File</a>
-                </li>
-              </ul>
+            <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarId" aria-controls="navbarId" aria-expanded="false" aria-label="Toggle navigation">
+    <span className="navbar-toggler-icon"></span>
+        </button>
+          <div className="collapse navbar-collapse" id="navbarId">
+            <div className="navbar-nav" style={{cursor: "default"}}>
+              <a  className={`${this.state.display==="d1" ? "active" : ""} nav-item nav-link`}
+                  onClick={()=>{this.setDisplay("d1")}}>Image</a>
+              <a  className={`${this.state.display==="d2" ? "active" : ""} nav-item nav-link`}
+                  onClick={()=>{this.setDisplay("d2")}}>Chat</a>
+              <a  className={`${this.state.display==="d3" ? "active" : ""} nav-item nav-link`}
+                  onClick={()=>{this.setDisplay("d3")}}>Drag</a>
+              <a  className={`${this.state.display==="d4" ? "active" : ""} nav-item nav-link`}
+                  onClick={()=>{this.setDisplay("d4")}}>File</a>
             </div>
-          </nav>
+          </div>
+        </nav>
         <Display
-          className="mb-10"
           display={display} 
           host={AUTH_SERVER} 
           jwt={jwt}
