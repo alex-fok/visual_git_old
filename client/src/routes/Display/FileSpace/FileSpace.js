@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import FileVersionTree from './FileVersionTree';
+import FileList from './FileList';
 
 const $ = (id) => {return document.getElementById(id)}
 
@@ -6,35 +8,55 @@ class FileSpace extends Component {
 	constructor(props) {
 		super(props);
 		this.state={
-			active: "home"
+			active: "Files",
+			tabs: {
+				Files: {
+					id: "Files"
+				},
+				file: {
+					id: "file",
+					fileBit:""
+				}
+			}
 		}
-		this.toHome = this.toHome.bind(this);
-		this.toFile = this.toFile.bind(this);
+		this.toTab = this.toTab.bind(this);
+		this.addTab = this.addTab.bind(this);
 	}
 
-	toHome() {
+	toTab(tabId) {
 		this.setState({
-			active: "home"
+			active: tabId
 		})
 	}
 
-	toFile() {
-		this.setState({
-			active: "file"
-		})
+	addTab(data) {
+		this.setState(prev => ({
+			tabs: Object.assign(prev.tabs, {[data.id] : data})
+		}))
 	}
 
 	render() {
 		return (
 			<div>
-				<ul className="nav nav-tabs mb-3">
-				  <li className="nav-item">
-				    <a id="home" className={`nav-link ${this.state.active === "home" ? "active" : ""}`} onClick={this.toHome} style={{cursor: "default"}}>Home</a>
-				  </li>
-				  <li className="nav-item">
-				    <a id="file" className={`nav-link ${this.state.active === "file" ? "active" : ""}`} onClick={this.toFile} style={{cursor: "default"}}>File</a>
-				  </li>
-				</ul>
+				<div className="nav nav-tabs" style={{userSelect: "none"}}>
+					{Object.keys(this.state.tabs).map(tabId => {	
+						return (
+							<div
+								key={tabId}
+								id={tabId}
+								className={`nav-item nav-link ${this.state.active === tabId ? "active" : ""}`}
+								onClick={()=> {this.toTab(tabId)}}>{tabId}</div>);
+					})}
+				</div>
+				<div>
+				{this.state.active === "Files" ?
+					<FileList files={this.props.fileList} addTab={this.addTab}/>
+					:
+					<FileVersionTree fileData={this.state.tabs[this.state.active]}/>
+				}
+				</div>
+
+
 			</div>
 		)
 	}
