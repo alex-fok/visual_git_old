@@ -60,14 +60,6 @@ class Messenger extends Component {
       resize: "none",
     }
 
-    const wrapperStyle = {
-      
-    }
-
-    const rowStyle = {
-      width: "400px"
-    }
-
     return (
       <div>
         <div style={MsgStyle}>
@@ -77,10 +69,12 @@ class Messenger extends Component {
             })}
           </ul>
         </div>
-        <div className="container" style={wrapperStyle}>
-          <div className="row" style={rowStyle}>
+        <div className="container">
+          <div className="row" style={{width: "400px"}}>
+            <div className="col">
               <input id="usertext" style={DialogStyle} placeholder={"Chat as "+ this.props.user}/>            
               <button onClick={this.handleMessageSubmit}>Submit</button>
+            </div>
           </div>
         </div>
       </div>

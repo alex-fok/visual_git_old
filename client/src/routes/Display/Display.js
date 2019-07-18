@@ -35,16 +35,6 @@ class Display extends Component {
     return <FileSpace host={host} jwt={jwt} user={user}/>
   }
 
-
-  componentDidMount() {
-    console.log("Display.js is mounted")
-  }
-
-  componentWillUnmount() {
-    console.log("Display.js is unmounted");
-  }
-
-
   componentToDisplay() {
     const {display, host, jwt, user} = this.props;
 
