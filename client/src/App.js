@@ -79,14 +79,13 @@ class App extends Component {
     }
   }
 
-  setDisplay(e) {
-    const value = e.target.value;
+  setDisplay(d) {
     const {display} = this.state;
     
-    if (display !== value) {
-      console.log("Changing display to " + value);  
+    if (display !== d) {
+      console.log("Changing display to " + d);  
       this.setState({
-        display: value
+        display: d
       })
     }
   }
@@ -104,14 +103,33 @@ class App extends Component {
       {
         <PrivateRoute setAxiosHeader={this.setAxiosHeader} host={AUTH_SERVER}>
         <div>
-          <div className="btn-group">
-            <button className="btn btn-secondary" value="d1" onClick={this.setDisplay}>Image</button>
-            <button className="btn btn-secondary" value="d2" onClick={this.setDisplay}>Chat</button>
-            <button className="btn btn-secondary" value="d3" onClick={this.setDisplay}>Drag</button>
-            <button className="btn btn-secondary" value="d4" onClick={this.setDisplay}>File</button>
-          </div>
-
+          <nav className="navbar navbar-expand-lg navbar-light bg-light">
+            <button
+              className="navbar-toggler"
+              type="button"
+              data-toggle="collapse"
+              aria-controls="navbarId"
+              aira-expanded="false"
+              ></button>
+            <div className="collapse navbar-collapse" id="navbarId">
+              <ul className="navbar-nav" style={{cursor: "default"}}>
+                <li className={`${this.state.display==="d1" ? "active" : ""} nav-item`}>
+                  <a className="nav-link" value="d1" onClick={()=>{this.setDisplay("d1")}}>Image</a>
+                </li>
+                <li className={`${this.state.display==="d2" ? "active" : ""} nav-item`}>
+                  <a className="nav-link" value="d2" onClick={()=>{this.setDisplay("d2")}}>Chat</a>
+                </li>
+                <li className={`${this.state.display==="d3" ? "active" : ""} nav-item`}>
+                  <a className="nav-link" value="d3" onClick={()=>{this.setDisplay("d3")}}>Drag</a>
+                </li>
+                <li className={`${this.state.display==="d4" ? "active" : ""} nav-item`}>
+                  <a className="nav-link" value="d4" onClick={()=>{this.setDisplay("d4")}}>File</a>
+                </li>
+              </ul>
+            </div>
+          </nav>
         <Display
+          className="mb-10"
           display={display} 
           host={AUTH_SERVER} 
           jwt={jwt}
