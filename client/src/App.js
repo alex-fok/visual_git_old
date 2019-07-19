@@ -103,7 +103,7 @@ class App extends Component {
     <span className="navbar-toggler-icon"></span>
         </button>
           <div className="collapse navbar-collapse" id="navbarId">
-            <div className="navbar-nav" style={{cursor: "default"}}>
+            <div className="navbar-nav" style={{userSelect: "none"}}>
               <a  className={`${this.state.display==="d1" ? "active" : ""} nav-item nav-link`}
                   onClick={()=>{this.setDisplay("d1")}}>Image</a>
               <a  className={`${this.state.display==="d2" ? "active" : ""} nav-item nav-link`}

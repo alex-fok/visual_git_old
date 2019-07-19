@@ -4,30 +4,50 @@ class FileVersionTree extends Component {
 	constructor(props) {
 		super(props);
 		this.showDetails = this.showDetails.bind(this);
+		this.state = {
+			popOver: {
+				file: {
+					id: "",
+					data: {}
+				}
+			}
+		}
 	}
 
 	showDetails() {
-		console.log("showDetails clicked");
+		
 	}
 	render() {
 		const {fileData} = this.props;
 		return (
 			<div style={{width: "1200px", height: "600px"}}>
-			<svg
-				viewBox={`0 0 1200 600`}
-				width="100%"
-				height="100%"
-				style={{backgroundColor: "#F5F5F5"}}
-			>
-			<rect 
-				x="100"
-				y="200"
-				width="40"
-				height="40"
-				fill="#FF8000"
-				onClick={this.showDetails}
-			/>
-			</svg>
+				<svg
+					viewBox={`0 0 300 150`}
+					width="100%"
+					height="100%"
+					style={{backgroundColor: "#F5F5F5"}}
+				>
+					<rect 
+						x="25"
+						y="70"
+						width="10"
+						height="10"
+						fill="#FF8000"
+						data-toggle="modal"
+						data-target="#details"
+						onClick={this.showDetails}
+					/>
+				</svg>
+				<div className="modal fade" id="details" role="dialog" aria-hidden="true">
+					<div className="modal-dialog">
+						<div className="modal-content">
+						
+							<div className="modal-body">
+								Text here
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		)
 	}
