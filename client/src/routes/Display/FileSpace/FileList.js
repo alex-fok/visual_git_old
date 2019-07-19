@@ -9,6 +9,11 @@ class FileList extends Component {
 		this.state = {
 			files: files
 		}
+		this.setFile = this.setFile.bind(this);
+	}
+
+	setFile(e) {
+
 	}
 	render() {
 		return (
@@ -27,6 +32,22 @@ class FileList extends Component {
 							</div>)
 						})
 					}
+					<div
+						className="list-group-item"
+					>
+						<label className="input-group-prepend">
+		          <span
+		            className="btn btn-outline-secondary">
+								Add File
+								<input
+									type="file"
+									className="form-control-file"
+									onChange={(e)=> {this.setFile(e)}}
+									style={{display: "none"}}
+								/>
+							</span>
+						</label>
+					</div>
 				</div>
 			</div>
 		)
