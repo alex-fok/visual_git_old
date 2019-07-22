@@ -9,12 +9,14 @@ class FileList extends Component {
 		this.state = {
 			files: files
 		}
-		this.setFile = this.setFile.bind(this);
 	}
 
-	setFile(e) {
-
+	componentDidMount() {
+		// Set up association between the file button and the actual file input
+		document.getElementById("file-button")
+			.addEventListener("click", ()=> {document.getElementById("file-input").click()});
 	}
+
 	render() {
 		return (
 			<div>
@@ -27,26 +29,35 @@ class FileList extends Component {
 								className="list-group-item list-group-item-action"
 								style={{userSelect: "none"}}
 								aria-label={id}
-								onClick={(e)=>{this.props.addTab(e.target.getAttribute("id"))}}
-							>{this.props.files[id].fileName}
+								onClick={(e)=>{e.target.getAttribute("aria-label")===id ? this.props.addTab(e.target.getAttribute("aria-label")) : e.stopPropagation()}}
+							>
+								<span
+									aria-label={id}
+									//onClick={(e)=>{this.props.addTab(e.target.getAttribute("id"))}}
+								>{this.props.files[id].fileName}
+								</span>
+								<button
+									type="button"
+									className="close"
+									onClick={()=> {this.props.removeFile(id)}}
+								>
+									<span>&times;</span></button>
 							</div>)
 						})
 					}
-					<div
-						className="list-group-item"
-					>
-						<label className="input-group-prepend">
-		          <span
-		            className="btn btn-outline-secondary">
-								Add File
-								<input
-									type="file"
-									className="form-control-file"
-									onChange={(e)=> {this.setFile(e)}}
-									style={{display: "none"}}
-								/>
-							</span>
-						</label>
+					<div className="list-group-item">
+						<input
+							id="file-input"
+							type="file"
+							onChange={(e)=> {this.props.setFile(e)}}
+							style={{display: "none"}}
+						/>
+						<button
+							id="file-button"
+							type="button"
+							className="btn btn-outline-secondary"
+						>Add File...
+						</button>
 					</div>
 				</div>
 			</div>
