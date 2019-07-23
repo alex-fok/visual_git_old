@@ -18,8 +18,14 @@ class FileVersionTree extends Component {
 		
 	}
 	render() {
-		var fileType = this.props.fileData.src.match(/(?:data:)(.*)(?:;)/)[1];
+		const {fileData} = this.props;
+		var file = {
+			desc: fileData.src.match(/(?:data:)(.*)(?:;)/)[1],
+			base64: fileData.src.match(/data:.*;base64/) ? true : false,
+			data: fileData.src.match(/(?:data:.*;)(?:base64,)*(.*)/)[1]
+		};
 		return (
+
 			<div style={{width: "1200px", height: "600px"}}>
 				<svg
 					viewBox={`0 0 300 150`}
@@ -43,8 +49,9 @@ class FileVersionTree extends Component {
 						<div className="modal-content">
 							<div className="modal-body">
 								{
-									fileType.match(/text\/.*/) ? "TEXT"
-									: fileType.match(/image\/.*/) ? <img src={this.props.fileData.src}/>
+									file.desc.match(/text\/.*/) ? 
+										(file.base64 ? window.atob(file.data) : file.data)
+									: file.desc.match(/image\/.*/) ? <img src={this.props.fileData.src}/>
 									: "NOT TEXT OR IMAGE"
 								}
 							</div>
