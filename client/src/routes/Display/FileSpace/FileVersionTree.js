@@ -18,7 +18,7 @@ class FileVersionTree extends Component {
 		
 	}
 	render() {
-		const {fileData} = this.props;
+		var fileType = this.props.fileData.src.match(/(?:data:)(.*)(?:;)/)[1];
 		return (
 			<div style={{width: "1200px", height: "600px"}}>
 				<svg
@@ -41,15 +41,18 @@ class FileVersionTree extends Component {
 				<div className="modal fade" id="details" role="dialog" aria-hidden="true">
 					<div className="modal-dialog">
 						<div className="modal-content">
-						
 							<div className="modal-body">
-								Text here
+								{
+									fileType.match(/text\/.*/) ? "TEXT"
+									: fileType.match(/image\/.*/) ? <img src={this.props.fileData.src}/>
+									: "NOT TEXT OR IMAGE"
+								}
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		)
+		)	
 	}
 }
 

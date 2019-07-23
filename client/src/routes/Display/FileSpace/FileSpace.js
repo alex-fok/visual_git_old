@@ -55,15 +55,18 @@ class FileSpace extends Component {
 		if (event.target.files[0]) {
 			const fileDirectory = e.target.value;
 			var fr = new FileReader();
-			fr.readAsDataURL(event.target.files[0]);
-
 			const fileName = fileDirectory.replace(/\\/g, '/').replace(/.*\//, '');
+			const ext = fileDirectory.replace(/.*\./,"");
+			fr.readAsDataURL(event.target.files[0]);
 			e.target.value = null;
+			
 			fr.onload = () => {
+				
 				this.setState(prev => ({
 					files: Object.assign(prev.files, {[fileName] : {
 						fileName: fileName,
 						label: fileName,
+						extension: ext,
 						src: fr.result}})
 				}))
 			}
@@ -102,7 +105,7 @@ class FileSpace extends Component {
 										className="close"
 										onClick={(e)=> {this.closeTab(tabId)}}
 									><span>&times;</span></button>
-								</div>);
+							</div>);
 					})}
 				</div>
 				<div>
