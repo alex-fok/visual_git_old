@@ -61,13 +61,18 @@ class FileSpace extends Component {
 			e.target.value = null;
 			
 			fr.onload = () => {
-				
 				this.setState(prev => ({
 					files: Object.assign(prev.files, {[fileName] : {
 						fileName: fileName,
 						label: fileName,
 						extension: ext,
-						src: fr.result}})
+						src: fr.result,
+						properties: {
+							desc: fr.result.match(/(?:data:)(.*)(?:;)/)[1],
+							base64: fr.result.match(/(?:data:.*;base64)/) ? true : false,
+							data: fr.result.match(/(?:data:.*;)(?:base64,)*(.*)/)[1]
+						}
+					}})
 				}))
 			}
 		}
@@ -94,7 +99,7 @@ class FileSpace extends Component {
 						return (
 							<div
 								key={tabId}
-								id={tabId}
+								id={`${tabId}_tab`}
 								className={`nav-item nav-link ${this.state.active === tabId ? "active" : ""}`}
 							>
 								<span onClick={()=> {this.toTab(tabId)}}>
@@ -117,7 +122,7 @@ class FileSpace extends Component {
 						removeFile={this.removeFile}
 					/>
 					:
-					<FileVersionTree fileData={this.state.files[this.state.active]}/>
+					<FileVersionTree file={this.state.files[this.state.active]}/>
 				}
 				</div>
 

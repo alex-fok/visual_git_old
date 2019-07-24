@@ -25,7 +25,7 @@ class FileList extends Component {
 						return (
 							<div
 								key={id}
-								id={id}
+								id={`${id}_list_item`}
 								className="list-group-item list-group-item-action"
 								style={{userSelect: "none"}}
 								aria-label={id}

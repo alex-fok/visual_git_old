@@ -12,18 +12,19 @@ class FileVersionTree extends Component {
 				}
 			}
 		}
+		this.setSize = this.setSize.bind(this);
 	}
 
 	showDetails() {
 		
 	}
+
+	setSize(img) {
+		document.getElementById(this.props.file.fileName).style.width = `${img.width}px`;
+		document.getElementById(this.props.file.fileName).style.height = `${img.height}px`;
+	}
 	render() {
-		const {fileData} = this.props;
-		var file = {
-			desc: fileData.src.match(/(?:data:)(.*)(?:;)/)[1],
-			base64: fileData.src.match(/data:.*;base64/) ? true : false,
-			data: fileData.src.match(/(?:data:.*;)(?:base64,)*(.*)/)[1]
-		};
+		const {file} = this.props;
 		return (
 
 			<div style={{width: "1200px", height: "600px"}}>
@@ -44,16 +45,29 @@ class FileVersionTree extends Component {
 						onClick={this.showDetails}
 					/>
 				</svg>
-				<div className="modal fade" id="details" role="dialog" aria-hidden="true">
+				<div className="modal" id="details" role="dialog">
 					<div className="modal-dialog">
-						<div className="modal-content">
-							<div className="modal-body">
+						<div id={file.fileName} className="modal-content">
+							<div className="modal-header">
+								<h5 className="modal-title">{file.fileName}</h5>
+							</div>
+							<div 
+								className="modal-body">
 								{
-									file.desc.match(/text\/.*/) ? 
-										(file.base64 ? window.atob(file.data) : file.data)
-									: file.desc.match(/image\/.*/) ? <img src={this.props.fileData.src}/>
+									file.properties.desc.match(/text\/.*/) ? 
+										<textarea 
+											style={{width: "100%"}}
+											value= {file.properties.base64 ? 
+												window.atob(file.properties.data)
+											: file.properties.data} readOnly
+										></textarea>
+									: file.properties.desc.match(/image\/.*/) ? 
+									<img src={file.src} onLoad={(e)=>{this.setSize(e.target)}}/>
 									: "NOT TEXT OR IMAGE"
 								}
+							</div>
+							<div className="modal-footer">
+								<button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
 							</div>
 						</div>
 					</div>
