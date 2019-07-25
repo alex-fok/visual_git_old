@@ -125,8 +125,6 @@ class FileSpace extends Component {
 					<FileVersionTree file={this.state.files[this.state.active]}/>
 				}
 				</div>
-
-
 			</div>
 		)
 	}
