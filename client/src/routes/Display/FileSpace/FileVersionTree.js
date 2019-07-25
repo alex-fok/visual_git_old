@@ -19,9 +19,10 @@ class FileVersionTree extends Component {
 		
 	}
 
-	setSize(img) {
-		document.getElementById(this.props.file.fileName).style.width = `${img.width}px`;
-		document.getElementById(this.props.file.fileName).style.height = `${img.height}px`;
+	setSize(w,h) {
+		console.log(`width: ${w}, height: ${h}`)
+	document.getElementsByClassName("modal-lg").style.width = `${w}px`;
+	document.getElementsByClassName("modal-lg").style.height = `${h}px`;
 	}
 	render() {
 		const {file} = this.props;
@@ -45,24 +46,22 @@ class FileVersionTree extends Component {
 						onClick={this.showDetails}
 					/>
 				</svg>
-				<div className="modal" id="details" role="dialog">
-					<div className="modal-dialog">
-						<div id={file.fileName} className="modal-content">
+				<div className="modal fade" id="details" role="document">
+					<div className="modal-dialog modal-lg" style={{width: "1124px"}}>
+						<div id={file.fileName} className="modal-content w-100">
 							<div className="modal-header">
 								<h5 className="modal-title">{file.fileName}</h5>
 							</div>
-							<div 
-								className="modal-body">
+							<div className="modal-body" style={{overflow: "auto", height: "400px"}}>
 								{
 									file.properties.desc.match(/text\/.*/) ? 
-										<textarea 
-											style={{width: "100%"}}
-											value= {file.properties.base64 ? 
+										<p>
+											{file.properties.base64 ? 
 												window.atob(file.properties.data)
-											: file.properties.data} readOnly
-										></textarea>
+											: file.properties.data}
+										></p>
 									: file.properties.desc.match(/image\/.*/) ? 
-									<img src={file.src} onLoad={(e)=>{this.setSize(e.target)}}/>
+									<img src={file.src} onLoad={(e)=>{this.setSize(e.target.width, e.target.height)}}/>
 									: "NOT TEXT OR IMAGE"
 								}
 							</div>
