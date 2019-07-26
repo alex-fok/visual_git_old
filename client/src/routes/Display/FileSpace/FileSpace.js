@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import FileVersionTree from './FileVersionTree';
+import FileTree from './FileTree';
 import FileList from './FileList';
 
 const $ = (id) => {return document.getElementById(id)}
@@ -10,13 +10,13 @@ class FileSpace extends Component {
 		this.state={
 			active: "Files",
 			tabs: {},
-			files: {
+			fileTrees: {
 			}
 		}
 		this.toTab = this.toTab.bind(this);
 		this.addTab = this.addTab.bind(this);
 		this.closeTab = this.closeTab.bind(this);
-		this.setFile = this.setFile.bind(this);
+		this.setInitFile = this.setInitFile.bind(this);
 		this.removeFile = this.removeFile.bind(this);
 	}
 
@@ -33,7 +33,8 @@ class FileSpace extends Component {
 			console.log(tabId + " not found. Adding new tab");
 			this.setState(prev => ({
 				active: tabId,
-				tabs: Object.assign(prev.tabs, {[tabId] : prev.files[tabId]})
+				tabs: Object.assign(prev.tabs, {[tabId] :
+					prev.fileTrees[tabId].init.fileName})
 			}))
 		} else {
 			this.setState({
@@ -51,7 +52,7 @@ class FileSpace extends Component {
 		}))
 	}
 
-	setFile(e) {
+	setInitFile(e) {
 		if (event.target.files[0]) {
 			const fileDirectory = e.target.value;
 			var fr = new FileReader();
@@ -62,17 +63,22 @@ class FileSpace extends Component {
 			
 			fr.onload = () => {
 				this.setState(prev => ({
-					files: Object.assign(prev.files, {[fileName] : {
-						fileName: fileName,
-						label: fileName,
-						extension: ext,
-						src: fr.result,
-						properties: {
-							desc: fr.result.match(/(?:data:)(.*)(?:;)/)[1],
-							base64: fr.result.match(/(?:data:.*;base64)/) ? true : false,
-							data: fr.result.match(/(?:data:.*;)(?:base64,)*(.*)/)[1]
+					fileTrees: Object.assign(prev.fileTrees, {
+						[fileName] : {
+							init: {
+								fileName: fileName,
+								version: 1,
+								label: fileName,
+								extension: ext,
+								src: fr.result,
+								properties: {
+									desc: fr.result.match(/(?:data:)(.*)(?:;)/)[1],
+									base64: fr.result.match(/(?:data:.*;base64)/) ? true : false,
+									data: fr.result.match(/(?:data:.*;)(?:base64,)*(.*)/)[1]
+								}
+							}
 						}
-					}})
+					})
 				}))
 			}
 		}
@@ -80,7 +86,7 @@ class FileSpace extends Component {
 
 	removeFile(id) {
 		this.setState(prev => ({
-			files: delete prev.files[id],
+			fileTrees: delete prev.fileTrees[id],
 			tabs: prev.tabs[id] ? delete prev.tabs[id] : prev.tabs
 		}))
 	}
@@ -103,7 +109,7 @@ class FileSpace extends Component {
 								className={`nav-item nav-link ${this.state.active === tabId ? "active" : ""}`}
 							>
 								<span onClick={()=> {this.toTab(tabId)}}>
-									{this.state.tabs[tabId].label}
+									{this.state.tabs[tabId]}
 								</span>
 									<button 
 										type="button"
@@ -116,13 +122,13 @@ class FileSpace extends Component {
 				<div>
 				{this.state.active === "Files" ?
 					<FileList
-						files={this.state.files}
+						files={this.state.fileTrees}
 						addTab={this.addTab}
-						setFile={this.setFile}
+						setFile={this.setInitFile}
 						removeFile={this.removeFile}
 					/>
 					:
-					<FileVersionTree file={this.state.files[this.state.active]}/>
+					<FileTree fileTree={this.state.fileTrees[this.state.active]}/>
 				}
 				</div>
 			</div>

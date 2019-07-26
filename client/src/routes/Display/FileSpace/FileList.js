@@ -34,7 +34,7 @@ class FileList extends Component {
 								<span
 									aria-label={id}
 									//onClick={(e)=>{this.props.addTab(e.target.getAttribute("id"))}}
-								>{this.props.files[id].fileName}
+								>{this.props.files[id].init.fileName}
 								</span>
 								<button
 									type="button"
