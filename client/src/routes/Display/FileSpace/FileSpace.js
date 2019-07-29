@@ -75,6 +75,11 @@ class FileSpace extends Component {
 									desc: fr.result.match(/(?:data:)(.*)(?:;)/)[1],
 									base64: fr.result.match(/(?:data:.*;base64)/) ? true : false,
 									data: fr.result.match(/(?:data:.*;)(?:base64,)*(.*)/)[1]
+								},
+								relation: {
+									type: "master",
+									next: "",
+									edit: {}
 								}
 							}
 						}
@@ -111,11 +116,10 @@ class FileSpace extends Component {
 								<span onClick={()=> {this.toTab(tabId)}}>
 									{this.state.tabs[tabId]}
 								</span>
-									<button 
-										type="button"
+									<a 
 										className="close"
 										onClick={(e)=> {this.closeTab(tabId)}}
-									><span>&times;</span></button>
+									><span>&times;</span></a>
 							</div>);
 					})}
 				</div>

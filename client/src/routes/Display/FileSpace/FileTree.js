@@ -2,16 +2,25 @@ import React, {Component} from 'react';
 import './FileTree.css';
 import FileTreeNode from './FileTreeNode';
 
-const htmlNS = "http://www.w3.org/1999/xhtml";
-const svgNS = "http://www.w3.org/2000/svg";
-
 class FileTree extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			selected:""
+			selected:"",
+			nodeMap: {},
+			latest: {
+				x: 0, 
+				y: 0
+			}
 		}
-		this.setModal = this.setModal.bind(this);
+
+		this.setSelected = this.setSelected.bind(this);
+		this.addChild = this.addChild.bind(this);
+		this.configureXY = this.configureXY.bind(this);
+	}
+
+	addChild(e) {
+		console.log(this.props.fileTree[this.state.selected]);
 	}
 
 	componentDidMount() {
@@ -32,9 +41,10 @@ class FileTree extends Component {
 			})
 		}
 
+		console.log(this.state.nodeMap)
 	}
 
-	setModal(version) {	
+	setSelected(version) {	
 		this.setState({
 			selected: version
 		})
@@ -56,9 +66,21 @@ class FileTree extends Component {
 		)
 	}
 
+	configureXY(node) {
+		var c = {x: 0, y: 0};
+		if (!node.parent) {
+			c = {x: 30, y: 30}
+		} else if (node.parent && this.props.fileTree[node.parent]) {
+			const parentXY = this.configureXY(node.parent);
+			Object.assign(c, {x: parentXY.x + 5, y: parentXY.y + 5})
+		}
+		return c;
+	}
+
 	render() {
 		const {fileTree} = this.props;
-		const nodeSelected = this.props.fileTree[this.state.selected]
+		const nodeSelected = this.props.fileTree[this.state.selected];
+
 		return (
 			<div>
 				<div style={{width: "1200px", height: "600px"}}>
@@ -69,9 +91,11 @@ class FileTree extends Component {
 						height="100%"
 						style={{backgroundColor: "#F5F5F5"}}
 					>
-					{Object.keys(this.props.fileTree).map(version => {
-						return <FileTreeNode key={version} version={version} setModal={this.setModal}/>
-					})}
+						{
+							Object.keys(this.props.fileTree).map(version => {
+								return <FileTreeNode key={version} version={version} setSelected={this.setSelected}  coordinate={this.configureXY(version)}/>
+							})
+						}
 					</svg>
 
 					<div className="modal fade" id="details" role="document">
@@ -100,7 +124,7 @@ class FileTree extends Component {
 						position: "fixed"
 					}}
 				>
-					<li className="list-group-item list-group-item-light list-group-item-action menu-option" onClick={(e)=> {console.log(e.currentTarget)}}>Add Child</li>
+					<li className="list-group-item list-group-item-light list-group-item-action menu-option" onClick={(e)=> {this.addChild(e)}}>Add Child</li>
 					<li className="list-group-item list-group-item-light list-group-item-action menu-option">Edit</li>
 					<li className="list-group-item list-group-item-light list-group-item-action menu-option">Remove</li>
 				</ul>

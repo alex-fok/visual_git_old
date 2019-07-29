@@ -32,16 +32,17 @@ class FileList extends Component {
 								onClick={(e)=>{e.target.getAttribute("aria-label")===id ? this.props.addTab(e.target.getAttribute("aria-label")) : e.stopPropagation()}}
 							>
 								<span
+									className="px-1"
 									aria-label={id}
 									//onClick={(e)=>{this.props.addTab(e.target.getAttribute("id"))}}
 								>{this.props.files[id].init.fileName}
 								</span>
 								<button
 									type="button"
-									className="close"
+									className="close float-left"
 									onClick={()=> {this.props.removeFile(id)}}
 								>
-									<span>&times;</span></button>
+									<span className="px-1">&times;</span></button>
 							</div>)
 						})
 					}
