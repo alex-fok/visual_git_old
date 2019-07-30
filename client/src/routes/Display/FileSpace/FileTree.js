@@ -68,16 +68,16 @@ class FileTree extends Component {
 	configureXY(node) {
 		const type = this.props.fileTree[node]
 		var c = {x: 0, y: 0};
-		if (!node.prev && !node.parent) {
+
+		const dependency = 
+			node.type==="master" ? node.prev : 
+				node.type==="edit" ? node.parent : "";
+
+		if (!dependency && !node.prev && !node.parent) {
 			Object.assign(c, {x: 30, y: 30})
 		}
-		else if (node.type==="master" ) {
-			const prevXY = this.configureXY(node.prev)
+		else {
 			Object.assign(c, {x: prevXY.x + 5, y: prevXY.y})
-		}
-		else if (node.type==="edit") {
-			const parentXY = this.configureXY(node.parent);
-			Object.assign(c, {x: parentXY.x + 5, y: parentXY.y + 5})
 		}
 		return c;
 	}
