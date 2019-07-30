@@ -13,7 +13,6 @@ class FileTree extends Component {
 				y: 0
 			}
 		}
-
 		this.setSelected = this.setSelected.bind(this);
 		this.addChild = this.addChild.bind(this);
 		this.configureXY = this.configureXY.bind(this);
@@ -59,7 +58,7 @@ class FileTree extends Component {
 					{properties.base64 ? 
 						window.atob(properties.data)
 					: properties.data}
-				></p>
+				</p>
 			: properties.desc.match(/image\/.*/) ? 
 			<img src={file.src} />
 			: "NOT TEXT OR IMAGE"
@@ -67,10 +66,16 @@ class FileTree extends Component {
 	}
 
 	configureXY(node) {
+		const type = this.props.fileTree[node]
 		var c = {x: 0, y: 0};
-		if (!node.parent) {
-			c = {x: 30, y: 30}
-		} else if (node.parent && this.props.fileTree[node.parent]) {
+		if (!node.prev && !node.parent) {
+			Object.assign(c, {x: 30, y: 30})
+		}
+		else if (node.type==="master" ) {
+			const prevXY = this.configureXY(node.prev)
+			Object.assign(c, {x: prevXY.x + 5, y: prevXY.y})
+		}
+		else if (node.type==="edit") {
 			const parentXY = this.configureXY(node.parent);
 			Object.assign(c, {x: parentXY.x + 5, y: parentXY.y + 5})
 		}

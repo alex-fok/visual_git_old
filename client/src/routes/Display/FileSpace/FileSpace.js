@@ -78,8 +78,9 @@ class FileSpace extends Component {
 								},
 								relation: {
 									type: "master",
-									next: "",
-									edit: {}
+									parent: "",
+									prev:"",
+									children: []
 								}
 							}
 						}
