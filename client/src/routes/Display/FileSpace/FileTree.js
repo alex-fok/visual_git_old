@@ -7,7 +7,6 @@ class FileTree extends Component {
 		super(props);
 		this.state = {
 			selected:"",
-			nodeMap: {},
 			latest: {
 				x: 0, 
 				y: 0
@@ -39,8 +38,6 @@ class FileTree extends Component {
 				document.getElementById("customMenu").style.display = "none";
 			})
 		}
-
-		console.log(this.state.nodeMap)
 	}
 
 	setSelected(version) {	
@@ -65,19 +62,25 @@ class FileTree extends Component {
 		)
 	}
 
-	configureXY(node) {
-		const type = this.props.fileTree[node]
+	configureXY(version) {
+		const node = this.props.fileTree[version];
+		const {position} = node;
 		var c = {x: 0, y: 0};
 
 		const dependency = 
-			node.type==="master" ? node.prev : 
-				node.type==="edit" ? node.parent : "";
+			position.type==="master" ? position.prev : 
+				position.type==="edit" ? position.parent : "";
 
-		if (!dependency && !node.prev && !node.parent) {
+		if (!dependency && !position.prev && !position.parent) {
 			Object.assign(c, {x: 30, y: 30})
 		}
 		else {
-			Object.assign(c, {x: prevXY.x + 5, y: prevXY.y})
+			const last = this.configureXY(dependency); 
+			Object.assign(c, {
+				x: last.x + 50, 
+				y: position.type==="master" ? last.y : 
+				last.y + 20 * ( 1 + this.props.fileTree[dependency].position.children.indexOf(node.version))
+			})
 		}
 		return c;
 	}

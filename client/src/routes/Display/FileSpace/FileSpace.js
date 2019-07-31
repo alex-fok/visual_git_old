@@ -64,10 +64,11 @@ class FileSpace extends Component {
 			fr.onload = () => {
 				this.setState(prev => ({
 					fileTrees: Object.assign(prev.fileTrees, {
+						//fileName.version; first file created always has version "init"
 						[fileName] : {
 							init: {
 								fileName: fileName,
-								version: 1,
+								version: "init",
 								label: fileName,
 								extension: ext,
 								src: fr.result,
@@ -76,11 +77,11 @@ class FileSpace extends Component {
 									base64: fr.result.match(/(?:data:.*;base64)/) ? true : false,
 									data: fr.result.match(/(?:data:.*;)(?:base64,)*(.*)/)[1]
 								},
-								relation: {
+								position: {
 									type: "master",
 									parent: "",
 									prev:"",
-									children: []
+									children: ["one"]
 								}
 							}
 						}
