@@ -12,13 +12,39 @@ class FileTree extends Component {
 				y: 0
 			}
 		}
+		this.getSelected = this.getSelected.bind(this);
 		this.setSelected = this.setSelected.bind(this);
 		this.addChild = this.addChild.bind(this);
+		this.getMenuOptions = this.getMenuOptions.bind(this);
 		this.configureXY = this.configureXY.bind(this);
 	}
 
+	getSelected() {
+		return this.props.fileTree[this.state.selected];
+	}
+
+	setSelected(version) {	
+		this.setState({
+			selected: version
+		})
+	}
+
 	addChild(e) {
-		console.log(this.props.fileTree[this.state.selected]);
+		this.props.addChild(this.getSelected());
+	}
+	editNode(e) {
+		console.log("edit Node");
+	}
+	deleteNode(e) {
+		console.log("delete Node");
+	}
+
+	getMenuOptions() {
+		return {
+			addChild: {existsIn: ["master"], func: ((node)=> this.addChild(node))},
+			edit: {existsIn: ["master"], func: ((node)=> this.editNode(node))},
+			delete: {existsIn: ["master"], func: ((node)=> this.deleteNode(node))}
+		}
 	}
 
 	componentDidMount() {
@@ -38,12 +64,6 @@ class FileTree extends Component {
 				document.getElementById("customMenu").style.display = "none";
 			})
 		}
-	}
-
-	setSelected(version) {	
-		this.setState({
-			selected: version
-		})
 	}
 
 	getModalContent(selected) {
@@ -87,7 +107,7 @@ class FileTree extends Component {
 
 	render() {
 		const {fileTree} = this.props;
-		const nodeSelected = this.props.fileTree[this.state.selected];
+		const nodeSelected = this.getSelected();
 
 		return (
 			<div>
@@ -132,9 +152,15 @@ class FileTree extends Component {
 						position: "fixed"
 					}}
 				>
-					<li className="list-group-item list-group-item-light list-group-item-action menu-option" onClick={(e)=> {this.addChild(e)}}>Add Child</li>
-					<li className="list-group-item list-group-item-light list-group-item-action menu-option">Edit</li>
-					<li className="list-group-item list-group-item-light list-group-item-action menu-option">Remove</li>
+					{Object.keys(this.getMenuOptions()).map((option)=> {
+						const optionProps = this.getMenuOptions()[option];
+						return <li
+							key={option}
+							style={nodeSelected && optionProps.existsIn.includes(nodeSelected.position.type) ? {display: "block"} : {display: "none"}}
+							className="list-group-item list-group-item-light list-group-item-action menu-option"
+							onClick={()=> {optionProps.func(nodeSelected)}}
+							>{option}</li>
+					})}
 				</ul>
 			</div>
 		)	

@@ -16,7 +16,9 @@ class FileSpace extends Component {
 		this.toTab = this.toTab.bind(this);
 		this.addTab = this.addTab.bind(this);
 		this.closeTab = this.closeTab.bind(this);
+		this.addChild = this.addChild.bind(this);
 		this.setInitFile = this.setInitFile.bind(this);
+		this.addChild = this.addChild.bind(this);
 		this.removeFile = this.removeFile.bind(this);
 	}
 
@@ -34,7 +36,7 @@ class FileSpace extends Component {
 			this.setState(prev => ({
 				active: tabId,
 				tabs: Object.assign(prev.tabs, {[tabId] :
-					prev.fileTrees[tabId].init.fileName})
+					prev.fileTrees[tabId]["0"].fileName})
 			}))
 		} else {
 			this.setState({
@@ -66,9 +68,9 @@ class FileSpace extends Component {
 					fileTrees: Object.assign(prev.fileTrees, {
 						//fileName.version; first file created always has version "init"
 						[fileName] : {
-							init: {
+							"0": {
 								fileName: fileName,
-								version: "init",
+								version: "0",
 								label: fileName,
 								extension: ext,
 								src: fr.result,
@@ -81,7 +83,7 @@ class FileSpace extends Component {
 									type: "master",
 									parent: "",
 									prev:"",
-									children: ["one"]
+									children: []
 								}
 							}
 						}
@@ -89,6 +91,44 @@ class FileSpace extends Component {
 				}))
 			}
 		}
+	}
+
+	addChild(origin) {
+		console.log(origin);
+		const temp = origin;
+		const temp2 = origin;
+		const childVersion = temp.position.children.length*.1 + .1;
+		const childrenArray = temp.position.children;
+		childrenArray.push(childVersion.toString());
+		console.log(`childrenArray: ${childrenArray}`);
+		const updatedOriginPosition = Object.assign(temp, {position: Object.assign(temp.position, {children: childrenArray})});
+		const childPosition = Object.assign(temp2, {position: Object.assign(temp2.position, {
+			type: "edit",
+			parent: origin.version
+		})})
+		this.setState(prev=> ({
+			fileTrees: Object.assign(prev.fileTrees, 
+				{[origin.fileName]: Object.assign(prev.fileTrees[origin.fileName],
+					//Update children attribute in the origin
+					{[origin.version]: Object.assign(prev.fileTrees[origin.fileName][origin.version], 
+						updatedOriginPosition)
+					},
+					//Add in the new child node
+					{[childVersion]: Object.assign(prev.fileTrees[origin.fileName][origin.version],{
+						version: childVersion,
+						position: {
+							type: "edit",
+							parent: origin.version,
+							prev: "",
+							children: []
+						}
+					})
+					}
+				)},
+			)
+		}))
+		console.log(`origin version: ${origin.version}`)
+		console.log(this.state.fileTrees[origin.fileName])
 	}
 
 	removeFile(id) {
@@ -134,7 +174,7 @@ class FileSpace extends Component {
 						removeFile={this.removeFile}
 					/>
 					:
-					<FileTree fileTree={this.state.fileTrees[this.state.active]}/>
+					<FileTree fileTree={this.state.fileTrees[this.state.active]} addChild={this.addChild}/>
 				}
 				</div>
 			</div>
