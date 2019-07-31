@@ -70,11 +70,7 @@ class FileSpace extends Component {
 						[fileName] : {
 							"0": {
 								fileName: fileName,
-<<<<<<< HEAD
 								version: "0",
-=======
-								version: "init",
->>>>>>> 3c4aabfcbeffa13adda55aa5f03e8039552fdf6c
 								label: fileName,
 								extension: ext,
 								src: fr.result,

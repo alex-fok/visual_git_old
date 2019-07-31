@@ -64,17 +64,7 @@ class FileTree extends Component {
 				document.getElementById("customMenu").style.display = "none";
 			})
 		}
-<<<<<<< HEAD
-=======
 	}
-
-	setSelected(version) {	
-		this.setState({
-			selected: version
-		})
->>>>>>> 3c4aabfcbeffa13adda55aa5f03e8039552fdf6c
-	}
-
 	getModalContent(selected) {
 		const file = this.props.fileTree[this.state.selected];
 		if (!file) return; 
