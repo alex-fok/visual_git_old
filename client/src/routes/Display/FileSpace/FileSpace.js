@@ -82,8 +82,9 @@ class FileSpace extends Component {
 								position: {
 									type: "master",
 									parent: "",
-									prev:"",
-									children: []
+									children: [],
+									prev: "",
+									next: ""
 								}
 							}
 						}
@@ -101,18 +102,18 @@ class FileSpace extends Component {
 		const childrenArray = origin.position.children;
 		const childVersion = `${origin.version}.${childrenArray.length + 1}`;
 		childrenArray.push(childVersion);
-		const updatedOriginPosition = Object.assign({}, origin, {position: Object.assign({}, origin.position, {children: childrenArray})});
-		const childPosition = Object.assign({}, origin, {position: Object.assign({}, origin.position, {
+		const childPosition = Object.assign({}, origin.position, {
 			type: "edit",
 			parent: origin.version
-		})})
-		console.log(`childVersion: ${childVersion}`);
+		});
+		const updatedOriginPosition = Object.assign({}, origin.position, {children: childrenArray});
+		
 		this.setState(prev=> ({
 			fileTrees: Object.assign(prev.fileTrees, 
 				{[origin.fileName]: Object.assign({}, prev.fileTrees[origin.fileName],
 					//Update children attribute in the origin
-					{[origin.version]: Object.assign({}, prev.fileTrees[origin.fileName][origin.version], 
-						updatedOriginPosition)
+					{[origin.version]: Object.assign({}, prev.fileTrees[origin.fileName][origin.version],{ 
+						position: updatedOriginPosition})
 					},
 					//Add in the new child node
 					{[childVersion]: Object.assign({}, prev.fileTrees[origin.fileName][origin.version],{
@@ -120,10 +121,10 @@ class FileSpace extends Component {
 						position: {
 							type: "edit",
 							parent: origin.version,
+							children: [],
 							prev: "",
-							children: []
-						}
-					})
+							next: ""}
+						})
 					}
 				)},
 			)

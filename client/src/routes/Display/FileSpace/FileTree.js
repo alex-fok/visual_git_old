@@ -17,6 +17,7 @@ class FileTree extends Component {
 		this.addChild = this.addChild.bind(this);
 		this.getMenuOptions = this.getMenuOptions.bind(this);
 		this.configureXY = this.configureXY.bind(this);
+		this.createArrow = this.createArrow.bind(this);
 	}
 
 	getSelected() {
@@ -106,6 +107,12 @@ class FileTree extends Component {
 		return c;
 	}
 
+	createArrow(src, dest) {
+		console.log(`parent: ${JSON.stringify(src.position)}`);
+		console.log(`child : ${JSON.stringify(dest.position)}`)
+		console.log(`arrow from : ${src.version} to ${dest.version}`)
+	}
+
 	render() {
 		const {fileTree} = this.props;
 		const nodeSelected = this.getSelected();
@@ -132,6 +139,17 @@ class FileTree extends Component {
 										dimension={type==="master" ? "10" : "5"}
 										fill={type==="master" ? "#FF8000" : "#6666FF"}
 									/>)
+							})
+						}
+						{
+							Object.keys(this.props.fileTree).map(version => {
+								
+								let {children} = fileTree[version].position;
+								children.length ? children.map(child => {
+									console.log(`Parent : ${JSON.stringify(fileTree[version])}`);
+									console.log(`Child : ${JSON.stringify(fileTree[child])}`);
+									this.createArrow(fileTree[version], fileTree[child])
+								}) : ""
 							})
 						}
 					</svg>
