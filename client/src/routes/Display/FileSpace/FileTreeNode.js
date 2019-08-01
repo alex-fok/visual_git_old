@@ -9,9 +9,9 @@ class FileTreeNode extends Component{
 			<rect
 				x={this.props.coordinate.x}
 				y={this.props.coordinate.y}
-				width="10"
-				height="10"
-				fill="#FF8000"
+				width={this.props.dimension}
+				height={this.props.dimension}
+				fill={this.props.fill}
 				data-toggle="modal"
 				data-target="#details"
 				onClick={()=> {this.props.setSelected(this.props.version)}}

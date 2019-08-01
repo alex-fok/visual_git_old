@@ -83,7 +83,7 @@ class FileSpace extends Component {
 									type: "master",
 									parent: "",
 									prev:"",
-									children: ["one"]
+									children: []
 								}
 							}
 						}
@@ -95,26 +95,24 @@ class FileSpace extends Component {
 
 	addChild(origin) {
 		console.log(origin);
-		const temp = origin;
-		const temp2 = origin;
-		const childVersion = temp.position.children.length*.1 + .1;
-		const childrenArray = temp.position.children;
+		const childVersion = (origin.position.children.length*.1 + .1).toString();
+		const childrenArray = origin.position.children;
 		childrenArray.push(childVersion.toString());
 		console.log(`childrenArray: ${childrenArray}`);
-		const updatedOriginPosition = Object.assign(temp, {position: Object.assign(temp.position, {children: childrenArray})});
-		const childPosition = Object.assign(temp2, {position: Object.assign(temp2.position, {
+		const updatedOriginPosition = Object.assign({}, origin, {position: Object.assign({}, origin.position, {children: childrenArray})});
+		const childPosition = Object.assign({}, origin, {position: Object.assign({}, origin.position, {
 			type: "edit",
 			parent: origin.version
 		})})
 		this.setState(prev=> ({
 			fileTrees: Object.assign(prev.fileTrees, 
-				{[origin.fileName]: Object.assign(prev.fileTrees[origin.fileName],
+				{[origin.fileName]: Object.assign({}, prev.fileTrees[origin.fileName],
 					//Update children attribute in the origin
-					{[origin.version]: Object.assign(prev.fileTrees[origin.fileName][origin.version], 
+					{[origin.version]: Object.assign({}, prev.fileTrees[origin.fileName][origin.version], 
 						updatedOriginPosition)
 					},
 					//Add in the new child node
-					{[childVersion]: Object.assign(prev.fileTrees[origin.fileName][origin.version],{
+					{[childVersion]: Object.assign({}, prev.fileTrees[origin.fileName][origin.version],{
 						version: childVersion,
 						position: {
 							type: "edit",
@@ -127,8 +125,6 @@ class FileSpace extends Component {
 				)},
 			)
 		}))
-		console.log(`origin version: ${origin.version}`)
-		console.log(this.state.fileTrees[origin.fileName])
 	}
 
 	removeFile(id) {
@@ -136,6 +132,10 @@ class FileSpace extends Component {
 			fileTrees: delete prev.fileTrees[id],
 			tabs: prev.tabs[id] ? delete prev.tabs[id] : prev.tabs
 		}))
+	}
+
+	componentDidMount() {
+		console.log(this.state.fileTrees);
 	}
 
 	render() {

@@ -42,8 +42,8 @@ class FileTree extends Component {
 	getMenuOptions() {
 		return {
 			addChild: {existsIn: ["master"], func: ((node)=> this.addChild(node))},
-			edit: {existsIn: ["master"], func: ((node)=> this.editNode(node))},
-			delete: {existsIn: ["master"], func: ((node)=> this.deleteNode(node))}
+			edit: {existsIn: ["master", "edit"], func: ((node)=> this.editNode(node))},
+			delete: {existsIn: ["master", "edit"], func: ((node)=> this.deleteNode(node))}
 		}
 	}
 
@@ -94,11 +94,13 @@ class FileTree extends Component {
 			Object.assign(c, {x: 30, y: 30})
 		}
 		else {
+			console.log(`node version: ${node.version } ${this.props.fileTree[dependency].position.children.indexOf(node.version)}`)
 			const last = this.configureXY(dependency); 
+			const disposition = this.props.fileTree[dependency].position.children.indexOf(node.version) + 1;
 			Object.assign(c, {
-				x: last.x + 50, 
+				x: disposition > 0 ? last.x + 15 : last.x + 50, 
 				y: position.type==="master" ? last.y : 
-				last.y + 20 * ( 1 + this.props.fileTree[dependency].position.children.indexOf(node.version))
+				last.y + 20 * disposition
 			})
 		}
 		return c;
@@ -120,7 +122,16 @@ class FileTree extends Component {
 					>
 						{
 							Object.keys(this.props.fileTree).map(version => {
-								return <FileTreeNode key={version} version={version} setSelected={this.setSelected}  coordinate={this.configureXY(version)}/>
+								let type = fileTree[version].position.type;
+								return (
+									<FileTreeNode 
+										key={version}
+										version={version}
+										setSelected={this.setSelected}
+									  coordinate={this.configureXY(version)}
+										dimension={type==="master" ? "10" : "5"}
+										fill={type==="master" ? "#FF8000" : "#DAE8FC"}
+									/>)
 							})
 						}
 					</svg>
