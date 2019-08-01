@@ -94,7 +94,7 @@ class FileTree extends Component {
 			Object.assign(c, {x: 30, y: 30})
 		}
 		else {
-			console.log(`node version: ${node.version } ${this.props.fileTree[dependency].position.children.indexOf(node.version)}`)
+			//console.log(`node version: ${JSON.stringify(node)} ${this.props.fileTree[dependency].position.children.indexOf(node.version)}`)
 			const last = this.configureXY(dependency); 
 			const disposition = this.props.fileTree[dependency].position.children.indexOf(node.version) + 1;
 			Object.assign(c, {
@@ -130,14 +130,14 @@ class FileTree extends Component {
 										setSelected={this.setSelected}
 									  coordinate={this.configureXY(version)}
 										dimension={type==="master" ? "10" : "5"}
-										fill={type==="master" ? "#FF8000" : "#DAE8FC"}
+										fill={type==="master" ? "#FF8000" : "#6666FF"}
 									/>)
 							})
 						}
 					</svg>
 
 					<div className="modal fade" id="details" role="document">
-						<div className="modal-dialog modal-lg" style={{width: "1124px"}}>
+						<div className="modal-dialog modal-lg">
 							<div className="modal-content w-100">
 								<div className="modal-header">
 									<h5 className="modal-title">{nodeSelected ? 

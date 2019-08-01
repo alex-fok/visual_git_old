@@ -93,17 +93,20 @@ class FileSpace extends Component {
 		}
 	}
 
+	componentDidMount() {
+		console.log(this.state.fileTrees)
+	}
+
 	addChild(origin) {
-		console.log(origin);
-		const childVersion = (origin.position.children.length*.1 + .1).toString();
 		const childrenArray = origin.position.children;
-		childrenArray.push(childVersion.toString());
-		console.log(`childrenArray: ${childrenArray}`);
+		const childVersion = `${origin.version}.${childrenArray.length + 1}`;
+		childrenArray.push(childVersion);
 		const updatedOriginPosition = Object.assign({}, origin, {position: Object.assign({}, origin.position, {children: childrenArray})});
 		const childPosition = Object.assign({}, origin, {position: Object.assign({}, origin.position, {
 			type: "edit",
 			parent: origin.version
 		})})
+		console.log(`childVersion: ${childVersion}`);
 		this.setState(prev=> ({
 			fileTrees: Object.assign(prev.fileTrees, 
 				{[origin.fileName]: Object.assign({}, prev.fileTrees[origin.fileName],
@@ -132,10 +135,6 @@ class FileSpace extends Component {
 			fileTrees: delete prev.fileTrees[id],
 			tabs: prev.tabs[id] ? delete prev.tabs[id] : prev.tabs
 		}))
-	}
-
-	componentDidMount() {
-		console.log(this.state.fileTrees);
 	}
 
 	render() {
