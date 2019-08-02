@@ -12,16 +12,17 @@ class FileTree extends Component {
 				y: 0
 			}
 		}
-		this.getSelected = this.getSelected.bind(this);
+		this.getNode = this.getNode.bind(this);
 		this.setSelected = this.setSelected.bind(this);
 		this.addChild = this.addChild.bind(this);
+		this.addNext = this.addNext.bind(this);
 		this.getMenuOptions = this.getMenuOptions.bind(this);
 		this.configureXY = this.configureXY.bind(this);
 		this.createArrow = this.createArrow.bind(this);
 	}
 
-	getSelected() {
-		return this.props.fileTree[this.state.selected];
+	getNode(node) {
+		return this.props.fileTree[node];
 	}
 
 	setSelected(version) {	
@@ -31,7 +32,10 @@ class FileTree extends Component {
 	}
 
 	addChild(e) {
-		this.props.addChild(this.getSelected());
+		this.props.addChild(this.getNode(this.state.selected));
+	}
+	addNext(e) {
+		this.props.addNext(this.getNode(this.getNode(this.state.selected).position.parent));
 	}
 	editNode(e) {
 		console.log("edit Node");
@@ -43,6 +47,7 @@ class FileTree extends Component {
 	getMenuOptions() {
 		return {
 			addChild: {existsIn: ["master"], func: ((node)=> this.addChild(node))},
+			addNext: {existsIn: ["edit"], func: ((node)=> this.addNext(node))},
 			edit: {existsIn: ["master", "edit"], func: ((node)=> this.editNode(node))},
 			delete: {existsIn: ["master", "edit"], func: ((node)=> this.deleteNode(node))}
 		}
@@ -108,14 +113,12 @@ class FileTree extends Component {
 	}
 
 	createArrow(src, dest) {
-		console.log(`parent: ${JSON.stringify(src.position)}`);
-		console.log(`child : ${JSON.stringify(dest.position)}`)
 		console.log(`arrow from : ${src.version} to ${dest.version}`)
 	}
 
 	render() {
 		const {fileTree} = this.props;
-		const nodeSelected = this.getSelected();
+		const nodeSelected = this.getNode(this.state.selected);
 
 		return (
 			<div>
@@ -146,8 +149,6 @@ class FileTree extends Component {
 								
 								let {children} = fileTree[version].position;
 								children.length ? children.map(child => {
-									console.log(`Parent : ${JSON.stringify(fileTree[version])}`);
-									console.log(`Child : ${JSON.stringify(fileTree[child])}`);
 									this.createArrow(fileTree[version], fileTree[child])
 								}) : ""
 							})
