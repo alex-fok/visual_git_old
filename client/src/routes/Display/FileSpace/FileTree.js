@@ -1,6 +1,12 @@
 import React, {Component} from 'react';
 import './FileTree.css';
 import FileTreeNode from './FileTreeNode';
+import Arrow from './Arrow';
+
+const svgNS = "http://www.w3.org/2000/svg";
+
+const masterSize = "10";
+const editSize = "5";
 
 class FileTree extends Component {
 	constructor(props) {
@@ -18,7 +24,7 @@ class FileTree extends Component {
 		this.addNext = this.addNext.bind(this);
 		this.getMenuOptions = this.getMenuOptions.bind(this);
 		this.configureXY = this.configureXY.bind(this);
-		this.createArrow = this.createArrow.bind(this);
+		
 	}
 
 	getNode(node) {
@@ -35,7 +41,8 @@ class FileTree extends Component {
 		this.props.addChild(this.getNode(this.state.selected));
 	}
 	addNext(e) {
-		this.props.addNext(this.getNode(this.getNode(this.state.selected).position.parent));
+		const selected = this.getNode(this.state.selected);
+		this.props.addNext(this.getNode(selected.position.parent), {properties: selected.properties});
 	}
 	editNode(e) {
 		console.log("edit Node");
@@ -112,10 +119,6 @@ class FileTree extends Component {
 		return c;
 	}
 
-	createArrow(src, dest) {
-		console.log(`arrow from : ${src.version} to ${dest.version}`)
-	}
-
 	render() {
 		const {fileTree} = this.props;
 		const nodeSelected = this.getNode(this.state.selected);
@@ -139,20 +142,33 @@ class FileTree extends Component {
 										version={version}
 										setSelected={this.setSelected}
 									  coordinate={this.configureXY(version)}
-										dimension={type==="master" ? "10" : "5"}
+										dimension={type==="master" ? masterSize : editSize}
 										fill={type==="master" ? "#FF8000" : "#6666FF"}
 									/>)
 							})
 						}
-						{
-							Object.keys(this.props.fileTree).map(version => {
-								
+						
+						{Object.keys(this.props.fileTree).map(version => {
 								let {children} = fileTree[version].position;
-								children.length ? children.map(child => {
-									this.createArrow(fileTree[version], fileTree[child])
+								return children.length ? children.map(child => {
+									const src = this.configureXY(version);
+									const dest = this.configureXY(child);
+									return (
+										<Arrow
+										  key={`${version}To${child}`}
+										  type="P2C"
+										  src={src}
+										  dest={dest}
+										  s_size = {masterSize}
+										  d_size = {editSize}
+										 />)
 								}) : ""
 							})
 						}
+						{Object.keys(this.props.fileTree).map(version => {
+								let {next} = fileTree[version].position;
+								
+						})}
 					</svg>
 
 					<div className="modal fade" id="details" role="document">

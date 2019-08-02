@@ -94,7 +94,7 @@ class FileSpace extends Component {
 		}
 	}
 
-	addNext(origin) {
+	addNext(origin, data) {
 		const nextVersion = (parseInt(origin.version) + 1).toString();
 		this.setState(prev => ({
 			fileTrees: Object.assign(prev.fileTrees,
@@ -113,7 +113,7 @@ class FileSpace extends Component {
 							prev: origin.version,
 							next: ""
 						}
-					})}
+					}, data)}
 				)}
 			)
 		}))
