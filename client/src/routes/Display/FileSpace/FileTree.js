@@ -4,8 +4,6 @@ import FileTreeNode from './FileTreeNode';
 import Arrow from './Arrow';
 import SvgProps from './SvgProps.json';
 
-const svgNS = "http://www.w3.org/2000/svg";
-
 class FileTree extends Component {
 	constructor(props) {
 		super(props);
@@ -22,6 +20,7 @@ class FileTree extends Component {
 		this.addNext = this.addNext.bind(this);
 		this.getMenuOptions = this.getMenuOptions.bind(this);
 		this.configureXY = this.configureXY.bind(this);
+		this.configureArrow = this.configureArrow.bind(this);
 		
 	}
 
@@ -117,6 +116,21 @@ class FileTree extends Component {
 		return c;
 	}
 
+	configureArrow(current, target, relation) {
+		const src = this.configureXY(current);
+		const dest = this.configureXY(target);
+		return (
+			<Arrow
+				key={`${current}To${target}`}
+				type={relation}
+				src={src}
+				dest={dest}
+				sSize = {SvgProps.MASTERSIZE}
+			  dSize = {relation === "M2M" ? SvgProps.MASTERSIZE : SvgProps.SUBVERSIZE}
+			/>
+		)
+	}
+
 	render() {
 		const {fileTree} = this.props;
 		const nodeSelected = this.getNode(this.state.selected);
@@ -150,39 +164,14 @@ class FileTree extends Component {
 							Object.keys(this.props.fileTree).map(version => {
 								let {children} = fileTree[version].position;
 								return children.length ? children.map(child => {
-									const src = this.configureXY(version);
-									const dest = this.configureXY(child);
-									return (
-										<Arrow
-										  key={`${version}To${child}`}
-										  type="M2S"
-										  src={src}
-										  dest={dest}
-										  s_size = {SvgProps.MASTERSIZE}
-										  d_size = {SvgProps.SUBVERSIZE}
-										 />)
+									return this.configureArrow(version, child, "M2S")
 								}) : ""
 							})
 						}
 						{
 							Object.keys(this.props.fileTree).map(version => {
-								const {next} = fileTree[version].position;
-								
-								return next ? ((n=next)=>{
-									console.log(`version: ${version}\nNext: ${n}`)
-									const src = this.configureXY(version);
-									const dest = this.configureXY(n);
-									return (
-										<Arrow
-											key={`${version}To${n}`}
-											type="M2M"
-											src={src}
-											dest={dest}
-											s_size = {SvgProps.MASTERSIZE}
-										  d_size = {SvgProps.MASTERSIZE}
-										/>)
-									
-								})() : ""
+								let {next} = fileTree[version].position;
+								return next ? this.configureArrow(version, next, "M2M") : ""
 							})
 						}
 					</svg>
