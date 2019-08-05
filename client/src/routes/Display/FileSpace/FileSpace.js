@@ -18,7 +18,7 @@ class FileSpace extends Component {
 		this.closeTab = this.closeTab.bind(this);
 		this.addSub = this.addSub.bind(this);
 		this.setInitFile = this.setInitFile.bind(this);
-		this.addNext = this.addNext.bind(this);
+		this.createMaster = this.createMaster.bind(this);
 		this.removeFile = this.removeFile.bind(this);
 	}
 
@@ -84,7 +84,8 @@ class FileSpace extends Component {
 									master: "",
 									subs: [],
 									prev: "",
-									next: ""
+									next: "",
+									fromSub: ""
 								}
 							}
 						}
@@ -94,7 +95,7 @@ class FileSpace extends Component {
 		}
 	}
 
-	addNext(origin, data) {
+	createMaster(sub, origin, data) {
 		const nextVersion = (parseInt(origin.version) + 1).toString();
 		this.setState(prev => ({
 			fileTrees: Object.assign(prev.fileTrees,
@@ -111,7 +112,8 @@ class FileSpace extends Component {
 							master: "",
 							subs: [],
 							prev: origin.version,
-							next: ""
+							next: "",
+							fromSub: sub.version
 						}
 					}, data)}
 				)}
@@ -198,7 +200,7 @@ class FileSpace extends Component {
 					<FileTree
 						fileTree={this.state.fileTrees[this.state.active]}
 						addSub={this.addSub}
-						addNext={this.addNext}
+						createMaster={this.createMaster}
 						/>
 				}
 				</div>

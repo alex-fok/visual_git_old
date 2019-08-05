@@ -25,8 +25,8 @@ class Arrow extends Component {
 			}
 
 		return (
-			<g stroke="black" strokeWidth = ".3">
-				<polyline 
+			<g stroke="black" strokeWidth = "1">
+				<polyline
 					fill="none"
 					points={
 						`

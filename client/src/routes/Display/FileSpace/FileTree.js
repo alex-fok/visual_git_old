@@ -17,7 +17,7 @@ class FileTree extends Component {
 		this.getNode = this.getNode.bind(this);
 		this.setSelected = this.setSelected.bind(this);
 		this.addSub = this.addSub.bind(this);
-		this.addNext = this.addNext.bind(this);
+		this.createMaster = this.createMaster.bind(this);
 		this.getMenuOptions = this.getMenuOptions.bind(this);
 		this.configureXY = this.configureXY.bind(this);
 		this.configureArrow = this.configureArrow.bind(this);
@@ -37,9 +37,9 @@ class FileTree extends Component {
 	addSub(e) {
 		this.props.addSub(this.getNode(this.state.selected));
 	}
-	addNext(e) {
+	createMaster(e) {
 		const selected = this.getNode(this.state.selected);
-		this.props.addNext(this.getNode(selected.position.master), {properties: selected.properties});
+		this.props.createMaster(selected, this.getNode(selected.position.master), {properties: selected.properties});
 	}
 	editNode(e) {
 		console.log("edit Node");
@@ -51,7 +51,7 @@ class FileTree extends Component {
 	getMenuOptions() {
 		return {
 			addSub: {existsIn: ["master"], func: ((node)=> this.addSub(node))},
-			addNext: {existsIn: ["sub"], func: ((node)=> this.addNext(node))},
+			createMaster: {existsIn: ["sub"], func: ((node)=> this.createMaster(node))},
 			edit: {existsIn: ["master", "sub"], func: ((node)=> this.editNode(node))},
 			delete: {existsIn: ["master", "sub"], func: ((node)=> this.deleteNode(node))}
 		}

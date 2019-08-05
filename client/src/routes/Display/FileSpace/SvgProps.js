@@ -1,6 +1,6 @@
 const w = 1200;
 const h = 600;
-const scale = .25;
+const scale = 1;
 
 const data = {
 	WIDTH: w,
@@ -10,16 +10,16 @@ const data = {
 		y: h*scale
 	},
 	INIT_POSITION: {
-		x: 120*scale,
-		y: 120*scale
+		x: w*.1*scale,
+		y: w*.1*scale
 	},
-	MASTERSIZE: 40*scale,
-	SUBSIZE: 20*scale,
+	MASTERSIZE: w*.034*scale,
+	SUBSIZE: w*.0167*scale,
 	DISPOSITION: {
-		Ms_x: 140*scale,
-		M2S_x: 60*scale,
-		M2S_y: 80*scale,
-		Ss_y : 40*scale
+		Ms_x: w*.1*scale,
+		M2S_x: w*.05*scale,
+		M2S_y: w*.0834*scale,
+		Ss_y : w*.0334*scale
 	}
 }
 
