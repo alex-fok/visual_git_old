@@ -96,6 +96,7 @@ class FileSpace extends Component {
 
 	addNext(origin, data) {
 		const nextVersion = (parseInt(origin.version) + 1).toString();
+		console.log(`Adding ${nextVersion} to ${origin.version}`);
 		this.setState(prev => ({
 			fileTrees: Object.assign(prev.fileTrees,
 				{[origin.fileName]: Object.assign({}, prev.fileTrees[origin.fileName],
@@ -124,7 +125,7 @@ class FileSpace extends Component {
 		const childVersion = `${origin.version}.${childrenArray.length + 1}`;
 		childrenArray.push(childVersion);
 		const childPosition = Object.assign({}, origin.position, {
-			type: "edit",
+			type: "subVer",
 			parent: origin.version
 		});
 		const updatedOriginPosition = Object.assign({}, origin.position, {children: childrenArray});
@@ -140,7 +141,7 @@ class FileSpace extends Component {
 					{[childVersion]: Object.assign({}, prev.fileTrees[origin.fileName][origin.version],{
 						version: childVersion,
 						position: {
-							type: "edit",
+							type: "subVer",
 							parent: origin.version,
 							children: [],
 							prev: "",

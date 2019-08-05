@@ -13,7 +13,7 @@ class Arrow extends Component {
 			y: parseInt(dest.y) + parseInt(d_size)*.5
 		}
 
-		const start = type === "P2C" ?
+		const start = type === "M2S" ?
 			{
 				x: parseInt(src.x) + parseInt(s_size)*.5,
 				y: parseInt(src.y) + parseInt(s_size)
@@ -27,7 +27,11 @@ class Arrow extends Component {
 		return (
 			<polyline 
 				points={
-					`${start.x},${start.y} ${type==="P2C" ? `${start.x},${end.y}` : ""} ${end.x},${end.y}`
+					`
+					${start.x},${start.y} 
+					${type==="M2S" ? `${start.x},${end.y}` : ""} 
+					${end.x},${end.y}
+					`
 				}
 				fill="none"
 				stroke="black"

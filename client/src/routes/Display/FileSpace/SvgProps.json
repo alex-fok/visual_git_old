@@ -1,0 +1,12 @@
+{
+	"INIT_POSITION": {
+		"x": 30,
+		"y": 30
+	},
+	"MASTERSIZE": 10,
+	"SUBVERSIZE": 5,
+	"Ms_x": 50,
+	"M2S_x": 15,
+	"M2S_y": 20,
+	"Ss_y" : 10
+}

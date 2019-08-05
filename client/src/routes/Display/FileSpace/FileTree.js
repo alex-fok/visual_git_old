@@ -2,11 +2,9 @@ import React, {Component} from 'react';
 import './FileTree.css';
 import FileTreeNode from './FileTreeNode';
 import Arrow from './Arrow';
+import SvgProps from './SvgProps.json';
 
 const svgNS = "http://www.w3.org/2000/svg";
-
-const masterSize = "10";
-const editSize = "5";
 
 class FileTree extends Component {
 	constructor(props) {
@@ -54,9 +52,9 @@ class FileTree extends Component {
 	getMenuOptions() {
 		return {
 			addChild: {existsIn: ["master"], func: ((node)=> this.addChild(node))},
-			addNext: {existsIn: ["edit"], func: ((node)=> this.addNext(node))},
-			edit: {existsIn: ["master", "edit"], func: ((node)=> this.editNode(node))},
-			delete: {existsIn: ["master", "edit"], func: ((node)=> this.deleteNode(node))}
+			addNext: {existsIn: ["subVer"], func: ((node)=> this.addNext(node))},
+			edit: {existsIn: ["master", "subVer"], func: ((node)=> this.editNode(node))},
+			delete: {existsIn: ["master", "subVer"], func: ((node)=> this.deleteNode(node))}
 		}
 	}
 
@@ -95,26 +93,26 @@ class FileTree extends Component {
 	}
 
 	configureXY(version) {
-		const node = this.props.fileTree[version];
+		const node = this.getNode(version);
 		const {position} = node;
 		var c = {x: 0, y: 0};
 
 		const dependency = 
 			position.type==="master" ? position.prev : 
-				position.type==="edit" ? position.parent : "";
+			position.type==="subVer" ? position.parent : "";
 
 		if (!dependency && !position.prev && !position.parent) {
-			Object.assign(c, {x: 30, y: 30})
+			Object.assign(c, SvgProps.INIT_POSITION)
 		}
 		else {
-			//console.log(`node version: ${JSON.stringify(node)} ${this.props.fileTree[dependency].position.children.indexOf(node.version)}`)
 			const last = this.configureXY(dependency); 
-			const disposition = this.props.fileTree[dependency].position.children.indexOf(node.version) + 1;
-			Object.assign(c, {
-				x: disposition > 0 ? last.x + 15 : last.x + 50, 
-				y: position.type==="master" ? last.y : 
-				last.y + 20 * disposition
-			})
+
+			Object.assign(c, position.type === "master" ?
+				{	x: last.x + SvgProps.Ms_x, y: last.y} :
+				{ x: last.x + SvgProps.M2S_x, y: last.y + SvgProps.M2S_y + 
+					this.getNode(dependency).position
+					.children.indexOf(node.version) * SvgProps.Ss_y}
+			)
 		}
 		return c;
 	}
@@ -142,13 +140,14 @@ class FileTree extends Component {
 										version={version}
 										setSelected={this.setSelected}
 									  coordinate={this.configureXY(version)}
-										dimension={type==="master" ? masterSize : editSize}
+										dimension={type==="master" ?SvgProps.MASTERSIZE : SvgProps.SUBVERSIZE}
 										fill={type==="master" ? "#FF8000" : "#6666FF"}
 									/>)
 							})
 						}
 						
-						{Object.keys(this.props.fileTree).map(version => {
+						{
+							Object.keys(this.props.fileTree).map(version => {
 								let {children} = fileTree[version].position;
 								return children.length ? children.map(child => {
 									const src = this.configureXY(version);
@@ -156,19 +155,36 @@ class FileTree extends Component {
 									return (
 										<Arrow
 										  key={`${version}To${child}`}
-										  type="P2C"
+										  type="M2S"
 										  src={src}
 										  dest={dest}
-										  s_size = {masterSize}
-										  d_size = {editSize}
+										  s_size = {SvgProps.MASTERSIZE}
+										  d_size = {SvgProps.SUBVERSIZE}
 										 />)
 								}) : ""
 							})
 						}
-						{Object.keys(this.props.fileTree).map(version => {
-								let {next} = fileTree[version].position;
+						{
+							Object.keys(this.props.fileTree).map(version => {
+								const {next} = fileTree[version].position;
 								
-						})}
+								return next ? ((n=next)=>{
+									console.log(`version: ${version}\nNext: ${n}`)
+									const src = this.configureXY(version);
+									const dest = this.configureXY(n);
+									return (
+										<Arrow
+											key={`${version}To${n}`}
+											type="M2M"
+											src={src}
+											dest={dest}
+											s_size = {SvgProps.MASTERSIZE}
+										  d_size = {SvgProps.MASTERSIZE}
+										/>)
+									
+								})() : ""
+							})
+						}
 					</svg>
 
 					<div className="modal fade" id="details" role="document">
