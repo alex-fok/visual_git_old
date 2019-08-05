@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import './FileTree.css';
 import FileTreeNode from './FileTreeNode';
 import Arrow from './Arrow';
-import SvgProps from './SvgProps.json';
+import {WIDTH, HEIGHT, VIEWBOX, INIT_POSITION, MASTERSIZE, SUBSIZE, DISPOSITION} from './SvgProps';
 
 class FileTree extends Component {
 	constructor(props) {
@@ -16,7 +16,7 @@ class FileTree extends Component {
 		}
 		this.getNode = this.getNode.bind(this);
 		this.setSelected = this.setSelected.bind(this);
-		this.addChild = this.addChild.bind(this);
+		this.addSub = this.addSub.bind(this);
 		this.addNext = this.addNext.bind(this);
 		this.getMenuOptions = this.getMenuOptions.bind(this);
 		this.configureXY = this.configureXY.bind(this);
@@ -34,12 +34,12 @@ class FileTree extends Component {
 		})
 	}
 
-	addChild(e) {
-		this.props.addChild(this.getNode(this.state.selected));
+	addSub(e) {
+		this.props.addSub(this.getNode(this.state.selected));
 	}
 	addNext(e) {
 		const selected = this.getNode(this.state.selected);
-		this.props.addNext(this.getNode(selected.position.parent), {properties: selected.properties});
+		this.props.addNext(this.getNode(selected.position.master), {properties: selected.properties});
 	}
 	editNode(e) {
 		console.log("edit Node");
@@ -50,10 +50,10 @@ class FileTree extends Component {
 
 	getMenuOptions() {
 		return {
-			addChild: {existsIn: ["master"], func: ((node)=> this.addChild(node))},
-			addNext: {existsIn: ["subVer"], func: ((node)=> this.addNext(node))},
-			edit: {existsIn: ["master", "subVer"], func: ((node)=> this.editNode(node))},
-			delete: {existsIn: ["master", "subVer"], func: ((node)=> this.deleteNode(node))}
+			addSub: {existsIn: ["master"], func: ((node)=> this.addSub(node))},
+			addNext: {existsIn: ["sub"], func: ((node)=> this.addNext(node))},
+			edit: {existsIn: ["master", "sub"], func: ((node)=> this.editNode(node))},
+			delete: {existsIn: ["master", "sub"], func: ((node)=> this.deleteNode(node))}
 		}
 	}
 
@@ -98,19 +98,19 @@ class FileTree extends Component {
 
 		const dependency = 
 			position.type==="master" ? position.prev : 
-			position.type==="subVer" ? position.parent : "";
+			position.type==="sub" ? position.master : "";
 
-		if (!dependency && !position.prev && !position.parent) {
-			Object.assign(c, SvgProps.INIT_POSITION)
+		if (!dependency && !position.prev && !position.master) {
+			Object.assign(c, INIT_POSITION)
 		}
 		else {
 			const last = this.configureXY(dependency); 
 
 			Object.assign(c, position.type === "master" ?
-				{	x: last.x + SvgProps.Ms_x, y: last.y} :
-				{ x: last.x + SvgProps.M2S_x, y: last.y + SvgProps.M2S_y + 
+				{	x: last.x + DISPOSITION.Ms_x, y: last.y} :
+				{ x: last.x + DISPOSITION.M2S_x, y: last.y + DISPOSITION.M2S_y + 
 					this.getNode(dependency).position
-					.children.indexOf(node.version) * SvgProps.Ss_y}
+					.subs.indexOf(node.version) * DISPOSITION.Ss_y}
 			)
 		}
 		return c;
@@ -125,8 +125,8 @@ class FileTree extends Component {
 				type={relation}
 				src={src}
 				dest={dest}
-				sSize = {SvgProps.MASTERSIZE}
-			  dSize = {relation === "M2M" ? SvgProps.MASTERSIZE : SvgProps.SUBVERSIZE}
+				sSize = {MASTERSIZE}
+			  dSize = {relation === "M2M" ? MASTERSIZE : SUBSIZE}
 			/>
 		)
 	}
@@ -134,13 +134,12 @@ class FileTree extends Component {
 	render() {
 		const {fileTree} = this.props;
 		const nodeSelected = this.getNode(this.state.selected);
-
 		return (
 			<div>
-				<div style={{width: "1200px", height: "600px"}}>
+				<div style={{width: `${WIDTH}px`, height: `${HEIGHT}px`}}>
 					<svg
 						id="FileTree"
-						viewBox={`0 0 300 150`}
+						viewBox={`0 0 ${VIEWBOX.x} ${VIEWBOX.y}`}
 						width="100%"
 						height="100%"
 						style={{backgroundColor: "#F5F5F5"}}
@@ -154,17 +153,16 @@ class FileTree extends Component {
 										version={version}
 										setSelected={this.setSelected}
 									  coordinate={this.configureXY(version)}
-										dimension={type==="master" ?SvgProps.MASTERSIZE : SvgProps.SUBVERSIZE}
+										dimension={type==="master" ? MASTERSIZE : SUBSIZE}
 										fill={type==="master" ? "#FF8000" : "#6666FF"}
 									/>)
 							})
 						}
-						
 						{
 							Object.keys(this.props.fileTree).map(version => {
-								let {children} = fileTree[version].position;
-								return children.length ? children.map(child => {
-									return this.configureArrow(version, child, "M2S")
+								let {subs} = fileTree[version].position;
+								return subs.length ? subs.map(sub => {
+									return this.configureArrow(version, sub, "M2S")
 								}) : ""
 							})
 						}

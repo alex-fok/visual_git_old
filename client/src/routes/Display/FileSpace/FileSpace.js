@@ -16,7 +16,7 @@ class FileSpace extends Component {
 		this.toTab = this.toTab.bind(this);
 		this.addTab = this.addTab.bind(this);
 		this.closeTab = this.closeTab.bind(this);
-		this.addChild = this.addChild.bind(this);
+		this.addSub = this.addSub.bind(this);
 		this.setInitFile = this.setInitFile.bind(this);
 		this.addNext = this.addNext.bind(this);
 		this.removeFile = this.removeFile.bind(this);
@@ -81,8 +81,8 @@ class FileSpace extends Component {
 								},
 								position: {
 									type: "master",
-									parent: "",
-									children: [],
+									master: "",
+									subs: [],
 									prev: "",
 									next: ""
 								}
@@ -96,7 +96,6 @@ class FileSpace extends Component {
 
 	addNext(origin, data) {
 		const nextVersion = (parseInt(origin.version) + 1).toString();
-		console.log(`Adding ${nextVersion} to ${origin.version}`);
 		this.setState(prev => ({
 			fileTrees: Object.assign(prev.fileTrees,
 				{[origin.fileName]: Object.assign({}, prev.fileTrees[origin.fileName],
@@ -109,8 +108,8 @@ class FileSpace extends Component {
 						version: nextVersion,
 						position: {
 							type: "master",
-							parent: "",
-							children: [],
+							master: "",
+							subs: [],
 							prev: origin.version,
 							next: ""
 						}
@@ -120,30 +119,30 @@ class FileSpace extends Component {
 		}))
 	}
 
-	addChild(origin) {
-		const childrenArray = origin.position.children;
-		const childVersion = `${origin.version}.${childrenArray.length + 1}`;
-		childrenArray.push(childVersion);
-		const childPosition = Object.assign({}, origin.position, {
+	addSub(origin) {
+		const subsArray = origin.position.subs;
+		const sub = `${origin.version}.${subsArray.length + 1}`;
+		subsArray.push(sub);
+		const subPosition = Object.assign({}, origin.position, {
 			type: "subVer",
-			parent: origin.version
+			master: origin.version
 		});
-		const updatedOriginPosition = Object.assign({}, origin.position, {children: childrenArray});
+		const updatedOriginPosition = Object.assign({}, origin.position, {subs: subsArray});
 		
 		this.setState(prev=> ({
 			fileTrees: Object.assign(prev.fileTrees, 
 				{[origin.fileName]: Object.assign({}, prev.fileTrees[origin.fileName],
-					//Update children attribute in the origin
+					//Update subs attribute in the origin
 					{[origin.version]: Object.assign({}, prev.fileTrees[origin.fileName][origin.version],{ 
 						position: updatedOriginPosition})
 					},
-					//Add in the new child node
-					{[childVersion]: Object.assign({}, prev.fileTrees[origin.fileName][origin.version],{
-						version: childVersion,
+					//Add in the new sub node
+					{[sub]: Object.assign({}, prev.fileTrees[origin.fileName][origin.version],{
+						version: sub,
 						position: {
-							type: "subVer",
-							parent: origin.version,
-							children: [],
+							type: "sub",
+							master: origin.version,
+							subs: [],
 							prev: "",
 							next: ""}
 						})
@@ -198,7 +197,7 @@ class FileSpace extends Component {
 					:
 					<FileTree
 						fileTree={this.state.fileTrees[this.state.active]}
-						addChild={this.addChild}
+						addSub={this.addSub}
 						addNext={this.addNext}
 						/>
 				}
