@@ -80,6 +80,7 @@ class FileSpace extends Component {
 									data: fr.result.match(/(?:data:.*;)(?:base64,)*(.*)/)[1]
 								},
 								position: {
+									active: true,
 									type: "master",
 									master: "",
 									subs: [],
@@ -97,12 +98,18 @@ class FileSpace extends Component {
 
 	createMaster(sub, origin, data) {
 		const nextVersion = (parseInt(origin.version) + 1).toString();
+		const dsubs = origin.subs;
+		const deactivatedTree = this.state.fileTrees[origin.fileName];
+
+		
+
 		this.setState(prev => ({
 			fileTrees: Object.assign(prev.fileTrees,
 				{[origin.fileName]: Object.assign({}, prev.fileTrees[origin.fileName],
 					{[origin.version]: Object.assign({}, prev.fileTrees[origin.fileName][origin.version], {
 						position: Object.assign({}, prev.fileTrees[origin.fileName][origin.version].position, {
-							next: nextVersion
+							next: nextVersion,
+							active: false
 						})
 					})},
 					{[nextVersion]: Object.assign({}, prev.fileTrees[origin.fileName][origin.version], {
@@ -113,9 +120,11 @@ class FileSpace extends Component {
 							subs: [],
 							prev: origin.version,
 							next: "",
-							fromSub: sub.version
+							fromSub: sub.version,
+							active: true
 						}
-					}, data)}
+					}, data)},
+
 				)}
 			)
 		}))
@@ -146,7 +155,9 @@ class FileSpace extends Component {
 							master: origin.version,
 							subs: [],
 							prev: "",
-							next: ""}
+							next: "",
+							active: true
+						}
 						})
 					}
 				)},

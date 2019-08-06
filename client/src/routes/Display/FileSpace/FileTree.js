@@ -50,10 +50,10 @@ class FileTree extends Component {
 
 	getMenuOptions() {
 		return {
-			addSub: {existsIn: ["master"], func: ((node)=> this.addSub(node))},
-			createMaster: {existsIn: ["sub"], func: ((node)=> this.createMaster(node))},
-			edit: {existsIn: ["master", "sub"], func: ((node)=> this.editNode(node))},
-			delete: {existsIn: ["master", "sub"], func: ((node)=> this.deleteNode(node))}
+			addSub: {label: "Add Sub", existsIn: ["master"], func: ((node)=> this.addSub(node))},
+			createMaster: {label: "Create Master", existsIn: ["sub"], func: ((node)=> this.createMaster(node))},
+			edit: {label: "Edit", existsIn: ["sub"], func: ((node)=> this.editNode(node))},
+			delete: {label: "Delete", existsIn: ["sub"], func: ((node)=> this.deleteNode(node))}
 		}
 	}
 
@@ -207,7 +207,7 @@ class FileTree extends Component {
 							style={nodeSelected && optionProps.existsIn.includes(nodeSelected.position.type) ? {display: "block"} : {display: "none"}}
 							className="list-group-item list-group-item-light list-group-item-action menu-option"
 							onClick={()=> {optionProps.func(nodeSelected)}}
-							>{option}</li>
+							>{optionProps.label}</li>
 					})}
 				</ul>
 			</div>
