@@ -14,11 +14,11 @@ const data = {
 		y: w*.1*scale
 	},
 	MASTERSIZE: w*.034*scale,
-	SUBSIZE: w*.0167*scale,
+	COMMITSIZE: w*.0167*scale,
 	DISPOSITION: {
 		Ms_x: w*.1*scale,
-		M2S_x: w*.05*scale,
-		M2S_y: w*.0834*scale,
+		M2C_x: w*.05*scale,
+		M2C_y: w*.0834*scale,
 		Ss_y : w*.0334*scale
 	}
 }
@@ -29,5 +29,5 @@ export let
 	VIEWBOX = data.VIEWBOX,
 	INIT_POSITION = data.INIT_POSITION,
 	MASTERSIZE = data.MASTERSIZE,
-	SUBSIZE = data.SUBSIZE,
+	COMMITSIZE = data.COMMITSIZE,
 	DISPOSITION = data.DISPOSITION;

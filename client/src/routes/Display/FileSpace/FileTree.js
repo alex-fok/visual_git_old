@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import './FileTree.css';
 import FileTreeNode from './FileTreeNode';
 import Arrow from './Arrow';
-import {WIDTH, HEIGHT, VIEWBOX, INIT_POSITION, MASTERSIZE, SUBSIZE, DISPOSITION} from './SvgProps';
+import {WIDTH, HEIGHT, VIEWBOX, INIT_POSITION, MASTERSIZE, COMMITSIZE, DISPOSITION} from './SvgProps';
 
 class FileTree extends Component {
 	constructor(props) {
@@ -16,7 +16,7 @@ class FileTree extends Component {
 		}
 		this.getNode = this.getNode.bind(this);
 		this.setSelected = this.setSelected.bind(this);
-		this.addSub = this.addSub.bind(this);
+		this.addCommit = this.addCommit.bind(this);
 		this.createMaster = this.createMaster.bind(this);
 		this.getMenuOptions = this.getMenuOptions.bind(this);
 		this.configureXY = this.configureXY.bind(this);
@@ -34,8 +34,8 @@ class FileTree extends Component {
 		})
 	}
 
-	addSub(e) {
-		this.props.addSub(this.getNode(this.state.selected));
+	addCommit(e) {
+		this.props.addCommit(this.getNode(this.state.selected));
 	}
 	createMaster(e) {
 		const selected = this.getNode(this.state.selected);
@@ -50,10 +50,10 @@ class FileTree extends Component {
 
 	getMenuOptions() {
 		return {
-			addSub: {label: "Add Sub", existsIn: ["master"], func: ((node)=> this.addSub(node))},
-			createMaster: {label: "Create Master", existsIn: ["sub"], func: ((node)=> this.createMaster(node))},
-			edit: {label: "Edit", existsIn: ["sub"], func: ((node)=> this.editNode(node))},
-			delete: {label: "Delete", existsIn: ["sub"], func: ((node)=> this.deleteNode(node))}
+			addCommit: {label: "Add Commit", existsIn: ["master"], func: ((node)=> this.addCommit(node))},
+			createMaster: {label: "Create Master", existsIn: ["commit"], func: ((node)=> this.createMaster(node))},
+			edit: {label: "Edit", existsIn: ["commit"], func: ((node)=> this.editNode(node))},
+			delete: {label: "Delete", existsIn: ["commit"], func: ((node)=> this.deleteNode(node))}
 		}
 	}
 
@@ -98,7 +98,7 @@ class FileTree extends Component {
 
 		const dependency = 
 			position.type==="master" ? position.prev : 
-			position.type==="sub" ? position.master : "";
+			position.type==="commit" ? position.master : "";
 
 		if (!dependency && !position.prev && !position.master) {
 			Object.assign(c, INIT_POSITION)
@@ -108,9 +108,9 @@ class FileTree extends Component {
 
 			Object.assign(c, position.type === "master" ?
 				{	x: last.x + DISPOSITION.Ms_x, y: last.y} :
-				{ x: last.x + DISPOSITION.M2S_x, y: last.y + DISPOSITION.M2S_y + 
+				{ x: last.x + DISPOSITION.M2C_x, y: last.y + DISPOSITION.M2C_y + 
 					this.getNode(dependency).position
-					.subs.indexOf(node.version) * DISPOSITION.Ss_y}
+					.commits.indexOf(node.version) * DISPOSITION.Ss_y}
 			)
 		}
 		return c;
@@ -126,7 +126,7 @@ class FileTree extends Component {
 				src={src}
 				dest={dest}
 				sSize = {MASTERSIZE}
-			  dSize = {relation === "M2M" ? MASTERSIZE : SUBSIZE}
+			  dSize = {relation === "M2M" ? MASTERSIZE : COMMITSIZE}
 			/>
 		)
 	}
@@ -153,16 +153,16 @@ class FileTree extends Component {
 										version={version}
 										setSelected={this.setSelected}
 									  coordinate={this.configureXY(version)}
-										dimension={type==="master" ? MASTERSIZE : SUBSIZE}
+										dimension={type==="master" ? MASTERSIZE : COMMITSIZE}
 										fill={type==="master" ? "#FF8000" : "#6666FF"}
 									/>)
 							})
 						}
 						{
 							Object.keys(this.props.fileTree).map(version => {
-								let {subs} = fileTree[version].position;
-								return subs.length ? subs.map(sub => {
-									return this.configureArrow(version, sub, "M2S")
+								let {commits} = fileTree[version].position;
+								return commits.length ? commits.map(commit => {
+									return this.configureArrow(version, commit, "M2C")
 								}) : ""
 							})
 						}

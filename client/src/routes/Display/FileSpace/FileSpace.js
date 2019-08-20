@@ -16,7 +16,7 @@ class FileSpace extends Component {
 		this.toTab = this.toTab.bind(this);
 		this.addTab = this.addTab.bind(this);
 		this.closeTab = this.closeTab.bind(this);
-		this.addSub = this.addSub.bind(this);
+		this.addCommit = this.addCommit.bind(this);
 		this.setInitFile = this.setInitFile.bind(this);
 		this.createMaster = this.createMaster.bind(this);
 		this.removeFile = this.removeFile.bind(this);
@@ -55,12 +55,12 @@ class FileSpace extends Component {
 	}
 
 	setInitFile(e) {
-		if (event.target.files[0]) {
+		if (e.target.files[0]) {
 			const fileDirectory = e.target.value;
 			var fr = new FileReader();
 			const fileName = fileDirectory.replace(/\\/g, '/').replace(/.*\//, '');
 			const ext = fileDirectory.replace(/.*\./,"");
-			fr.readAsDataURL(event.target.files[0]);
+			fr.readAsDataURL(e.target.files[0]);
 			e.target.value = null;
 			
 			fr.onload = () => {
@@ -83,10 +83,10 @@ class FileSpace extends Component {
 									active: true,
 									type: "master",
 									master: "",
-									subs: [],
+									commits: [],
 									prev: "",
 									next: "",
-									fromSub: ""
+									fromcommit: ""
 								}
 							}
 						}
@@ -96,12 +96,9 @@ class FileSpace extends Component {
 		}
 	}
 
-	createMaster(sub, origin, data) {
+	createMaster(commit, origin, data) {
 		const nextVersion = (parseInt(origin.version) + 1).toString();
-		const dsubs = origin.subs;
 		const deactivatedTree = this.state.fileTrees[origin.fileName];
-
-		
 
 		this.setState(prev => ({
 			fileTrees: Object.assign(prev.fileTrees,
@@ -117,10 +114,10 @@ class FileSpace extends Component {
 						position: {
 							type: "master",
 							master: "",
-							subs: [],
+							commits: [],
 							prev: origin.version,
 							next: "",
-							fromSub: sub.version,
+							fromcommit: commit.version,
 							active: true
 						}
 					}, data)},
@@ -130,30 +127,30 @@ class FileSpace extends Component {
 		}))
 	}
 
-	addSub(origin) {
-		const subsArray = origin.position.subs;
-		const sub = `${origin.version}.${subsArray.length + 1}`;
-		subsArray.push(sub);
-		const subPosition = Object.assign({}, origin.position, {
-			type: "subVer",
+	addCommit(origin) {
+		const commitsArray = origin.position.commits;
+		const commit = `${origin.version}.${commitsArray.length + 1}`;
+		commitsArray.push(commit);
+		const commitPosition = Object.assign({}, origin.position, {
+			type: "commitVer",
 			master: origin.version
 		});
-		const updatedOriginPosition = Object.assign({}, origin.position, {subs: subsArray});
+		const updatedOriginPosition = Object.assign({}, origin.position, {commits: commitsArray});
 		
 		this.setState(prev=> ({
 			fileTrees: Object.assign(prev.fileTrees, 
 				{[origin.fileName]: Object.assign({}, prev.fileTrees[origin.fileName],
-					//Update subs attribute in the origin
+					//Update commits attribute in the origin
 					{[origin.version]: Object.assign({}, prev.fileTrees[origin.fileName][origin.version],{ 
 						position: updatedOriginPosition})
 					},
-					//Add in the new sub node
-					{[sub]: Object.assign({}, prev.fileTrees[origin.fileName][origin.version],{
-						version: sub,
+					//Add in the new commit node
+					{[commit]: Object.assign({}, prev.fileTrees[origin.fileName][origin.version],{
+						version: commit,
 						position: {
-							type: "sub",
+							type: "commit",
 							master: origin.version,
-							subs: [],
+							commits: [],
 							prev: "",
 							next: "",
 							active: true
@@ -163,6 +160,18 @@ class FileSpace extends Component {
 				)},
 			)
 		}))
+	}
+
+	removeMaster(target, prev) {
+
+		if(!target.position.next==="") {
+			const next = this.state.fileTree[target.fileName][target.position.next];
+			removeMaster(next, target);
+		}
+
+		this.setState({
+					
+		})
 	}
 
 	removeFile(id) {
@@ -210,7 +219,7 @@ class FileSpace extends Component {
 					:
 					<FileTree
 						fileTree={this.state.fileTrees[this.state.active]}
-						addSub={this.addSub}
+						addCommit={this.addCommit}
 						createMaster={this.createMaster}
 						/>
 				}

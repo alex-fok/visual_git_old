@@ -13,7 +13,7 @@ class Arrow extends Component {
 			y: parseInt(dest.y) + parseInt(dSize)*.5
 		}
 
-		const start = type === "M2S" ?
+		const start = type === "M2C" ?
 			{
 				x: parseInt(src.x) + parseInt(sSize)*.5,
 				y: parseInt(src.y) + parseInt(sSize)
@@ -31,7 +31,7 @@ class Arrow extends Component {
 					points={
 						`
 						${start.x},${start.y} 
-						${type==="M2S" ? `${start.x},${end.y}` : ""} 
+						${type==="M2C" ? `${start.x},${end.y}` : ""} 
 						${end.x},${end.y}
 						`
 					}					
