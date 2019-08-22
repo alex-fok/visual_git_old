@@ -98,9 +98,9 @@ class FileSpace extends Component {
     }
   }
 
-  createMaster(commit, origin, data) {
+  createMaster(commitVersion, originVersion, data) {
+    const origin = this.state.fileTrees[this.state.active][originVersion]
     const nextVersion = (parseInt(origin.version) + 1).toString();
-    const deactivatedTree = this.state.fileTrees[origin.fileName];
 
     this.setState(prev => ({
       fileTrees: Object.assign(prev.fileTrees,
@@ -119,7 +119,7 @@ class FileSpace extends Component {
               commits: [],
               prev: origin.version,
               next: "",
-              fromcommit: commit.version,
+              fromcommit: commitVersion,
               active: true
             }
           }, data)},
@@ -129,7 +129,8 @@ class FileSpace extends Component {
     }))
   }
 
-  addCommit(origin) {
+  addCommit(fileName, originVersion) {
+    const origin = this.state.fileTrees[fileName][originVersion];
     const commitsArray = origin.position.commits;
     const commit = `${origin.version}.${commitsArray.length + 1}`;
     commitsArray.push(commit);
@@ -181,11 +182,26 @@ class FileSpace extends Component {
   }
 
   removeCommit(fileName, targetVersion) {
-    var trees = this.state.fileTrees;
-    delete trees[fileName][targetVersion];
-    this.setState({
-      fileTrees: trees
-    })
+    const {fileTrees} = this.state;
+    const target = fileTrees[fileName][targetVersion];
+    console.log("target.position.master: " + target.position.master);
+    const master = fileTrees[fileName][target.position.master];
+    console.log("target.positon.master.commits: "+master.position.commits);
+    this.setState(prev=> ({
+      fileTrees: 
+        (()=> {
+          var temp = prev.fileTrees;
+          var commitsInMaster = temp[fileName][target.position.master].position.commits;
+          var index = commitsInMaster.indexOf(targetVersion);          
+          console.log("INDEX: "+ index);
+          var newCommits = commitsInMaster.splice(commitsInMaster.indexOf(targetVersion), 1);
+          temp[fileName][target.position.master].position.commits = newCommits;
+          
+          console.log("removeCommit-- temp value: "+JSON.stringify(temp));
+          delete temp[fileName][targetVersion];
+          return temp;
+        })() 
+    }))
   }
 
   removeFile(id) {
@@ -240,9 +256,11 @@ class FileSpace extends Component {
           />
           :
           <FileTree
+            fileName={this.state.active}
             fileTree={this.state.fileTrees[this.state.active]}
             addCommit={this.addCommit}
             createMaster={this.createMaster}
+            removeCommit={this.removeCommit}
             />
         }
         </div>

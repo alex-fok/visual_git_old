@@ -35,11 +35,14 @@ class FileTree extends Component {
 	}
 
 	addCommit(e) {
-		this.props.addCommit(this.getNode(this.state.selected));
+		this.props.addCommit(this.props.fileName, this.state.selected);
+	}
+	removeCommit(e) {
+		this.props.removeCommit(this.props.fileName, this.state.selected);
 	}
 	createMaster(e) {
 		const selected = this.getNode(this.state.selected);
-		this.props.createMaster(selected, this.getNode(selected.position.master), {properties: selected.properties});
+		this.props.createMaster(this.state.selected, selected.position.master, {properties: selected.properties});
 	}
 	editNode(e) {
 		console.log("edit Node");
@@ -51,9 +54,11 @@ class FileTree extends Component {
 	getMenuOptions() {
 		return {
 			addCommit: {label: "Add Commit", existsIn: ["master"], func: ((node)=> this.addCommit(node))},
+			removeCommit: {label: "Remove Commit", existsIn: ["commit"], func: ((node)=> this.removeCommit(node))},
 			createMaster: {label: "Create Master", existsIn: ["commit"], func: ((node)=> this.createMaster(node))},
 			edit: {label: "Edit", existsIn: ["commit"], func: ((node)=> this.editNode(node))},
-			delete: {label: "Delete", existsIn: ["commit"], func: ((node)=> this.deleteNode(node))}
+			delete: {label: "Delete", existsIn: ["commit"], func: ((node)=> this.deleteNode(node))},
+
 		}
 	}
 
@@ -133,6 +138,7 @@ class FileTree extends Component {
 
 	render() {
 		const {fileTree} = this.props;
+		console.log(JSON.stringify(fileTree));
 		const nodeSelected = this.getNode(this.state.selected);
 		return (
 			<div>
@@ -161,6 +167,7 @@ class FileTree extends Component {
 						{
 							Object.keys(this.props.fileTree).map(version => {
 								let {commits} = fileTree[version].position;
+								console.log("commits: "+commits);
 								return commits.length ? commits.map(commit => {
 									return this.configureArrow(version, commit, "M2C")
 								}) : ""
