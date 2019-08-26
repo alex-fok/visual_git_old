@@ -184,22 +184,16 @@ class FileSpace extends Component {
   removeCommit(fileName, targetVersion) {
     const {fileTrees} = this.state;
     const target = fileTrees[fileName][targetVersion];
-    console.log("target.position.master: " + target.position.master);
     const master = fileTrees[fileName][target.position.master];
-    console.log("target.positon.master.commits: "+master.position.commits);
     this.setState(prev=> ({
       fileTrees: 
         (()=> {
-          var temp = prev.fileTrees;
-          var commitsInMaster = temp[fileName][target.position.master].position.commits;
-          var index = commitsInMaster.indexOf(targetVersion);          
-          console.log("INDEX: "+ index);
-          var newCommits = commitsInMaster.splice(commitsInMaster.indexOf(targetVersion), 1);
-          temp[fileName][target.position.master].position.commits = newCommits;
+          var trees = prev.fileTrees;
+          var index = trees[fileName][target.position.master].position.commits.indexOf(targetVersion);
           
-          console.log("removeCommit-- temp value: "+JSON.stringify(temp));
-          delete temp[fileName][targetVersion];
-          return temp;
+          trees[fileName][target.position.master].position.commits.splice(index, 1);
+          delete trees[fileName][targetVersion];
+          return trees;
         })() 
     }))
   }

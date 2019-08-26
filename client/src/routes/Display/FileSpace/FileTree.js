@@ -47,17 +47,13 @@ class FileTree extends Component {
 	editNode(e) {
 		console.log("edit Node");
 	}
-	deleteNode(e) {
-		console.log("delete Node");
-	}
 
 	getMenuOptions() {
 		return {
 			addCommit: {label: "Add Commit", existsIn: ["master"], func: ((node)=> this.addCommit(node))},
-			removeCommit: {label: "Remove Commit", existsIn: ["commit"], func: ((node)=> this.removeCommit(node))},
 			createMaster: {label: "Create Master", existsIn: ["commit"], func: ((node)=> this.createMaster(node))},
 			edit: {label: "Edit", existsIn: ["commit"], func: ((node)=> this.editNode(node))},
-			delete: {label: "Delete", existsIn: ["commit"], func: ((node)=> this.deleteNode(node))},
+			removeCommit: {label: "Delete", existsIn: ["commit"], func: ((node)=> this.removeCommit(node))},
 
 		}
 	}
