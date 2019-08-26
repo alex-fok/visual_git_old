@@ -165,37 +165,47 @@ class FileSpace extends Component {
     }))
   }
 
-  removeMaster(fileName, targetVersion, prevVersion) {
-    const targetNode = this.state.fileTree[fileName][targetVersion];
-    if(!target.position.next==="") {
-      this.removeMaster(fileName, target.position.next, targetVersion);
-    }
-    var i;
-    var trees = this.state.fileTrees;
-    for (i = 0; i < target.position.commits.length; i++) {
-      delete(trees[target.fileName][target.position.commits[i]])
-    }
-    delete trees[target.fileName][targetVersion];
-    this.setState({
-      fileTrees: trees
-    })
+  removeMaster(fileTree, targetVersion, callback) {
+    var ft = fileTree;
+    const target = ft[targetVersion];
+    
+    if(!target.position.next==="")
+      this.removeMaster(ft, target.position.next, updatedFT=>{ft=updatedFT});
+
+    const {commits} = target.position;
+    if (commits.length > 0)
+      for (var i = 0; i < commits.length; i++)
+        delete ft[commits[i]];
+
+    delete ft[targetVersion];
+    callback(ft);
   }
 
-  removeCommit(fileName, targetVersion) {
-    const {fileTrees} = this.state;
-    const target = fileTrees[fileName][targetVersion];
-    const master = fileTrees[fileName][target.position.master];
-    this.setState(prev=> ({
-      fileTrees: 
-        (()=> {
-          var trees = prev.fileTrees;
-          var index = trees[fileName][target.position.master].position.commits.indexOf(targetVersion);
-          
-          trees[fileName][target.position.master].position.commits.splice(index, 1);
-          delete trees[fileName][targetVersion];
-          return trees;
-        })() 
-    }))
+  updateTree(option, fileName, targetVersion) {
+    const update = tree => {
+      var {fileTrees} = this.state;
+      fileTrees[fileName] = tree;
+      this.setState({fileTrees: fileTrees})
+    };
+    var fileTree = this.state.fileTrees[fileName];
+    option==="removeMaster" ?
+    this.removeMaster(fileTree, targetVersion, tree=>{update(tree)}) :
+    //removeCommit
+    this.removeCommit(fileTree, targetVersion, tree=> {update(tree)})
+  }
+
+  removeCommit(fileTree, targetVersion, callback) {
+    var ft = fileTree;
+    const target = ft[targetVersion];
+    const master = ft[target.position.master];
+            
+    const index = master.position.commits.indexOf(targetVersion);
+    master.position.commits.splice(index, 1);
+
+    ft[target.position.master] = master;
+    delete ft[targetVersion];
+    
+    callback(ft);
   }
 
   removeFile(id) {

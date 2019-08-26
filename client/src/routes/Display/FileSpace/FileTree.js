@@ -18,6 +18,8 @@ class FileTree extends Component {
 		this.setSelected = this.setSelected.bind(this);
 		this.addCommit = this.addCommit.bind(this);
 		this.createMaster = this.createMaster.bind(this);
+		this.removeMaster = this.removeMaster.bind(this);
+		this.removeCommit = this.removeCommit.bind(this);
 		this.getMenuOptions = this.getMenuOptions.bind(this);
 		this.configureXY = this.configureXY.bind(this);
 		this.configureArrow = this.configureArrow.bind(this);
@@ -37,8 +39,11 @@ class FileTree extends Component {
 	addCommit(e) {
 		this.props.addCommit(this.props.fileName, this.state.selected);
 	}
+	removeMaster(e) {
+		this.props.updateTree("removeMaster", this.props.fileName, this.state.selected);
+	}
 	removeCommit(e) {
-		this.props.removeCommit(this.props.fileName, this.state.selected);
+		this.props.updateTree("removeCommit", this.props.fileName, this.state.selected);
 	}
 	createMaster(e) {
 		const selected = this.getNode(this.state.selected);
