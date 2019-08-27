@@ -37,7 +37,7 @@ class FileTree extends Component {
 	}
 
 	addCommit(e) {
-		this.props.addCommit(this.props.fileName, this.state.selected);
+		this.props.updateTree("addCommit", this.props.fileName, this.state.selected);
 	}
 	removeMaster(e) {
 		this.props.updateTree("removeMaster", this.props.fileName, this.state.selected);
@@ -46,8 +46,7 @@ class FileTree extends Component {
 		this.props.updateTree("removeCommit", this.props.fileName, this.state.selected);
 	}
 	createMaster(e) {
-		const selected = this.getNode(this.state.selected);
-		this.props.createMaster(this.state.selected, selected.position.master, {properties: selected.properties});
+		this.props.updateTree("createMaster", this.props.fileName, this.state.selected);
 	}
 	editNode(e) {
 		console.log("edit Node");
@@ -139,7 +138,6 @@ class FileTree extends Component {
 
 	render() {
 		const {fileTree} = this.props;
-		console.log(JSON.stringify(fileTree));
 		const nodeSelected = this.getNode(this.state.selected);
 		return (
 			<div>
@@ -168,7 +166,6 @@ class FileTree extends Component {
 						{
 							Object.keys(this.props.fileTree).map(version => {
 								let {commits} = fileTree[version].position;
-								console.log("commits: "+commits);
 								return commits.length ? commits.map(commit => {
 									return this.configureArrow(version, commit, "M2C")
 								}) : ""

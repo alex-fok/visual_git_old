@@ -21,6 +21,7 @@ class FileSpace extends Component {
     this.createMaster = this.createMaster.bind(this);
     this.removeMaster = this.removeMaster.bind(this);
     this.removeCommit = this.removeCommit.bind(this);
+    this.updateTree = this.updateTree.bind(this);
     this.removeFile = this.removeFile.bind(this);
   }
 
@@ -88,7 +89,7 @@ class FileSpace extends Component {
                   commits: [],
                   prev: "",
                   next: "",
-                  fromcommit: ""
+                  fromCommit: ""
                 }
               }
             }
@@ -98,71 +99,60 @@ class FileSpace extends Component {
     }
   }
 
-  createMaster(commitVersion, originVersion, data) {
-    const origin = this.state.fileTrees[this.state.active][originVersion]
-    const nextVersion = (parseInt(origin.version) + 1).toString();
+  createMaster(fileTree, commitVersion, callback) {
+    const ft = fileTree;    
+    const originVersion = fileTree[commitVersion].position.master;
+    const nextVersion = (parseInt(originVersion) + 1).toString();
 
-    this.setState(prev => ({
-      fileTrees: Object.assign(prev.fileTrees,
-        {[origin.fileName]: Object.assign({}, prev.fileTrees[origin.fileName],
-          {[origin.version]: Object.assign({}, prev.fileTrees[origin.fileName][origin.version], {
-            position: Object.assign({}, prev.fileTrees[origin.fileName][origin.version].position, {
-              next: nextVersion,
-              active: false
-            })
-          })},
-          {[nextVersion]: Object.assign({}, prev.fileTrees[origin.fileName][origin.version], {
-            version: nextVersion,
-            position: {
-              type: "master",
-              master: "",
-              commits: [],
-              prev: origin.version,
-              next: "",
-              fromcommit: commitVersion,
-              active: true
-            }
-          }, data)},
-
-        )}
-      )
-    }))
+    Object.assign(ft,
+      {[originVersion]: Object.assign({}, ft[originVersion], {
+          position: Object.assign({}, ft[originVersion].position, {
+            next: nextVersion,
+            active: false
+          })
+      })},
+      {[nextVersion]: Object.assign({}, ft[originVersion], {
+          version: nextVersion,
+          properties: ft[commitVersion].properties,
+          position: {
+            type: "master",
+            master: "",
+            commits: [],
+            prev: originVersion,
+            next: "",
+            fromCommit: commitVersion,
+            active: true
+          }
+      })}
+    );
+    callback(ft);
   }
 
-  addCommit(fileName, originVersion) {
-    const origin = this.state.fileTrees[fileName][originVersion];
+  addCommit(fileTree, originVersion, callback) {
+    const ft = fileTree;
+    const origin = ft[originVersion];
     const commitsArray = origin.position.commits;
-    const commit = `${origin.version}.${commitsArray.length + 1}`;
-    commitsArray.push(commit);
-    const commitPosition = Object.assign({}, origin.position, {
-      type: "commitVer",
-      master: origin.version
-    });
-    const updatedOriginPosition = Object.assign({}, origin.position, {commits: commitsArray});
-    
-    this.setState(prev=> ({
-      fileTrees: Object.assign(prev.fileTrees, 
-        {[origin.fileName]: Object.assign({}, prev.fileTrees[origin.fileName],
-          //Update commits attribute in the origin
-          {[origin.version]: Object.assign({}, prev.fileTrees[origin.fileName][origin.version],{ 
-            position: updatedOriginPosition})
-          },
-          //Add in the new commit node
-          {[commit]: Object.assign({}, prev.fileTrees[origin.fileName][origin.version],{
-            version: commit,
-            position: {
-              type: "commit",
-              master: origin.version,
-              commits: [],
-              prev: "",
-              next: "",
-              active: true
-            }
-            })
-          }
-        )},
-      )
-    }))
+    const commitVersion = `${origin.version}.${commitsArray.length+1}`;
+    commitsArray.push(commitVersion);
+
+    Object.assign(ft, 
+      {[origin.version]: Object.assign({}, ft[origin.version], {
+        position: Object.assign({}, origin.position, {commits: commitsArray})
+      })},
+      {[commitVersion]: Object.assign({}, ft[origin.version], {
+        version: commitVersion,
+        position: {
+          type: "commit",
+          master: origin.version,
+          commits: [],
+          prev: "",
+          next: "",
+          active: true
+        }
+      })
+      }
+    );
+    callback(ft);
   }
 
   removeMaster(fileTree, targetVersion, callback) {
@@ -181,19 +171,6 @@ class FileSpace extends Component {
     callback(ft);
   }
 
-  updateTree(option, fileName, targetVersion) {
-    const update = tree => {
-      var {fileTrees} = this.state;
-      fileTrees[fileName] = tree;
-      this.setState({fileTrees: fileTrees})
-    };
-    var fileTree = this.state.fileTrees[fileName];
-    option==="removeMaster" ?
-    this.removeMaster(fileTree, targetVersion, tree=>{update(tree)}) :
-    //removeCommit
-    this.removeCommit(fileTree, targetVersion, tree=> {update(tree)})
-  }
-
   removeCommit(fileTree, targetVersion, callback) {
     var ft = fileTree;
     const target = ft[targetVersion];
@@ -202,10 +179,32 @@ class FileSpace extends Component {
     const index = master.position.commits.indexOf(targetVersion);
     master.position.commits.splice(index, 1);
 
+    if (master.position.next !== "")
+      if (ft[master.position.next].position.fromCommit === targetVersion)
+        ft[master.position.next].position.fromCommit = ""
+
     ft[target.position.master] = master;
     delete ft[targetVersion];
     
     callback(ft);
+  }
+
+  updateTree(option, fileName, targetVersion) {
+    const update = tree => {
+      var {fileTrees} = this.state;
+      fileTrees[fileName] = tree;
+      this.setState({fileTrees: fileTrees})
+    };
+    var fileTree = this.state.fileTrees[fileName];
+    option==="addCommit" ?
+    this.addCommit(fileTree, targetVersion, tree=> {update(tree)}) :
+    option==="createMaster" ?
+    this.createMaster(fileTree, targetVersion, tree=> {update(tree)}) :
+    option==="removeMaster" ?
+    this.removeMaster(fileTree, targetVersion, tree=>{update(tree)}) :
+    option==="removeCommit" ?
+    this.removeCommit(fileTree, targetVersion, tree=> {update(tree)}) :
+    console.log(`Update Option: ${option} not accepted`);
   }
 
   removeFile(id) {
@@ -263,8 +262,7 @@ class FileSpace extends Component {
             fileName={this.state.active}
             fileTree={this.state.fileTrees[this.state.active]}
             addCommit={this.addCommit}
-            createMaster={this.createMaster}
-            removeCommit={this.removeCommit}
+            updateTree={this.updateTree}
             />
         }
         </div>
