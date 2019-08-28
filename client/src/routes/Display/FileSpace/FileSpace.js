@@ -159,13 +159,16 @@ class FileSpace extends Component {
     var ft = fileTree;
     const target = ft[targetVersion];
     
-    if(!target.position.next==="")
+    if(target.position.next!=="")
       this.removeMaster(ft, target.position.next, updatedFT=>{ft=updatedFT});
 
-    const {commits} = target.position;
+    const {commits, prev} = target.position;
     if (commits.length > 0)
       for (var i = 0; i < commits.length; i++)
         delete ft[commits[i]];
+
+    if (prev !== "")
+      ft[prev].position.next = "";
 
     delete ft[targetVersion];
     callback(ft);

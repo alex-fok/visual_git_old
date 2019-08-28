@@ -17,9 +17,9 @@ class FileTree extends Component {
 		this.getNode = this.getNode.bind(this);
 		this.setSelected = this.setSelected.bind(this);
 		this.addCommit = this.addCommit.bind(this);
+		this.removeCommit = this.removeCommit.bind(this);
 		this.createMaster = this.createMaster.bind(this);
 		this.removeMaster = this.removeMaster.bind(this);
-		this.removeCommit = this.removeCommit.bind(this);
 		this.getMenuOptions = this.getMenuOptions.bind(this);
 		this.configureXY = this.configureXY.bind(this);
 		this.configureArrow = this.configureArrow.bind(this);
@@ -39,27 +39,27 @@ class FileTree extends Component {
 	addCommit(e) {
 		this.props.updateTree("addCommit", this.props.fileName, this.state.selected);
 	}
-	removeMaster(e) {
-		this.props.updateTree("removeMaster", this.props.fileName, this.state.selected);
-	}
 	removeCommit(e) {
 		this.props.updateTree("removeCommit", this.props.fileName, this.state.selected);
 	}
 	createMaster(e) {
 		this.props.updateTree("createMaster", this.props.fileName, this.state.selected);
 	}
+	removeMaster(e) {
+		this.props.updateTree("removeMaster", this.props.fileName, this.state.selected);
+	}
 	editNode(e) {
 		console.log("edit Node");
 	}
 
-	getMenuOptions() {
-		return {
+	getMenuOptions(callback) {
+		return callback({
 			addCommit: {label: "Add Commit", existsIn: ["master"], func: ((node)=> this.addCommit(node))},
-			createMaster: {label: "Create Master", existsIn: ["commit"], func: ((node)=> this.createMaster(node))},
-			edit: {label: "Edit", existsIn: ["commit"], func: ((node)=> this.editNode(node))},
 			removeCommit: {label: "Delete", existsIn: ["commit"], func: ((node)=> this.removeCommit(node))},
-
-		}
+			createMaster: {label: "Create Master", existsIn: ["commit"], func: ((node)=> this.createMaster(node))},
+			removeMaster: {label: "Delete", existsIn: ["master"], func: ((node)=> this.removeMaster(node))},
+			edit: {label: "Edit", existsIn: ["commit"], func: ((node)=> this.editNode(node))}
+		})
 	}
 
 	componentDidMount() {
@@ -97,6 +97,7 @@ class FileTree extends Component {
 	}
 
 	configureXY(version) {
+		console.log(`configureXY--version: ${version}`)
 		const node = this.getNode(version);
 		const {position} = node;
 		var c = {x: 0, y: 0};
@@ -137,6 +138,7 @@ class FileTree extends Component {
 	}
 
 	render() {
+		console.log(this.props.fileTree);
 		const {fileTree} = this.props;
 		const nodeSelected = this.getNode(this.state.selected);
 		return (
@@ -205,14 +207,16 @@ class FileTree extends Component {
 						position: "fixed"
 					}}
 				>
-					{Object.keys(this.getMenuOptions()).map((option)=> {
-						const optionProps = this.getMenuOptions()[option];
-						return <li
-							key={option}
-							style={nodeSelected && optionProps.existsIn.includes(nodeSelected.position.type) ? {display: "block"} : {display: "none"}}
-							className="list-group-item list-group-item-light list-group-item-action menu-option"
-							onClick={()=> {optionProps.func(nodeSelected)}}
-							>{optionProps.label}</li>
+					{this.getMenuOptions(options => {
+						return Object.keys(options).map((opt)=> {
+							return <li
+								key={opt}
+								style={nodeSelected && options[opt].existsIn.includes(nodeSelected.position.type) ? {display: "block"} : {display: "none"}}
+								className="list-group-item list-group-item-light list-group-item-action menu-option"
+								onClick={()=> {options[opt].func(nodeSelected)}}
+								>{options[opt].label}
+								</li>
+						})
 					})}
 				</ul>
 			</div>
