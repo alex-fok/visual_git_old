@@ -97,7 +97,6 @@ class FileTree extends Component {
 	}
 
 	configureXY(version) {
-		console.log(`configureXY--version: ${version}`)
 		const node = this.getNode(version);
 		const {position} = node;
 		var c = {x: 0, y: 0};
@@ -138,7 +137,6 @@ class FileTree extends Component {
 	}
 
 	render() {
-		console.log(this.props.fileTree);
 		const {fileTree} = this.props;
 		const nodeSelected = this.getNode(this.state.selected);
 		return (
