@@ -52,14 +52,14 @@ class FileTree extends Component {
 		console.log("edit Node");
 	}
 
-	getMenuOptions(callback) {
-		return callback({
+	getMenuOptions() {
+		return {
 			addCommit: {label: "Add Commit", existsIn: ["master"], func: ((node)=> this.addCommit(node))},
 			removeCommit: {label: "Delete", existsIn: ["commit"], func: ((node)=> this.removeCommit(node))},
 			createMaster: {label: "Create Master", existsIn: ["commit"], func: ((node)=> this.createMaster(node))},
 			removeMaster: {label: "Delete", existsIn: ["master"], func: ((node)=> this.removeMaster(node))},
 			edit: {label: "Edit", existsIn: ["commit"], func: ((node)=> this.editNode(node))}
-		})
+		}
 	}
 
 	componentDidMount() {
@@ -124,6 +124,7 @@ class FileTree extends Component {
 	configureArrow(current, target, relation) {
 		const src = this.configureXY(current);
 		const dest = this.configureXY(target);
+
 		return (
 			<Arrow
 				key={`${current}To${target}`}
@@ -139,6 +140,8 @@ class FileTree extends Component {
 	render() {
 		const {fileTree} = this.props;
 		const nodeSelected = this.getNode(this.state.selected);
+		const menuOptions = this.getMenuOptions();
+
 		return (
 			<div>
 				<div style={{width: `${WIDTH}px`, height: `${HEIGHT}px`}}>
@@ -205,16 +208,14 @@ class FileTree extends Component {
 						position: "fixed"
 					}}
 				>
-					{this.getMenuOptions(options => {
-						return Object.keys(options).map((opt)=> {
-							return <li
-								key={opt}
-								style={nodeSelected && options[opt].existsIn.includes(nodeSelected.position.type) ? {display: "block"} : {display: "none"}}
-								className="list-group-item list-group-item-light list-group-item-action menu-option"
-								onClick={()=> {options[opt].func(nodeSelected)}}
-								>{options[opt].label}
-								</li>
-						})
+					{Object.keys(menuOptions).map((opt)=> {
+						return <li
+							key={opt}
+							style={nodeSelected && menuOptions[opt].existsIn.includes(nodeSelected.position.type) ? {display: "block"} : {display: "none"}}
+							className="list-group-item list-group-item-light list-group-item-action menu-option"
+							onClick={()=> {menuOptions[opt].func(nodeSelected)}}
+							>{menuOptions[opt].label}
+						</li>
 					})}
 				</ul>
 			</div>
