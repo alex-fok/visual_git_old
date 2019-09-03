@@ -8,11 +8,7 @@ class FileTree extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			selected:"",
-			latest: {
-				x: 0, 
-				y: 0
-			}
+			selected:""
 		}
 		this.getNode = this.getNode.bind(this);
 		this.setSelected = this.setSelected.bind(this);
@@ -54,10 +50,10 @@ class FileTree extends Component {
 
 	getMenuOptions() {
 		return {
-			addCommit: {label: "Add Commit", existsIn: ["master"], func: ((node)=> this.addCommit(node))},
-			removeCommit: {label: "Delete", existsIn: ["commit"], func: ((node)=> this.removeCommit(node))},
+			addCommit: {label: "Add Commit", existsIn: ["master", "init"], func: ((node)=> this.addCommit(node))},
+			removeCommit: {label: "Remove", existsIn: ["commit"], func: ((node)=> this.removeCommit(node))},
 			createMaster: {label: "Create Master", existsIn: ["commit"], func: ((node)=> this.createMaster(node))},
-			removeMaster: {label: "Delete", existsIn: ["master"], func: ((node)=> this.removeMaster(node))},
+			removeMaster: {label: "Remove", existsIn: ["master"], func: ((node)=> this.removeMaster(node))},
 			edit: {label: "Edit", existsIn: ["commit"], func: ((node)=> this.editNode(node))}
 		}
 	}
@@ -74,11 +70,14 @@ class FileTree extends Component {
 
 		const menuOptions = document.getElementsByClassName("menu-option");
 
+		const hideId = () => {document.getElementById("customMenu").style.display = "none"}
+
 		for (let i = 0; i < menuOptions.length; i++) {
-			menuOptions[i].addEventListener("click", (e)=> {
-				document.getElementById("customMenu").style.display = "none";
-			})
+			menuOptions[i].addEventListener("click", (e)=> {hideId()})
+			menuOptions[i].addEventListener("scroll", (e)=> {hideId()})
 		}
+
+		
 	}
 	getModalContent(selected) {
 		const file = this.props.fileTree[this.state.selected];
@@ -161,8 +160,8 @@ class FileTree extends Component {
 										version={version}
 										setSelected={this.setSelected}
 									  coordinate={this.configureXY(version)}
-										dimension={type==="master" ? MASTERSIZE : COMMITSIZE}
-										fill={type==="master" ? "#FF8000" : "#6666FF"}
+										dimension={type==="master" || type==="init" ? MASTERSIZE : COMMITSIZE}
+										fill={type==="master" || type==="init" ? "#FF8000" : "#6666FF"}
 									/>)
 							})
 						}

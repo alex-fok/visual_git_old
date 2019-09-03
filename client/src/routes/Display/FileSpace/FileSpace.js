@@ -84,7 +84,7 @@ class FileSpace extends Component {
                 },
                 position: {
                   active: true,
-                  type: "master",
+                  type: "init",
                   master: "",
                   commits: [],
                   prev: "",
