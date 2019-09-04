@@ -51,10 +51,11 @@ class FileTree extends Component {
 	getMenuOptions() {
 		return {
 			addCommit: {label: "Add Commit", existsIn: ["master", "init"], func: ((node)=> this.addCommit(node))},
-			removeCommit: {label: "Remove", existsIn: ["commit"], func: ((node)=> this.removeCommit(node))},
 			createMaster: {label: "Create Master", existsIn: ["commit"], func: ((node)=> this.createMaster(node))},
-			removeMaster: {label: "Remove", existsIn: ["master"], func: ((node)=> this.removeMaster(node))},
-			edit: {label: "Edit", existsIn: ["commit"], func: ((node)=> this.editNode(node))}
+			edit: {label: "Edit", existsIn: ["commit"], func: ((node)=> this.editNode(node))},
+			removeCommit: {label: "Remove", existsIn: ["commit"], func: ((node)=> this.removeCommit(node))},
+			removeMaster: {label: "Remove", existsIn: ["master"], func: ((node)=> this.removeMaster(node))}
+		
 		}
 	}
 
@@ -63,21 +64,13 @@ class FileTree extends Component {
 			e.preventDefault();
 		});
 
-		document.getElementById("FileTree").addEventListener("click", (e) => {
-			document.getElementById("customMenu") ?
+		const hideMenu = () => {
+			document.getElementById("customMenu") ? 
 			document.getElementById("customMenu").style.display = "none"
-			: ""});
-
-		const menuOptions = document.getElementsByClassName("menu-option");
-
-		const hideId = () => {document.getElementById("customMenu").style.display = "none"}
-
-		for (let i = 0; i < menuOptions.length; i++) {
-			menuOptions[i].addEventListener("click", (e)=> {hideId()})
-			menuOptions[i].addEventListener("scroll", (e)=> {hideId()})
-		}
-
-		
+			: ""
+		};
+		window.addEventListener("click", hideMenu);
+		window.addEventListener("scroll", hideMenu)
 	}
 	getModalContent(selected) {
 		const file = this.props.fileTree[this.state.selected];
@@ -143,7 +136,7 @@ class FileTree extends Component {
 
 		return (
 			<div>
-				<div style={{width: `${WIDTH}px`, height: `${HEIGHT}px`}}>
+				<div id="svgContainer" style={{width: `${WIDTH}px`, height: `${HEIGHT}px`}}>
 					<svg
 						id="FileTree"
 						viewBox={`0 0 ${VIEWBOX.x} ${VIEWBOX.y}`}
@@ -212,7 +205,9 @@ class FileTree extends Component {
 							key={opt}
 							style={nodeSelected && menuOptions[opt].existsIn.includes(nodeSelected.position.type) ? {display: "block"} : {display: "none"}}
 							className="list-group-item list-group-item-light list-group-item-action menu-option"
-							onClick={()=> {menuOptions[opt].func(nodeSelected)}}
+							onClick={()=> {
+								menuOptions[opt].func(nodeSelected);
+							}}
 							>{menuOptions[opt].label}
 						</li>
 					})}
