@@ -4,11 +4,14 @@ import FileTreeNode from './FileTreeNode';
 import Arrow from './Arrow';
 import {WIDTH, HEIGHT, VIEWBOX, INIT_POSITION, MASTERSIZE, COMMITSIZE, DISPOSITION} from './SvgProps';
 
+const html = "http://www.w3.org/1999/xhtml";
+
 class FileTree extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			selected:""
+			selected:"",
+
 		}
 		this.getNode = this.getNode.bind(this);
 		this.setSelected = this.setSelected.bind(this);
@@ -36,26 +39,52 @@ class FileTree extends Component {
 		this.props.updateTree("addCommit", this.props.fileName, this.state.selected);
 	}
 	removeCommit(e) {
+		this.setSelected("");
 		this.props.updateTree("removeCommit", this.props.fileName, this.state.selected);
 	}
 	createMaster(e) {
 		this.props.updateTree("createMaster", this.props.fileName, this.state.selected);
 	}
 	removeMaster(e) {
+		this.setSelected("");
 		this.props.updateTree("removeMaster", this.props.fileName, this.state.selected);
 	}
-	editNode(e) {
-		console.log("edit Node");
+	openNode(e) {
+		document.getElementById("modalControl").click();
 	}
 
 	getMenuOptions() {
 		return {
-			addCommit: {label: "Add Commit", existsIn: ["master", "init"], func: ((node)=> this.addCommit(node))},
-			createMaster: {label: "Create Master", existsIn: ["commit"], func: ((node)=> this.createMaster(node))},
-			edit: {label: "Edit", existsIn: ["commit"], func: ((node)=> this.editNode(node))},
-			removeCommit: {label: "Remove", existsIn: ["commit"], func: ((node)=> this.removeCommit(node))},
-			removeMaster: {label: "Remove", existsIn: ["master"], func: ((node)=> this.removeMaster(node))}
-		
+			open: {
+				label: "Open", 
+				existsIn: ["init", "master", "commit"], 
+				attributes:{},
+				func: ((node)=> this.openNode(node))
+			},
+			addCommit: {
+				label: "Add Commit", 
+				existsIn: ["master", "init"], 
+				attributes: {},
+				func: ((node)=> this.addCommit(node))
+			},
+			createMaster: {
+				label: "Create Master", 
+				existsIn: ["commit"],
+				attributes: {}, 
+				func: ((node)=> this.createMaster(node))
+			},
+			removeCommit: {
+				label: "Remove", 
+				existsIn: ["commit"], 
+				attributes:{},
+				func: ((node)=> this.removeCommit(node))
+			},
+			removeMaster: {
+				label: "Remove", 
+				existsIn: ["master"], 
+				attributes:{},
+				func: ((node)=> this.removeMaster(node))
+			}
 		}
 	}
 
@@ -66,8 +95,7 @@ class FileTree extends Component {
 
 		const hideMenu = () => {
 			document.getElementById("customMenu") ? 
-			document.getElementById("customMenu").style.display = "none"
-			: ""
+			document.getElementById("customMenu").style.display = "none": ""
 		};
 		window.addEventListener("click", hideMenu);
 		window.addEventListener("scroll", hideMenu)
@@ -155,6 +183,9 @@ class FileTree extends Component {
 									  coordinate={this.configureXY(version)}
 										dimension={type==="master" || type==="init" ? MASTERSIZE : COMMITSIZE}
 										fill={type==="master" || type==="init" ? "#FF8000" : "#6666FF"}
+										modalControl={()=> {
+											document.getElementById("modalControl").click();
+										}}
 									/>)
 							})
 						}
@@ -181,17 +212,22 @@ class FileTree extends Component {
 									<h5 className="modal-title">{nodeSelected ? 
 										nodeSelected.fileName: "Untitled"}  </h5>
 								</div>
+
 								<div className="modal-body" style={{overflow: "auto", height: "400px"}}>
 									{this.getModalContent(this.state.selected)}
 								</div>
 								<div className="modal-footer">
+									{this.state.selected && this.getNode(this.state.selected).position.type==="commit" ? 
+										<button type="button" className="btn btn-secondary">Edit</button> : ""
+									}
 									<button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-				
+
+				{/* Custom menu */}
 				<ul
 					id="customMenu"
 					className="list-group"
@@ -200,18 +236,26 @@ class FileTree extends Component {
 						position: "fixed"
 					}}
 				>
-					{Object.keys(menuOptions).map((opt)=> {
+					{
+						Object.keys(menuOptions).map((opt)=> {
 						return <li
 							key={opt}
 							style={nodeSelected && menuOptions[opt].existsIn.includes(nodeSelected.position.type) ? {display: "block"} : {display: "none"}}
-							className="list-group-item list-group-item-light list-group-item-action menu-option"
-							onClick={()=> {
-								menuOptions[opt].func(nodeSelected);
-							}}
+							className={`list-group-item list-group-item-light list-group-item-action menu-option`}
+							onClick={()=> {menuOptions[opt].func(nodeSelected);}}
 							>{menuOptions[opt].label}
 						</li>
 					})}
 				</ul>
+
+				{/* Modal on-off control */}
+				<button
+					type="button"
+					id="modalControl"
+					data-toggle="modal"
+					data-target="#details"
+					style={{display: "none"}}>
+				</button>
 			</div>
 		)	
 	}

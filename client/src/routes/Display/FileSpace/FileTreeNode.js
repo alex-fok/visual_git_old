@@ -12,9 +12,10 @@ class FileTreeNode extends Component{
 				width={this.props.dimension}
 				height={this.props.dimension}
 				fill={this.props.fill}
-				data-toggle="modal"
-				data-target="#details"
-				onClick={()=> {this.props.setSelected(this.props.version)}}
+				onClick={()=> {
+					this.props.setSelected(this.props.version);
+					this.props.modalControl();
+				}}
 				onContextMenu={(e)=> {
 					document.getElementById("customMenu").style.display = "block";
 					document.getElementById("customMenu").style.left = `${e.pageX - window.scrollX + 10}px`;
