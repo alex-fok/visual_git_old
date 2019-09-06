@@ -31,25 +31,26 @@ class FileTree extends Component {
 
 	setSelected(version) {	
 		this.setState({
-			selected: version
+			selected: version,
+			mode: "view"
 		})
 	}
 
-	addCommit(e) {
+	addCommit() {
 		this.props.updateTree("addCommit", this.props.fileName, this.state.selected);
 	}
-	removeCommit(e) {
+	removeCommit() {
 		this.setSelected("");
 		this.props.updateTree("removeCommit", this.props.fileName, this.state.selected);
 	}
-	createMaster(e) {
+	createMaster() {
 		this.props.updateTree("createMaster", this.props.fileName, this.state.selected);
 	}
-	removeMaster(e) {
+	removeMaster() {
 		this.setSelected("");
 		this.props.updateTree("removeMaster", this.props.fileName, this.state.selected);
 	}
-	openNode(e) {
+	openNode() {
 		document.getElementById("modalControl").click();
 	}
 
@@ -59,31 +60,31 @@ class FileTree extends Component {
 				label: "Open", 
 				existsIn: ["init", "master", "commit"], 
 				attributes:{},
-				func: ((node)=> this.openNode(node))
+				func: (()=> this.openNode())
 			},
 			addCommit: {
 				label: "Add Commit", 
 				existsIn: ["master", "init"], 
 				attributes: {},
-				func: ((node)=> this.addCommit(node))
+				func: (()=> this.addCommit())
 			},
 			createMaster: {
 				label: "Create Master", 
 				existsIn: ["commit"],
 				attributes: {}, 
-				func: ((node)=> this.createMaster(node))
+				func: (()=> this.createMaster())
 			},
 			removeCommit: {
 				label: "Remove", 
 				existsIn: ["commit"], 
 				attributes:{},
-				func: ((node)=> this.removeCommit(node))
+				func: (()=> this.removeCommit())
 			},
 			removeMaster: {
 				label: "Remove", 
 				existsIn: ["master"], 
 				attributes:{},
-				func: ((node)=> this.removeMaster(node))
+				func: (()=> this.removeMaster())
 			}
 		}
 	}
@@ -100,8 +101,7 @@ class FileTree extends Component {
 		window.addEventListener("click", hideMenu);
 		window.addEventListener("scroll", hideMenu)
 	}
-	getModalContent(selected) {
-		const file = this.props.fileTree[this.state.selected];
+	getModalContent(file) {
 		if (!file) return; 
 		const properties = file.properties;
 		return (properties.desc.match(/text\/.*/) ? 
@@ -214,11 +214,23 @@ class FileTree extends Component {
 								</div>
 
 								<div className="modal-body" style={{overflow: "auto", height: "400px"}}>
-									{this.getModalContent(this.state.selected)}
+
+									{this.state.mode==="edit" ? 
+										<textarea>
+											{this.getModalContent(nodeSelected)}
+										</textarea> :
+										this.getModalContent(nodeSelected)
+									}
 								</div>
 								<div className="modal-footer">
-									{this.state.selected && this.getNode(this.state.selected).position.type==="commit" ? 
-										<button type="button" className="btn btn-secondary">Edit</button> : ""
+									{nodeSelected && nodeSelected.position.type==="commit" ? 
+										<button
+											type="button"
+											className="btn btn-secondary"
+											onClick={(e)=>{this.setState({mode: "edit"})}}
+										>
+											Edit
+										</button> : ""
 									}
 									<button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
 								</div>
@@ -242,7 +254,7 @@ class FileTree extends Component {
 							key={opt}
 							style={nodeSelected && menuOptions[opt].existsIn.includes(nodeSelected.position.type) ? {display: "block"} : {display: "none"}}
 							className={`list-group-item list-group-item-light list-group-item-action menu-option`}
-							onClick={()=> {menuOptions[opt].func(nodeSelected);}}
+							onClick={()=> {menuOptions[opt].func()}}
 							>{menuOptions[opt].label}
 						</li>
 					})}
