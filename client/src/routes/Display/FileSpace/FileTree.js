@@ -11,7 +11,7 @@ class FileTree extends Component {
 		super(props);
 		this.state = {
 			selected:"",
-
+			content: ""
 		}
 		this.getNode = this.getNode.bind(this);
 		this.setSelected = this.setSelected.bind(this);
@@ -22,7 +22,8 @@ class FileTree extends Component {
 		this.getMenuOptions = this.getMenuOptions.bind(this);
 		this.configureXY = this.configureXY.bind(this);
 		this.configureArrow = this.configureArrow.bind(this);
-		
+		this.openNode = this.openNode.bind(this);
+		this.modalControl = React.createRef();
 	}
 
 	getNode(node) {
@@ -51,7 +52,11 @@ class FileTree extends Component {
 		this.props.updateTree("removeMaster", this.props.fileName, this.state.selected);
 	}
 	openNode() {
-		document.getElementById("modalControl").click();
+		this.modalControl.current.click();
+	}
+
+	saveChanges() {
+		this.props.updateTreeNode(this.state.selected, this.state.content);
 	}
 
 	getMenuOptions() {
@@ -101,15 +106,29 @@ class FileTree extends Component {
 		window.addEventListener("click", hideMenu);
 		window.addEventListener("scroll", hideMenu)
 	}
-	getModalContent(file) {
+	getModalContent(file, mode) {
 		if (!file) return; 
-		const properties = file.properties;
+		const {properties} = file;
 		return (properties.desc.match(/text\/.*/) ? 
-				<p>
-					{properties.base64 ? 
-						window.atob(properties.data)
-					: properties.data}
-				</p>
+				(()=>{
+					var reactElement;
+					const content = properties.base64 ? window.atob(properties.data) : properties.data;
+					mode === "edit" ?
+						reactElement = React.createElement("textarea", 
+							{
+								className: "w-100 h-100", 
+								value: this.state.content ? this.state.content : content,
+								onChange: (e)=> {
+									this.setState({
+										content: e.target.value
+									})
+								}
+							}
+						)
+					:
+						reactElement = React.createElement("p", {}, content);
+					return reactElement; 
+				})()
 			: properties.desc.match(/image\/.*/) ? 
 			<img src={file.src} />
 			: "NOT TEXT OR IMAGE"
@@ -158,6 +177,7 @@ class FileTree extends Component {
 	}
 
 	render() {
+		const {mode} = this.state;
 		const {fileTree} = this.props;
 		const nodeSelected = this.getNode(this.state.selected);
 		const menuOptions = this.getMenuOptions();
@@ -183,9 +203,7 @@ class FileTree extends Component {
 									  coordinate={this.configureXY(version)}
 										dimension={type==="master" || type==="init" ? MASTERSIZE : COMMITSIZE}
 										fill={type==="master" || type==="init" ? "#FF8000" : "#6666FF"}
-										modalControl={()=> {
-											document.getElementById("modalControl").click();
-										}}
+										openNode={this.openNode}
 									/>)
 							})
 						}
@@ -214,23 +232,29 @@ class FileTree extends Component {
 								</div>
 
 								<div className="modal-body" style={{overflow: "auto", height: "400px"}}>
-
-									{this.state.mode==="edit" ? 
-										<textarea>
-											{this.getModalContent(nodeSelected)}
-										</textarea> :
-										this.getModalContent(nodeSelected)
-									}
+									{this.getModalContent(nodeSelected, this.state.mode)}									
 								</div>
 								<div className="modal-footer">
 									{nodeSelected && nodeSelected.position.type==="commit" ? 
-										<button
-											type="button"
-											className="btn btn-secondary"
-											onClick={(e)=>{this.setState({mode: "edit"})}}
-										>
-											Edit
-										</button> : ""
+										mode==="view" ?
+											<button
+												type="button"
+												className="btn btn-secondary"
+												onClick={(e)=>{
+													this.setState({
+														mode: "edit"
+												})}}
+											>Edit</button>: ""
+										: <button
+												type="button"
+												className="btn btn-secondary"
+												onClick={(e)=> {
+													this.saveChanges();
+													this.setState({
+														mode:"view"
+													})
+												}}
+											>Save Changes</button>
 									}
 									<button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
 								</div>
@@ -263,7 +287,7 @@ class FileTree extends Component {
 				{/* Modal on-off control */}
 				<button
 					type="button"
-					id="modalControl"
+					ref={this.modalControl}
 					data-toggle="modal"
 					data-target="#details"
 					style={{display: "none"}}>

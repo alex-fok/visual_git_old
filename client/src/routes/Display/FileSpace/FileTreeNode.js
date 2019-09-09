@@ -14,7 +14,7 @@ class FileTreeNode extends Component{
 				fill={this.props.fill}
 				onClick={()=> {
 					this.props.setSelected(this.props.version);
-					this.props.modalControl();
+					this.props.openNode();
 				}}
 				onContextMenu={(e)=> {
 					document.getElementById("customMenu").style.display = "block";

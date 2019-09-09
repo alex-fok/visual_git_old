@@ -264,7 +264,6 @@ class FileSpace extends Component {
           <FileTree
             fileName={this.state.active}
             fileTree={this.state.fileTrees[this.state.active]}
-            addCommit={this.addCommit}
             updateTree={this.updateTree}
             />
         }
