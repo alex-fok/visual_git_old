@@ -99,9 +99,9 @@ class FileTree extends Component {
 			e.preventDefault();
 		});
 
-		const hideMenu = () => {
-			document.getElementById("customMenu") ? 
-			document.getElementById("customMenu").style.display = "none": ""
+		let hideMenu = () => {
+			let customMenu = document.getElementById("customMenu")
+			customMenu ? customMenu.style.display = "none": ""
 		};
 		window.addEventListener("click", hideMenu);
 		window.addEventListener("scroll", hideMenu)
@@ -244,8 +244,8 @@ class FileTree extends Component {
 													this.setState({
 														mode: "edit"
 												})}}
-											>Edit</button>: ""
-										: <button
+											>Edit</button>:
+											<button
 												type="button"
 												className="btn btn-secondary"
 												onClick={(e)=> {
@@ -255,6 +255,7 @@ class FileTree extends Component {
 													})
 												}}
 											>Save Changes</button>
+										: ""
 									}
 									<button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
 								</div>
@@ -274,14 +275,15 @@ class FileTree extends Component {
 				>
 					{
 						Object.keys(menuOptions).map((opt)=> {
-						return <li
-							key={opt}
-							style={nodeSelected && menuOptions[opt].existsIn.includes(nodeSelected.position.type) ? {display: "block"} : {display: "none"}}
-							className={`list-group-item list-group-item-light list-group-item-action menu-option`}
-							onClick={()=> {menuOptions[opt].func()}}
-							>{menuOptions[opt].label}
-						</li>
-					})}
+							return <li
+								key={opt}
+								style={nodeSelected && menuOptions[opt].existsIn.includes(nodeSelected.position.type) ? {display: "block"} : {display: "none"}}
+								className={`list-group-item list-group-item-light list-group-item-action menu-option`}
+								onClick={()=> {menuOptions[opt].func()}}
+								>{menuOptions[opt].label}
+							</li>
+						})
+					}
 				</ul>
 
 				{/* Modal on-off control */}
