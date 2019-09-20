@@ -21,6 +21,7 @@ class FileSpace extends Component {
     this.createMaster = this.createMaster.bind(this);
     this.removeMaster = this.removeMaster.bind(this);
     this.removeCommit = this.removeCommit.bind(this);
+    this.updateNode = this.updateNode.bind(this);
     this.updateTree = this.updateTree.bind(this);
     this.removeFile = this.removeFile.bind(this);
   }
@@ -67,6 +68,7 @@ class FileSpace extends Component {
       e.target.value = null;
       
       fr.onload = () => {
+        console.log(fr.result);
         this.setState(prev => ({
           fileTrees: Object.assign(prev.fileTrees, {
             //fileName.version; first file created always has version "init"
@@ -78,6 +80,7 @@ class FileSpace extends Component {
                 extension: ext,
                 src: fr.result,
                 properties: {
+                  prefix: fr.result.match(/(data:.*;)(base64,)*/)[1],
                   desc: fr.result.match(/(?:data:)(.*)(?:;)/)[1],
                   base64: fr.result.match(/(?:data:.*;base64)/) ? true : false,
                   data: fr.result.match(/(?:data:.*;)(?:base64,)*(.*)/)[1]
@@ -192,6 +195,23 @@ class FileSpace extends Component {
     callback(ft);
   }
 
+  updateNode(fileName, version, content) {
+    console.log(`updateNode -- fileName: ${fileName} version: ${version}`)
+    var node = this.state.fileTrees[fileName][version];
+    Object.assign(node.properties, {
+      data: node.properties.base64?window.btoa(content) : content
+    });
+    this.setState((prev)=>{
+      fileTrees: Object.assign({}, prev.fileTrees, {
+        [fileName]: Object.assign({}, prev.fileTrees[fileName], {
+          [version]: node
+        })
+      })
+    })
+
+    console.log(this.state.fileTrees);
+  }
+
   updateTree(option, fileName, targetVersion) {
     const update = tree => {
       var {fileTrees} = this.state;
@@ -264,6 +284,7 @@ class FileSpace extends Component {
           <FileTree
             fileName={this.state.active}
             fileTree={this.state.fileTrees[this.state.active]}
+            updateNode={this.updateNode}
             updateTree={this.updateTree}
             />
         }

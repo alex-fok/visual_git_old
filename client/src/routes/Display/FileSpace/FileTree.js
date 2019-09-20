@@ -56,7 +56,7 @@ class FileTree extends Component {
 	}
 
 	saveChanges() {
-		this.props.updateTreeNode(this.state.selected, this.state.content);
+		this.props.updateNode(this.props.fileName, this.state.selected, this.state.content);
 	}
 
 	getMenuOptions() {
