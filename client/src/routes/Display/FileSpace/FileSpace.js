@@ -198,8 +198,10 @@ class FileSpace extends Component {
   updateNode(fileName, version, content) {
     console.log(`updateNode -- fileName: ${fileName} version: ${version}`)
     var node = this.state.fileTrees[fileName][version];
-    Object.assign(node.properties, {
-      data: node.properties.base64?window.btoa(content) : content
+    node = Object.assign({}, node, {
+      properties: Object.assign({}, node.properties, {
+        data: node.properties.base64?window.btoa(content) : content
+      })
     });
     this.setState((prev)=>{
       fileTrees: Object.assign({}, prev.fileTrees, {
