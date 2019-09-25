@@ -22,6 +22,7 @@ class FileSpace extends Component {
     this.removeMaster = this.removeMaster.bind(this);
     this.removeCommit = this.removeCommit.bind(this);
     this.updateNode = this.updateNode.bind(this);
+    this.updateTree2 = this.updateTree2.bind(this);
     this.updateTree = this.updateTree.bind(this);
     this.removeFile = this.removeFile.bind(this);
   }
@@ -195,19 +196,17 @@ class FileSpace extends Component {
     callback(ft);
   }
 
-  updateNode(fileName, version, content) {
+  updateNode(node, fileName) {
     var {fileTrees} = this.state;
-    var node = fileTrees[fileName][version];
-    var c = node.properties.base64?window.btoa(content) : content;
-    node = Object.assign({}, node, {
-      src: `${node.properties.prefix}${c}`,
-      properties: Object.assign({}, node.properties, {
-        data: node.properties.base64?window.btoa(content) : content
-      }),
+    var tree = Object.assign({}, fileTrees[fileName], {
+      [node.version]: node
     });
-    fileTrees[fileName] = Object.assign({}, fileTrees[fileName], {
-      [version]: node
-    });
+    updateTree2(fileName, tree)
+  }
+
+  updateTree2(fileName, tree) {
+    var {fileTrees} = this.state;
+    fileTrees[fileName] = tree;
     this.setState({fileTrees: fileTrees})
   }
 
@@ -284,7 +283,7 @@ class FileSpace extends Component {
             fileName={this.state.active}
             fileTree={this.state.fileTrees[this.state.active]}
             updateNode={this.updateNode}
-            updateTree={this.updateTree}
+            updateTree={this.updateTree2}
             />
         }
         </div>

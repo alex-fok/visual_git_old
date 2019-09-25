@@ -38,11 +38,49 @@ class FileTree extends Component {
 	}
 
 	addCommit() {
-		this.props.updateTree("addCommit", this.props.fileName, this.state.selected);
+		const {updateTree, fileTree, fileName} = this.props;
+    const origin = fileTree[this.state.selected];
+    const commitsArray = origin.position.commits;
+    const commitVersion = `${origin.version}.${commitsArray.length+1}`;
+    commitsArray.push(commitVersion);
+		
+
+		var ft = Object.assign({}, fileTree, 
+      {[origin.version]: Object.assign({}, fileTree[origin.version], {
+        position: Object.assign({}, origin.position, {commits: commitsArray})
+      })},
+      {[commitVersion]: Object.assign({}, fileTree[origin.version], {
+        version: commitVersion,
+        position: {
+          type: "commit",
+          master: origin.version,
+          commits: [],
+          prev: "",
+          next: "",
+          active: true
+        }
+      })}
+    );
+    updateTree(fileName, ft);
 	}
 	removeCommit() {
 		this.setSelected("");
-		this.props.updateTree("removeCommit", this.props.fileName, this.state.selected);
+		var ft = this.props.fileTree;
+    const target = ft[this.state.selected];
+    const master = ft[target.position.master];
+
+    const index = master.position.commits.indexOf(this.state.selected);
+    master.position.commits.splice(index, 1);
+
+    if (master.position.next !== "")
+      if (ft[master.position.next].position.fromCommit === this.state.selected)
+        ft[master.position.next].position.fromCommit = ""
+
+    ft[target.position.master] = master;
+    delete ft[this.state.selected];
+    this.props.updateTree(this.props.fileName, ft);
+    //callback(ft);
+		//this.props.updateTree("removeCommit", this.props.fileName, this.state.selected);
 	}
 	createMaster() {
 		this.props.updateTree("createMaster", this.props.fileName, this.state.selected);
@@ -56,7 +94,17 @@ class FileTree extends Component {
 	}
 
 	saveChanges() {
-		this.props.updateNode(this.props.fileName, this.state.selected, this.state.content);
+		const {selected, content} = this.state;
+		const {fileTree, fileName, updateNode} = this.props;
+		var node = fileTree[selected];
+		var data = node.properties.base64 ? window.btoa(content) : content;
+		node = Object.assign({}, node, {
+      src: `${node.properties.prefix}${data}`,
+      properties: Object.assign({}, node.properties, {
+        data: data
+      }),
+    });
+		updateNode(node, fileName);
 		this.setState({content: ""})
 	}
 
