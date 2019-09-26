@@ -37,23 +37,22 @@ class FileTree extends Component {
 		})
 	}
 
-	addCommit() {
-		const {updateTree, fileTree, fileName} = this.props;
-    const origin = fileTree[this.state.selected];
+	addCommit(fileTree, originVersion, callback) {
+		var ft = fileTree;
+    const origin = ft[originVersion];
     const commitsArray = origin.position.commits;
     const commitVersion = `${origin.version}.${commitsArray.length+1}`;
     commitsArray.push(commitVersion);
 		
-
-		var ft = Object.assign({}, fileTree, 
-      {[origin.version]: Object.assign({}, fileTree[origin.version], {
+		ft = Object.assign({}, fileTree, 
+      {[origin.version]: Object.assign({}, fileTree[originVersion], {
         position: Object.assign({}, origin.position, {commits: commitsArray})
       })},
-      {[commitVersion]: Object.assign({}, fileTree[origin.version], {
+      {[commitVersion]: Object.assign({}, fileTree[originVersion], {
         version: commitVersion,
         position: {
           type: "commit",
-          master: origin.version,
+          master: originVersion,
           commits: [],
           prev: "",
           next: "",
@@ -61,34 +60,75 @@ class FileTree extends Component {
         }
       })}
     );
-    updateTree(fileName, ft);
+    callback(ft);
 	}
-	removeCommit() {
+	removeCommit(fileTree, targetVersion, callback) {
 		this.setSelected("");
-		var ft = this.props.fileTree;
-    const target = ft[this.state.selected];
+		const ft = this.props.fileTree;
+    const target = ft[targetVersion];
     const master = ft[target.position.master];
 
-    const index = master.position.commits.indexOf(this.state.selected);
+    let index = master.position.commits.indexOf(targetVersion);
     master.position.commits.splice(index, 1);
 
     if (master.position.next !== "")
-      if (ft[master.position.next].position.fromCommit === this.state.selected)
+      if (ft[master.position.next].position.fromCommit === targetVersion)
         ft[master.position.next].position.fromCommit = ""
 
     ft[target.position.master] = master;
-    delete ft[this.state.selected];
-    this.props.updateTree(this.props.fileName, ft);
-    //callback(ft);
-		//this.props.updateTree("removeCommit", this.props.fileName, this.state.selected);
+    delete ft[targetVersion];
+    
+    callback(ft);
 	}
-	createMaster() {
-		this.props.updateTree("createMaster", this.props.fileName, this.state.selected);
+	createMaster(fileTree, currentVersion, callback) {
+		const ft = this.props.fileTree;    
+    const originVersion = ft[currentVersion].position.master;
+    const nextVersion = (parseInt(originVersion) + 1).toString();
+
+    Object.assign(ft,
+      {[originVersion]: Object.assign({}, ft[originVersion], {
+          position: Object.assign({}, ft[originVersion].position, {
+            next: nextVersion,
+            active: false
+          })
+      })},
+      {[nextVersion]: Object.assign({}, ft[originVersion], {
+          version: nextVersion,
+          properties: ft[currentVersion].properties,
+          position: {
+            type: "master",
+            master: "",
+            commits: [],
+            prev: originVersion,
+            next: "",
+            fromCommit: currentVersion,
+            active: true
+          }
+      })}
+    );
+		callback(ft);
 	}
-	removeMaster() {
+
+	removeMaster(fileTree, targetVersion, callback) {
 		this.setSelected("");
-		this.props.updateTree("removeMaster", this.props.fileName, this.state.selected);
+		const ft = fileTree;
+    const target = ft[targetVersion];
+    
+    if(target.position.next!=="")
+      this.removeMaster(ft, target.position.next, updatedFT=>{ft=updatedFT});
+
+    const {commits, prev} = target.position;
+    if (commits.length > 0)
+      for (var i = 0; i < commits.length; i++)
+        delete ft[commits[i]];
+
+    if (prev !== "")
+      ft[prev].position.next = "";
+    delete ft[targetVersion];
+
+    callback(ft);
 	}
+
 	openNode() {
 		this.modalControl.current.click();
 	}
@@ -108,7 +148,7 @@ class FileTree extends Component {
 		this.setState({content: ""})
 	}
 
-	getMenuOptions() {
+	getMenuOptions(fileTree, fileName, targetVersion, updateTree) {
 		return {
 			open: {
 				label: "Open", 
@@ -120,25 +160,25 @@ class FileTree extends Component {
 				label: "Add Commit", 
 				existsIn: ["master", "init"], 
 				attributes: {},
-				func: (()=> this.addCommit())
+				func: (()=> this.addCommit(fileTree, targetVersion, ft=>updateTree(fileName, ft)))
 			},
 			createMaster: {
 				label: "Create Master", 
 				existsIn: ["commit"],
 				attributes: {}, 
-				func: (()=> this.createMaster())
+				func: (()=> this.createMaster(fileTree, targetVersion, ft=>updateTree(fileName, ft)))
 			},
 			removeCommit: {
 				label: "Remove", 
 				existsIn: ["commit"], 
 				attributes:{},
-				func: (()=> this.removeCommit())
+				func: (()=> this.removeCommit(fileTree, targetVersion, ft=>updateTree(fileName, ft)))
 			},
 			removeMaster: {
 				label: "Remove", 
 				existsIn: ["master"], 
 				attributes:{},
-				func: (()=> this.removeMaster())
+				func: (()=> this.removeMaster(fileTree, targetVersion, ft=>updateTree(fileName, ft)))
 			}
 		}
 	}
@@ -226,10 +266,10 @@ class FileTree extends Component {
 	}
 
 	render() {
-		const {mode} = this.state;
-		const {fileTree} = this.props;
-		const nodeSelected = this.getNode(this.state.selected);
-		const menuOptions = this.getMenuOptions();
+		const {mode, selected} = this.state;
+		const {fileTree, fileName, updateTree} = this.props;
+		const nodeSelected = this.getNode(selected);
+		const menuOptions = this.getMenuOptions(fileTree, fileName, selected, updateTree);
 
 		return (
 			<div>

@@ -201,7 +201,7 @@ class FileSpace extends Component {
     var tree = Object.assign({}, fileTrees[fileName], {
       [node.version]: node
     });
-    updateTree2(fileName, tree)
+    this.updateTree2(fileName, tree)
   }
 
   updateTree2(fileName, tree) {
